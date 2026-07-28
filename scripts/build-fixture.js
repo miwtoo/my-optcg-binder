@@ -178,43 +178,17 @@ function main() {
   const sizeBytes = Buffer.byteLength(JSON.stringify(data), 'utf-8');
   console.log(`\n  ✔  Wrote ${GENERATED_DATA_PATH} (${sizeBytes} bytes)`);
 
-  // 5. Generate public/data/binder.json for the existing UI
+  // 5. Publish canonical BinderData contract to public/data/binder.json
+  // The UI fetches this at runtime via BASE_URL + data/binder.json
   const publicDataDir = resolve(projectRoot, 'public', 'data');
   if (!existsSync(publicDataDir)) {
     mkdirSync(publicDataDir, { recursive: true });
   }
 
-  const uiCards = placement.cards.map(c => {
-    const loc = c.binderLocation;
-    const cat = catalog.get(c.code);
-    const totalDeckQty = c.deckAllocations.reduce((s, d) => s + d.quantity, 0);
-    // Derive first deck name if any
-    const deckName = c.deckAllocations.length > 0 ? c.deckAllocations[0].deck : undefined;
-    return {
-      code: c.code,
-      name: cat?.name ?? c.code,
-      color: cat?.color ?? 'Red',
-      cost: cat?.cost ?? 0,
-      type: cat?.type ?? 'Character',
-      owned: c.owned,
-      binder: c.binderQuantity,
-      deckQty: totalDeckQty,
-      deck: deckName,
-      slot: loc?.slot,
-      sheet: loc?.sheet,
-      side: loc?.side?.toLowerCase() ?? undefined,
-    };
-  });
-
-  const uiPayload = {
-    cards: uiCards,
-    wanted: wantedEntries,
-  };
-
-  const uiOutputPath = resolve(publicDataDir, 'binder.json');
-  writeFileSync(uiOutputPath, JSON.stringify(uiPayload, null, 2), 'utf-8');
-  const uiSizeBytes = Buffer.byteLength(JSON.stringify(uiPayload), 'utf-8');
-  console.log(`  ✔  Wrote public/data/binder.json (${uiSizeBytes} bytes)`);
+  const publicOutputPath = resolve(publicDataDir, 'binder.json');
+  writeFileSync(publicOutputPath, JSON.stringify(data, null, 2), 'utf-8');
+  const publicSizeBytes = Buffer.byteLength(JSON.stringify(data), 'utf-8');
+  console.log(`  ✔  Wrote public/data/binder.json (${publicSizeBytes} bytes) — canonical 8-key BinderData contract`);
   console.log(`\n✅ Fixture built successfully.`);
 
   // Print first few sheets summary

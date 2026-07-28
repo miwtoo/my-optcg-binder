@@ -194,7 +194,7 @@ export function getKnownCodes(): Set<string> {
 export function validateCodes<T extends { code: string }>(
   rows: T[],
   file: string,
-  existingErrors: CSVError[],
+  _existingErrors: CSVError[],
 ): CSVError[] {
   const errors: CSVError[] = [];
   for (let i = 0; i < rows.length; i++) {
@@ -217,7 +217,7 @@ export function validateCodes<T extends { code: string }>(
 export function findDuplicateCodes<T extends { code: string }>(
   rows: T[],
   file: string,
-  existingErrors: CSVError[],
+  _existingErrors: CSVError[],
 ): CSVError[] {
   const errors: CSVError[] = [];
   const seen = new Map<string, number[]>();
@@ -242,7 +242,7 @@ export function findDuplicateCodes<T extends { code: string }>(
 
 /* ─── Internal Parser ──────────────────────────────────────── */
 
-function parseCSVInternal<T>(
+function parseCSVInternal<T extends { code: string }>(
   filePath: string,
   rowParser: (fields: string[], rowNum: number, errors: CSVError[]) => T | null,
   deduplicateCodes: boolean,

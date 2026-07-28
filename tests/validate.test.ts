@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { validateAll } from '../src/lib/validate/index.js';
 
-const projectRoot = resolve(import.meta.dirname, '..');
+const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 describe('CSV Validation', () => {
   it('passes on valid source data', () => {
@@ -42,7 +43,7 @@ describe('CSV Validation', () => {
     const result = validateAll(projectRoot);
     expect(result.sources.files).toBeDefined();
     expect(Object.keys(result.sources.files).length).toBeGreaterThanOrEqual(3);
-    for (const [name, entry] of Object.entries(result.sources.files)) {
+    for (const [, entry] of Object.entries(result.sources.files)) {
       expect(entry.checksum).toMatch(/^[a-f0-9]{64}$/);
       expect(entry.rowCount).toBeGreaterThan(0);
     }

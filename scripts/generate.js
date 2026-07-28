@@ -241,6 +241,16 @@ function main() {
   writeFileSync(outputPath, JSON.stringify(data, null, 2), 'utf-8');
   const sizeBytes = Buffer.byteLength(JSON.stringify(data), 'utf-8');
   console.log(`  ✔  Wrote ${GENERATED_DATA_PATH} (${sizeBytes} bytes)`);
+
+  // Also publish canonical BinderData contract to public/data/binder.json
+  const publicDataDir = resolve(projectRoot, 'public', 'data');
+  if (!existsSync(publicDataDir)) {
+    mkdirSync(publicDataDir, { recursive: true });
+  }
+  const publicOutputPath = resolve(publicDataDir, 'binder.json');
+  writeFileSync(publicOutputPath, JSON.stringify(data, null, 2), 'utf-8');
+  const publicSizeBytes = Buffer.byteLength(JSON.stringify(data), 'utf-8');
+  console.log(`  ✔  Wrote public/data/binder.json (${publicSizeBytes} bytes) — canonical 8-key BinderData contract`);
   console.log(`\n✅ Generation complete.`);
 }
 

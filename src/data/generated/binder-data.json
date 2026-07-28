@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-07-28T20:54:19.044Z",
+    "generated": "2026-07-28T21:03:39.235Z",
     "generator": "my-optcg-binder build-fixture.js",
     "generatorVersion": "0.1.0",
     "catalogSource": "heuristic (set-prefix color mapping — no Vega snapshot)",
@@ -1697,7 +1697,7 @@
     }
   ],
   "sources": {
-    "generated": "2026-07-28T20:54:19.029Z",
+    "generated": "2026-07-28T21:03:39.228Z",
     "files": {
       "One Piece TCG Collection - All.csv": {
         "checksum": "f1cfbeb17fef3d32e7a70914caace3e71fd38500a8f6a0a09170e388e00d13c0",

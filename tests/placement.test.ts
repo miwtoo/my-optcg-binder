@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { validateAll } from '../src/lib/validate/index.js';
 import { computeBinderPlacement, computeBinderSummary, sortCardsPlayerFirst } from '../src/lib/binder/index.js';
 import { SET_COLOR_MAP } from '../src/lib/data/constants.js';
 
-const projectRoot = resolve(import.meta.dirname, '..');
+const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 /* ─── Heuristic catalog (same as build-fixture.js) ─────────── */
 
@@ -14,7 +15,7 @@ const knownLeaders = new Set([
   'ST06-015', 'ST35-001', 'OP13-004', 'OP02-068',
 ]);
 
-function buildHeuristicCatalog(codes) {
+function buildHeuristicCatalog(codes: string[]) {
   const catalog = new Map();
   for (const code of codes) {
     const prefix = code.match(/^([A-Z]+\d+)/)?.[1] ?? '';
@@ -32,11 +33,13 @@ function buildHeuristicCatalog(codes) {
 
 describe('Binder Placement Engine', () => {
   const validation = validateAll(projectRoot);
-  const allCodes = new Set([
-    ...validation.collection.map(r => r.code),
-    ...validation.saboDeck.map(r => r.code),
-    ...validation.luffyDeck.map(r => r.code),
-  ]);
+  const allCodes = [
+    ...new Set([
+      ...validation.collection.map(r => r.code),
+      ...validation.saboDeck.map(r => r.code),
+      ...validation.luffyDeck.map(r => r.code),
+    ]),
+  ];
   const catalog = buildHeuristicCatalog(allCodes);
 
   const collectionMap = new Map(validation.collection.map(r => [r.code, r.amount]));

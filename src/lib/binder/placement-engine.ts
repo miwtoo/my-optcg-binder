@@ -24,7 +24,7 @@ import type {
   CardType,
 } from '../data/types';
 import { COLOR_ORDER, TYPE_ORDER } from '../data/types';
-import { SLOTS_PER_SIDE, SIDES_PER_SHEET, MAX_SHEETS, RESERVED_SLOTS_PER_GROUP } from '../data/constants';
+import { SLOTS_PER_SIDE, MAX_SHEETS, RESERVED_SLOTS_PER_GROUP } from '../data/constants';
 
 /* ─── Group Key ────────────────────────────────────────────── */
 
@@ -48,48 +48,6 @@ function groupKeyForCard(code: string, catalog: Map<string, CatalogEntry>): Grou
 
 function formatGroupKey(gk: GroupKey): string {
   return `${gk.color}|${gk.cost}|${gk.type}`;
-}
-
-/* ─── Sheet Assignment ─────────────────────────────────────── */
-
-interface SheetSlot {
-  sheet: number;
-  side: 'Front' | 'Back';
-  slot: number; // 1-9
-}
-
-function assignSlots(
-  sortedCodes: string[],
-  catalog: Map<string, CatalogEntry>,
-): Map<string, BinderLocation> {
-  const assignments = new Map<string, BinderLocation>();
-
-  // Assign each code to sequential slots
-  let currentSheet = 1;
-  let currentSide: 'Front' | 'Back' = 'Front';
-  let currentSlot = 1;
-
-  for (const code of sortedCodes) {
-    assignments.set(code, {
-      sheet: currentSheet,
-      side: currentSide,
-      slot: currentSlot,
-    });
-
-    // Advance to next slot
-    currentSlot++;
-    if (currentSlot > SLOTS_PER_SIDE) {
-      currentSlot = 1;
-      if (currentSide === 'Front') {
-        currentSide = 'Back';
-      } else {
-        currentSide = 'Front';
-        currentSheet++;
-      }
-    }
-  }
-
-  return assignments;
 }
 
 /* ─── Main Placement Algorithm ─────────────────────────────── */
@@ -129,9 +87,6 @@ export function computeBinderPlacement(
         totalInDecks += deckQty;
       }
     }
-
-    // Important: if decks allocate more than owned, cap at owned
-    const binderQty = Math.max(0, owned - totalInDecks);
 
     codeAllocations.set(code, { owned, decks });
   }
@@ -189,7 +144,7 @@ interface GroupedSheetAssignments {
 
 function assignInGroupsWithReservedSlots(
   sortedCodes: string[],
-  binderQuantities: Map<string, number>,
+  _binderQuantities: Map<string, number>,
   catalog: Map<string, CatalogEntry>,
 ): GroupedSheetAssignments {
   const locations = new Map<string, BinderLocation>();

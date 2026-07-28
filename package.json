@@ -15,7 +15,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "prebuild": "pnpm run validate"
+    "prebuild": "tsx scripts/validate.js"
   },
   "dependencies": {
     "astro": "^5.7.0"

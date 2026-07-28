@@ -40,8 +40,8 @@ jobs:
         uses: withastro/action@v6
         with:
           node-version: 24
-          package-manager: pnpm
-          build: pnpm run build
+          package-manager: npm
+          build: npm run build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
