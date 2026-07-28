@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Vega raw snapshot (never committed)
+.vega/
+
+# Generated images (must be committed explicitly via `npm run generate`)
+public/images/cards/
+
+# TypeScript
+*.tsbuildinfo
+
+# Astro generated types
+.astro/
+
+# Logs
+*.log
+npm-debug.log*

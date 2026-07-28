@@ -36,7 +36,7 @@
   <footer class="site-footer"><p><strong>Wayfinder</strong> is an unofficial, non-affiliated personal collection companion.</p><p>Card names, metadata, and artwork are © their respective rights holders. Data is derived from the <a href="https://github.com/featherbear/vegapull" rel="noreferrer">Vega / vegapull</a> catalog and shipped locally — no live API or Bandai logo is used.</p></footer>
 </main>
 
-<script>
+<script lang="ts">
   type Card = { code: string; name: string; color: string; cost: number; type: string; owned: number; binder: number; deckQty: number; deck?: string; slot?: number; sheet?: number; side?: 'front'|'back'; image?: string };
   type Want = { code: string; amount: number; target: string };
   type Payload = { cards: Card[]; wanted: Want[] };

@@ -1,0 +1,60 @@
+# Static One Piece TCG Binder — GitHub Pages deployment
+#
+# Triggers: push to main, manual workflow_dispatch.
+# Validates source CSVs, runs type checks, executes tests,
+# builds Astro site, and deploys to GitHub Pages.
+#
+# Based on Astro deploy guide:
+# https://docs.astro.build/en/guides/deploy/github-pages/
+
+name: Deploy binder site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Grant GITHUB_TOKEN the permissions needed for Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Setup Node
+        uses: withastro/action@v6
+        with:
+          node-version: 24
+          package-manager: pnpm
+          build: pnpm run build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

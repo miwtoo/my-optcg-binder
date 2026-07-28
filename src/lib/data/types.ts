@@ -1,0 +1,148 @@
+/**
+ * Core data types for the One Piece TCG binder system.
+ * These define the contract between the generator/validator and the UI.
+ */
+
+/* ─── CSV Row Types ─────────────────────────────────────────── */
+
+export interface CollectionRow {
+  code: string;
+  amount: number;
+}
+
+export interface DecklistRow {
+  code: string;
+  amount: number;
+}
+
+export interface WantedRow {
+  code: string;
+  amount: number;
+  target: string; // "binder" or a deck/planning name
+}
+
+/* ─── Card Catalog ──────────────────────────────────────────── */
+
+export type CardColor =
+  | 'Red' | 'Green' | 'Blue' | 'Purple' | 'Black' | 'Yellow';
+export type CardType = 'Leader' | 'Character' | 'Event' | 'Stage';
+
+export const COLOR_ORDER: CardColor[] = [
+  'Red', 'Green', 'Blue', 'Purple', 'Black', 'Yellow',
+];
+
+export const TYPE_ORDER: CardType[] = [
+  'Leader', 'Character', 'Event', 'Stage',
+];
+
+export interface CatalogEntry {
+  /** Vega card code, e.g. "OP05-057" */
+  code: string;
+  /** Card name (null if unknown) */
+  name: string | null;
+  /** Card color (null if unknown) */
+  color: CardColor | null;
+  /** Play cost (null if unknown; 0 for Leaders) */
+  cost: number | null;
+  /** Card type (null if unknown) */
+  type: CardType | null;
+}
+
+/* ─── Binder Layout ────────────────────────────────────────── */
+
+export interface SlotEntry {
+  code: string;
+  quantity: number;
+}
+
+export interface BinderSheet {
+  sheet: number;
+  side: 'Front' | 'Back';
+  slots: (SlotEntry | null)[];
+}
+
+export interface BinderLocation {
+  sheet: number;
+  side: 'Front' | 'Back';
+  slot: number; // 1–9, left-to-right top-to-bottom
+}
+
+/* ─── Card Allocation ──────────────────────────────────────── */
+
+export interface DeckAllocation {
+  deck: string;
+  quantity: number;
+}
+
+export interface CardEntry {
+  code: string;
+  name: string | null;
+  owned: number;
+  binderQuantity: number;
+  deckAllocations: DeckAllocation[];
+  binderLocation: BinderLocation | null;
+}
+
+/* ─── Wanted ───────────────────────────────────────────────── */
+
+export interface WantedEntry {
+  code: string;
+  amount: number;
+  target: string; // "binder" or deck/planning name
+}
+
+/* ─── Source Manifest ──────────────────────────────────────── */
+
+export interface SourceFileEntry {
+  checksum: string; // sha256 hex
+  rowCount: number;
+}
+
+export interface SourceManifest {
+  generated: string; // ISO timestamp
+  files: Record<string, SourceFileEntry>;
+}
+
+/* ─── Attribution ──────────────────────────────────────────── */
+
+export interface Attribution {
+  copyright: string;
+  disclaimer: string;
+  dataSource: string;
+  dataSourceUrl: string;
+  toolUsed: string;
+}
+
+/* ─── Binder Summary ───────────────────────────────────────── */
+
+export interface BinderSummary {
+  totalPossessedCards: number;
+  totalUniqueCodes: number;
+  totalSheets: number;
+  totalDeckCards: number;
+  totalBinderCards: number;
+  reservedSlots: number;
+  overflowSheets: number;
+}
+
+/* ─── Top-Level Generated Data ─────────────────────────────── */
+
+export interface BinderData {
+  meta: {
+    generated: string;
+    generator: string;
+    generatorVersion: string;
+    catalogSource: string;
+    catalogSourceVersion: string;
+    totalCards: number;
+    totalSheets: number;
+    dataProvenance: string;
+  };
+  catalog: CatalogEntry[];
+  cards: CardEntry[];
+  sheets: BinderSheet[];
+  binder: BinderSummary;
+  wanted: WantedEntry[];
+  sources: SourceManifest;
+  attribution: Attribution;
+}
