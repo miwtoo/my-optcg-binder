@@ -31,4 +31,4 @@ Known inputs to account for:
 - **Sabo summary row**: ignore only the known accidental Sabo `,51` summary row.
 - **EB03-052**: this is the deliberate corrected code; any other malformed code fails validation.
 - **Deck availability**: no deck availability, readiness, or missing report in v1.
-- **Stored-deck location**: every card listed in the current Sabo and Luffy decklist CSVs is treated as physically stored in that named deck, not in the binder. Future per-card reference or physical allocation configuration remains a future detail.
+- **Stored-deck location**: binder quantity is collection quantity minus the quantities physically allocated to each current deck CSV. A card can therefore appear in both binder and deck search results when spare copies remain in the binder. Only card codes with positive binder quantity occupy a binder slot; duplicate copies stack in that one slot. Deck availability/readiness/missing reporting remains out of v1.
