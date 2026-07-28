@@ -9,7 +9,7 @@
     "validate": "tsx scripts/validate.js",
     "fixture": "tsx scripts/build-fixture.js",
     "generate": "tsx scripts/generate.js",
-    "check": "tsx scripts/check.js",
+    "check": "astro check",
     "test": "vitest run",
     "test:watch": "vitest",
     "dev": "astro dev",
