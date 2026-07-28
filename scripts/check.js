@@ -14,10 +14,11 @@
  */
 
 import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
 
-const projectRoot = resolve(import.meta.dirname, '..');
+const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const generatedPath = resolve(projectRoot, 'src/data/generated/binder-data.json');
 
 console.log('🔎 Running checks...\n');
