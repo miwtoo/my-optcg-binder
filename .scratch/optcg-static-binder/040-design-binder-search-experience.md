@@ -1,13 +1,13 @@
 ---
 title: Prototype the binder and search experience
-status: open
+status: closed
 labels:
   - wayfinder:prototype
 parent: .scratch/optcg-static-binder/001-map.md
 blocked_by:
   - 030-define-binder-placement-policy.md
   - 020-package-local-card-catalog.md
-assignee:
+assignee: assistant
 ---
 
 # Prototype the binder and search experience
@@ -22,3 +22,18 @@ Decide page/sheet visual model, card result/location affordances, filters, mobil
 - Filters: by color, cost, type, set, or decklist membership?
 - Mobile behavior: how does the 3×3 grid and page navigation work on small screens?
 - Edge cases: no search results, overflow (more cards than binder capacity), reserved slots (empty but intentional).
+
+## Resolution
+
+Prototype assets:
+- `assets/binder-search-prototype.html`
+- `assets/binder-search-prototype-notes.md`
+
+Confirmed UX decisions:
+
+- **Default landing**: Collection is the default, mobile-first landing view and is a fast vertically scrollable player-first browse surface.
+- **Card detail flow**: tapping a card opens card detail first; detail shows metadata, owned quantity, binder/deck locations. A `Show in binder` button navigates to and highlights the exact physical Sheet/Side/Slot.
+- **Binder navigation**: physical Binder remains literal 3×3 grid with Front/Back toggle and explicit Previous/Next sheet controls. No swipe navigation.
+- **Search and filters**: search supports card code and name with filters for color, cost, type, and location. Reserved pockets, no-results, and removable-sheet overflow are explicit visual states.
+- **Mobile baseline**: Pixel 8 Pro (412 CSS px) is the mobile quality baseline: one-handed, no horizontal overflow, touch-sized controls.
+- **Digital order**: the sorted digital view supports browsing independently of physical overflow placement.

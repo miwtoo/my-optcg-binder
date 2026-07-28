@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Binder Search — Prototype</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+           background: #f4f4f5; color: #18181b; max-width: 412px; margin: 0 auto;
+           min-height: 100vh; }
+    /* ---- layout ---- */
+    .app { display: flex; flex-direction: column; min-height: 100vh; }
+    .header { background: #18181b; color: #fff; padding: 12px 16px;
+              display: flex; align-items: center; gap: 12px; }
+    .header h1 { font-size: 18px; flex: 1; }
+    .header .icon { width: 24px; height: 24px; background: #52525b; border-radius: 4px; }
+    .tab-bar { display: flex; background: #fff; border-bottom: 1px solid #e4e4e7; }
+    .tab { flex: 1; text-align: center; padding: 10px 0; font-size: 13px;
+           font-weight: 600; color: #71717a; cursor: default; }
+    .tab.active { color: #18181b; border-bottom: 2px solid #18181b; }
+    .content { flex: 1; overflow-y: auto; padding: 12px; }
+    /* ---- collection card list ---- */
+    .card-row { display: flex; align-items: center; gap: 12px;
+                padding: 10px 0; border-bottom: 1px solid #e4e4e7;
+                cursor: default; }
+    .card-row .img-placeholder { width: 48px; height: 67px; background: #d4d4d8;
+                                 border-radius: 4px; flex-shrink: 0; }
+    .card-row .info { flex: 1; min-width: 0; }
+    .card-row .info .code { font-size: 11px; color: #71717a; }
+    .card-row .info .name { font-size: 14px; font-weight: 500; white-space: nowrap;
+                            overflow: hidden; text-overflow: ellipsis; }
+    .card-row .info .meta { font-size: 11px; color: #71717a; margin-top: 2px; }
+    .card-row .qty { font-size: 13px; font-weight: 600; color: #16a34a;
+                     text-align: right; min-width: 28px; }
+    /* ---- detail view ---- */
+    .detail-hero { text-align: center; padding: 16px 0; }
+    .detail-hero .img-lg { width: 160px; height: 224px; background: #d4d4d8;
+                           border-radius: 8px; margin: 0 auto 12px; }
+    .detail-hero h2 { font-size: 20px; }
+    .detail-hero .code { font-size: 13px; color: #71717a; }
+    .detail-section { margin: 16px 0; }
+    .detail-section h3 { font-size: 13px; font-weight: 600; color: #71717a;
+                         text-transform: uppercase; letter-spacing: 0.5px;
+                         margin-bottom: 8px; }
+    .detail-row { display: flex; justify-content: space-between; font-size: 14px;
+                  padding: 6px 0; }
+    .detail-row .label { color: #71717a; }
+    .btn-primary { display: block; width: 100%; padding: 12px; background: #18181b;
+                   color: #fff; text-align: center; border-radius: 8px;
+                   font-size: 15px; font-weight: 600; margin-top: 16px;
+                   cursor: default; }
+    /* ---- binder view ---- */
+    .binder-controls { display: flex; align-items: center; justify-content: space-between;
+                       margin-bottom: 12px; }
+    .binder-controls .sheet-label { font-size: 14px; font-weight: 600; }
+    .binder-nav { display: flex; gap: 8px; }
+    .binder-nav button { background: #e4e4e7; border: none; border-radius: 6px;
+                         padding: 6px 12px; font-size: 13px; cursor: default; }
+    .side-toggle { display: flex; gap: 4px; margin-bottom: 8px; }
+    .side-toggle span { flex: 1; text-align: center; padding: 6px; font-size: 13px;
+                        border-radius: 6px; background: #e4e4e7; cursor: default; }
+    .side-toggle span.active { background: #18181b; color: #fff; }
+    .binder-grid { display: grid; grid-template-columns: repeat(3, 1fr);
+                   gap: 4px; aspect-ratio: 3 / 4; }
+    .binder-slot { background: #e4e4e7; border-radius: 4px; display: flex;
+                   flex-direction: column; align-items: center; justify-content: center;
+                   font-size: 10px; color: #71717a; min-height: 80px;
+                   cursor: default; }
+    .binder-slot .slot-code { font-weight: 600; color: #18181b; font-size: 11px; }
+    .binder-slot .slot-qty { font-size: 10px; }
+    .binder-slot.highlight { outline: 3px solid #16a34a; outline-offset: -3px; }
+    .binder-slot.reserved { background: #fef9c3; color: #a16207; }
+    .binder-slot.overflow { background: #fce4ec; }
+    /* ---- search ---- */
+    .search-bar { display: flex; gap: 8px; margin-bottom: 12px; }
+    .search-bar input { flex: 1; padding: 10px 12px; border: 1px solid #d4d4d8;
+                        border-radius: 8px; font-size: 14px; }
+    .search-bar .filter-btn { width: 44px; height: 44px; background: #e4e4e7;
+                              border: none; border-radius: 8px; cursor: default; }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .chip { padding: 4px 10px; font-size: 12px; background: #e4e4e7; border-radius: 12px;
+            cursor: default; }
+    .chip.active { background: #18181b; color: #fff; }
+    /* ---- states ---- */
+    .empty-state { text-align: center; padding: 48px 16px; color: #71717a; }
+    .empty-state .icon-lg { font-size: 48px; margin-bottom: 12px; }
+    .empty-state h3 { font-size: 16px; color: #18181b; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- header -->
+    <div class="header">
+      <div class="icon"></div>
+      <h1>One Piece Binder</h1>
+      <div class="icon"></div>
+    </div>
+
+    <!-- tabs -->
+    <div class="tab-bar">
+      <span class="tab active">Collection</span>
+      <span class="tab">Binder</span>
+      <span class="tab">Search</span>
+      <span class="tab">Want</span>
+    </div>
+
+    <!-- content area -->
+    <div class="content" id="content">
+      <!-- collection view -->
+      <div id="view-collection">
+        <div style="font-size:13px;color:#71717a;margin-bottom:8px;">Leaders · 3 cards</div>
+        <div class="card-row">
+          <div class="img-placeholder"></div>
+          <div class="info">
+            <div class="code">ST01-001</div>
+            <div class="name">Monkey D. Luffy</div>
+            <div class="meta">Red Leader · 2 owned</div>
+          </div>
+          <div class="qty">2</div>
+        </div>
+        <div class="card-row">
+          <div class="img-placeholder"></div>
+          <div class="info">
+            <div class="code">ST01-002</div>
+            <div class="name">Roronoa Zoro</div>
+            <div class="meta">Red Leader · 1 owned</div>
+          </div>
+          <div class="qty">1</div>
+        </div>
+        <div class="card-row">
+          <div class="img-placeholder"></div>
+          <div class="info">
+            <div class="code">ST01-003</div>
+            <div class="name">Nami</div>
+            <div class="meta">Red Leader · 1 owned</div>
+          </div>
+          <div class="qty">1</div>
+        </div>
+        <div style="font-size:13px;color:#71717a;margin:12px 0 8px;">Red · 12 cards</div>
+        <div class="card-row">
+          <div class="img-placeholder"></div>
+          <div class="info">
+            <div class="code">ST01-004</div>
+            <div class="name">Gum-Gum Jet Pistol</div>
+            <div class="meta">1c Red Event · 4 owned · Sheet 1 Front</div>
+          </div>
+          <div class="qty">4</div>
+        </div>
+        <div class="card-row">
+          <div class="img-placeholder"></div>
+          <div class="info">
+            <div class="code">ST01-005</div>
+            <div class="name">Gum-Gum Gatling</div>
+            <div class="meta">2c Red Event · 3 owned · Sheet 1 Front</div>
+          </div>
+          <div class="qty">3</div>
+        </div>
+      </div>
+
+      <!-- detail view -->
+      <div id="view-detail" style="display:none;">
+        <div class="detail-hero">
+          <div class="img-lg"></div>
+          <h2>Gum-Gum Jet Pistol</h2>
+          <div class="code">ST01-004</div>
+        </div>
+        <div class="detail-section">
+          <h3>Card Details</h3>
+          <div class="detail-row"><span class="label">Color</span><span>Red</span></div>
+          <div class="detail-row"><span class="label">Cost</span><span>1</span></div>
+          <div class="detail-row"><span class="label">Type</span><span>Event</span></div>
+          <div class="detail-row"><span class="label">Owned</span><span>4</span></div>
+        </div>
+        <div class="detail-section">
+          <h3>Locations</h3>
+          <div class="detail-row"><span class="label">Binder</span><span>3 · Sheet 1 Front (slot 4)</span></div>
+          <div class="detail-row"><span class="label">Sabo Deck</span><span>1</span></div>
+        </div>
+        <div class="btn-primary">Show in binder</div>
+      </div>
+
+      <!-- binder view -->
+      <div id="view-binder" style="display:none;">
+        <div class="binder-controls">
+          <div class="sheet-label">Sheet 1</div>
+          <div class="binder-nav">
+            <button>Previous</button>
+            <button>Next</button>
+          </div>
+        </div>
+        <div class="side-toggle">
+          <span class="active">Front</span>
+          <span>Back</span>
+        </div>
+        <div class="binder-grid">
+          <div class="binder-slot highlight">
+            <div class="slot-code">ST01-004</div>
+            <div class="slot-qty">×3</div>
+          </div>
+          <div class="binder-slot">
+            <div class="slot-code">ST01-005</div>
+            <div class="slot-qty">×3</div>
+          </div>
+          <div class="binder-slot reserved">Reserved</div>
+          <div class="binder-slot"></div>
+          <div class="binder-slot"></div>
+          <div class="binder-slot"></div>
+          <div class="binder-slot"></div>
+          <div class="binder-slot"></div>
+          <div class="binder-slot overflow">Overflow</div>
+        </div>
+      </div>
+
+      <!-- search view -->
+      <div id="view-search" style="display:none;">
+        <div class="search-bar">
+          <input type="text" placeholder="Card code or name…">
+          <div class="filter-btn"></div>
+        </div>
+        <div class="filter-chips">
+          <span class="chip active">Red</span>
+          <span class="chip">Green</span>
+          <span class="chip">Blue</span>
+          <span class="chip">Purple</span>
+          <span class="chip">Black</span>
+          <span class="chip">Yellow</span>
+          <span class="chip">1c</span>
+          <span class="chip">2c</span>
+          <span class="chip">Character</span>
+          <span class="chip">Event</span>
+          <span class="chip">Binder</span>
+          <span class="chip">Deck</span>
+        </div>
+        <div class="card-row">
+          <div class="img-placeholder"></div>
+          <div class="info">
+            <div class="code">ST01-004</div>
+            <div class="name">Gum-Gum Jet Pistol</div>
+            <div class="meta">Red 1c Event · Sheet 1 Front</div>
+          </div>
+          <div class="qty">4</div>
+        </div>
+        <div class="empty-state" style="display:none;">
+          <div class="icon-lg">🔍</div>
+          <h3>No results</h3>
+          <p>Try adjusting your search or filters.</p>
+        </div>
+      </div>
+
+      <!-- want list -->
+      <div id="view-want" style="display:none;">
+        <div class="card-row">
+          <div class="img-placeholder"></div>
+          <div class="info">
+            <div class="code">OP01-001</div>
+            <div class="name">Monkey D. Luffy (Parallel)</div>
+            <div class="meta">Want ×2 · Destination: Binder</div>
+          </div>
+          <div class="qty">2</div>
+        </div>
+        <div class="empty-state">
+          <div class="icon-lg">📋</div>
+          <h3>Want list empty</h3>
+          <p>Add cards you're looking to buy.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
