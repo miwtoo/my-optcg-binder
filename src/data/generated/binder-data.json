@@ -1,489 +1,489 @@
 {
   "meta": {
-    "generated": "2026-07-28T21:03:39.235Z",
-    "generator": "my-optcg-binder build-fixture.js",
+    "generated": "2026-07-29T06:48:06.335Z",
+    "generator": "my-optcg-binder generate.js",
     "generatorVersion": "0.1.0",
-    "catalogSource": "heuristic (set-prefix color mapping — no Vega snapshot)",
-    "catalogSourceVersion": "0.1.0-fixture",
+    "catalogSource": "Vega",
+    "catalogSourceVersion": "vegapull v1.2.3 (English, pulled 2026-07-29T05:11:46.714848+07:00, 72300ms)",
     "totalCards": 67,
-    "totalSheets": 4,
-    "dataProvenance": "Fixture derived from source CSVs and set-prefix→color heuristics. Replace by running `npm run generate` with a live Vega snapshot at .vega/."
+    "totalSheets": 10,
+    "dataProvenance": "Generated from Vega snapshot at .vega/ — 4673 card entries, 2665 unique codes, 59 packs"
   },
   "catalog": [
     {
-      "code": "OP16-022",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-045",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-034",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-055",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-054",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-027",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-038",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-042",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP02-068",
-      "name": null,
-      "color": "Green",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "OP05-057",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
       "code": "ST06-015",
-      "name": null,
-      "color": "Purple",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "EB01-028",
-      "name": null,
-      "color": "Blue",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP13-004",
-      "name": null,
-      "color": "Blue",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "OP13-093",
-      "name": null,
-      "color": "Blue",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP12-093",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP13-017",
-      "name": null,
-      "color": "Blue",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP13-005",
-      "name": null,
-      "color": "Blue",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "ST35-003",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "ST35-001",
-      "name": null,
-      "color": "Red",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "OP14-074",
-      "name": null,
+      "name": "Great Eruption",
       "color": "Black",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-091",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "EB03-041",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "EB03-010",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP12-098",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "EB01-042",
-      "name": null,
-      "color": "Blue",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "EB03-008",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP05-007",
-      "name": null,
-      "color": "Red",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "OP12-090",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP05-051",
-      "name": null,
-      "color": "Red",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "EB03-058",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP13-113",
-      "name": null,
-      "color": "Blue",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP07-016",
-      "name": null,
-      "color": "Purple",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "OP07-015",
-      "name": null,
-      "color": "Purple",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "EB03-017",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP11-008",
-      "name": null,
-      "color": "Green",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "EB03-037",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP13-012",
-      "name": null,
-      "color": "Blue",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "P-069",
-      "name": null,
-      "color": null,
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP08-046",
-      "name": null,
-      "color": "Blue",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "OP12-086",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP07-017",
-      "name": null,
-      "color": "Purple",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "EB03-034",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "EB02-017",
-      "name": null,
-      "color": "Black",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-085",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-096",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-086",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP16-099",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP10-062",
-      "name": null,
-      "color": "Red",
-      "cost": 0,
-      "type": "Leader"
-    },
-    {
-      "code": "OP05-042",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP13-051",
-      "name": null,
-      "color": "Blue",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "EB03-052",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP05-069",
-      "name": null,
-      "color": "Red",
-      "cost": null,
-      "type": null
+      "cost": 1,
+      "type": "Event"
     },
     {
       "code": "OP03-110",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
+      "name": "Charlotte Smoothie",
+      "color": "Yellow",
+      "cost": 4,
+      "type": "Character"
     },
     {
-      "code": "EB01-022",
-      "name": null,
-      "color": "Blue",
-      "cost": null,
-      "type": null
+      "code": "OP12-090",
+      "name": "Belo Betty",
+      "color": "Black",
+      "cost": 3,
+      "type": "Character"
     },
     {
-      "code": "OP07-054",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
+      "code": "OP12-093",
+      "name": "Morley",
+      "color": "Black",
+      "cost": 4,
+      "type": "Character"
     },
     {
-      "code": "OP08-043",
-      "name": null,
-      "color": "Blue",
-      "cost": 0,
+      "code": "OP12-098",
+      "name": "Hair Removal Fist",
+      "color": "Black",
+      "cost": 1,
+      "type": "Event"
+    },
+    {
+      "code": "OP13-004",
+      "name": "Sabo",
+      "color": "Red",
+      "cost": 5,
       "type": "Leader"
     },
     {
-      "code": "OP05-034",
-      "name": null,
+      "code": "OP13-005",
+      "name": "Inazuma",
       "color": "Red",
-      "cost": null,
-      "type": null
+      "cost": 4,
+      "type": "Character"
     },
     {
       "code": "OP13-008",
-      "name": null,
-      "color": "Blue",
-      "cost": null,
-      "type": null
+      "name": "Emporio.Ivankov",
+      "color": "Red",
+      "cost": 2,
+      "type": "Character"
     },
     {
-      "code": "P-105",
-      "name": null,
-      "color": null,
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP13-081",
-      "name": null,
-      "color": "Blue",
-      "cost": null,
-      "type": null
+      "code": "OP13-017",
+      "name": "Monkey.D.Dragon",
+      "color": "Red",
+      "cost": 6,
+      "type": "Character"
     },
     {
       "code": "OP13-019",
-      "name": null,
-      "color": "Blue",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "EB03-013",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP12-062",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "OP12-097",
-      "name": null,
-      "color": "Purple",
-      "cost": null,
-      "type": null
-    },
-    {
-      "code": "ST35-004",
-      "name": null,
+      "name": "But Ace Here Said You Deserved It!!",
       "color": "Red",
-      "cost": null,
-      "type": null
+      "cost": 1,
+      "type": "Event"
+    },
+    {
+      "code": "OP13-081",
+      "name": "Koala",
+      "color": "Black",
+      "cost": 5,
+      "type": "Character"
+    },
+    {
+      "code": "P-105",
+      "name": "Sabo",
+      "color": "Black",
+      "cost": 4,
+      "type": "Character"
+    },
+    {
+      "code": "ST35-001",
+      "name": "Hack",
+      "color": "Red",
+      "cost": 4,
+      "type": "Character"
     },
     {
       "code": "ST35-002",
-      "name": null,
+      "name": "Lindbergh",
       "color": "Red",
-      "cost": null,
-      "type": null
+      "cost": 4,
+      "type": "Character"
+    },
+    {
+      "code": "ST35-003",
+      "name": "Karasu",
+      "color": "Black",
+      "cost": 3,
+      "type": "Character"
+    },
+    {
+      "code": "ST35-004",
+      "name": "Koala",
+      "color": "Black",
+      "cost": 7,
+      "type": "Character"
     },
     {
       "code": "ST35-005",
-      "name": null,
-      "color": "Red",
+      "name": "Bartholomew Kuma",
+      "color": "Black",
+      "cost": 5,
+      "type": "Character"
+    },
+    {
+      "code": "OP02-068",
+      "name": "Gum-Gum Rain",
+      "color": "Blue",
       "cost": null,
-      "type": null
+      "type": "Event"
+    },
+    {
+      "code": "OP05-007",
+      "name": "Sabo",
+      "color": "Red",
+      "cost": 6,
+      "type": "Character"
+    },
+    {
+      "code": "OP05-034",
+      "name": "Baby 5",
+      "color": "Green",
+      "cost": 1,
+      "type": "Character"
+    },
+    {
+      "code": "OP05-042",
+      "name": "Issho",
+      "color": "Blue",
+      "cost": 6,
+      "type": "Character"
+    },
+    {
+      "code": "OP05-051",
+      "name": "Borsalino",
+      "color": "Blue",
+      "cost": 7,
+      "type": "Character"
+    },
+    {
+      "code": "OP05-057",
+      "name": "Hound Blaze",
+      "color": "Blue",
+      "cost": 2,
+      "type": "Event"
+    },
+    {
+      "code": "OP05-069",
+      "name": "Trafalgar Law",
+      "color": "Purple",
+      "cost": 3,
+      "type": "Character"
+    },
+    {
+      "code": "OP07-015",
+      "name": "Monkey.D.Dragon",
+      "color": "Red",
+      "cost": 8,
+      "type": "Character"
+    },
+    {
+      "code": "OP07-016",
+      "name": "Galaxy Wink",
+      "color": "Red",
+      "cost": 1,
+      "type": "Event"
+    },
+    {
+      "code": "OP07-017",
+      "name": "Dragon Breath",
+      "color": "Red",
+      "cost": 2,
+      "type": "Event"
+    },
+    {
+      "code": "OP07-054",
+      "name": "Marguerite",
+      "color": "Blue",
+      "cost": 3,
+      "type": "Character"
+    },
+    {
+      "code": "OP08-043",
+      "name": "Edward.Newgate",
+      "color": "Blue",
+      "cost": 10,
+      "type": "Character"
+    },
+    {
+      "code": "OP08-046",
+      "name": "Shakuyaku",
+      "color": "Blue",
+      "cost": 5,
+      "type": "Character"
+    },
+    {
+      "code": "OP10-062",
+      "name": "Violet",
+      "color": "Purple",
+      "cost": 3,
+      "type": "Character"
+    },
+    {
+      "code": "OP11-008",
+      "name": "Doll",
+      "color": "Red",
+      "cost": 4,
+      "type": "Character"
+    },
+    {
+      "code": "OP12-062",
+      "name": "Vinsmoke Sora",
+      "color": "Purple",
+      "cost": 1,
+      "type": "Character"
+    },
+    {
+      "code": "OP12-086",
+      "name": "Koala",
+      "color": "Black",
+      "cost": 1,
+      "type": "Character"
+    },
+    {
+      "code": "OP12-097",
+      "name": "Captains Assembled",
+      "color": "Black",
+      "cost": 1,
+      "type": "Event"
+    },
+    {
+      "code": "OP13-012",
+      "name": "Nefeltari Vivi",
+      "color": "Red",
+      "cost": 1,
+      "type": "Character"
+    },
+    {
+      "code": "OP13-051",
+      "name": "Boa Hancock",
+      "color": "Blue",
+      "cost": 3,
+      "type": "Character"
+    },
+    {
+      "code": "OP13-093",
+      "name": "Morgans",
+      "color": "Black",
+      "cost": 3,
+      "type": "Character"
+    },
+    {
+      "code": "OP13-113",
+      "name": "Lilith",
+      "color": "Yellow",
+      "cost": 1,
+      "type": "Character"
+    },
+    {
+      "code": "OP14-074",
+      "name": "Monet",
+      "color": "Purple",
+      "cost": 5,
+      "type": "Character"
+    },
+    {
+      "code": "OP16-022",
+      "name": "Monkey.D.Luffy",
+      "color": "Green",
+      "cost": 4,
+      "type": "Leader"
+    },
+    {
+      "code": "OP16-027",
+      "name": "Jinbe",
+      "color": "Green",
+      "cost": 2,
+      "type": "Character"
+    },
+    {
+      "code": "OP16-034",
+      "name": "Monkey.D.Luffy",
+      "color": "Green",
+      "cost": 1,
+      "type": "Character"
+    },
+    {
+      "code": "OP16-038",
+      "name": "Let's Go!! To the Navy Headquarters!!",
+      "color": "Green",
+      "cost": 1,
+      "type": "Event"
+    },
+    {
+      "code": "OP16-042",
+      "name": "Prisoner of Impel Down",
+      "color": "Blue",
+      "cost": 6,
+      "type": "Character"
+    },
+    {
+      "code": "OP16-045",
+      "name": "Crocodile",
+      "color": "Blue",
+      "cost": 4,
+      "type": "Character"
+    },
+    {
+      "code": "OP16-054",
+      "name": "Mr.1(Daz.Bonez)",
+      "color": "Blue",
+      "cost": 2,
+      "type": "Character"
+    },
+    {
+      "code": "OP16-055",
+      "name": "Mr.2.Bon.Kurei(Bentham)",
+      "color": "Blue",
+      "cost": 2,
+      "type": "Character"
+    },
+    {
+      "code": "OP16-085",
+      "name": "Kouzuki Momonosuke",
+      "color": "Black",
+      "cost": 9,
+      "type": "Character"
+    },
+    {
+      "code": "OP16-086",
+      "name": "Sanji",
+      "color": "Black",
+      "cost": 8,
+      "type": "Character"
+    },
+    {
+      "code": "OP16-091",
+      "name": "Nami",
+      "color": "Black",
+      "cost": 1,
+      "type": "Character"
+    },
+    {
+      "code": "OP16-096",
+      "name": "Yamato",
+      "color": "Black",
+      "cost": 8,
+      "type": "Character"
+    },
+    {
+      "code": "OP16-099",
+      "name": "I've Come Here... To Cut Those Chains!!!",
+      "color": "Black",
+      "cost": 1,
+      "type": "Event"
+    },
+    {
+      "code": "EB01-022",
+      "name": "Inazuma",
+      "color": "Blue",
+      "cost": 6,
+      "type": "Character"
+    },
+    {
+      "code": "EB01-028",
+      "name": "Gum-Gum Champion Rifle",
+      "color": "Blue",
+      "cost": 1,
+      "type": "Event"
+    },
+    {
+      "code": "EB01-042",
+      "name": "Scarlet",
+      "color": "Black",
+      "cost": 2,
+      "type": "Character"
+    },
+    {
+      "code": "EB02-017",
+      "name": "Nami",
+      "color": "Green",
+      "cost": 1,
+      "type": "Character"
+    },
+    {
+      "code": "EB03-008",
+      "name": "Hibari",
+      "color": "Red",
+      "cost": 3,
+      "type": "Character"
+    },
+    {
+      "code": "EB03-010",
+      "name": "Monet",
+      "color": "Red",
+      "cost": 5,
+      "type": "Character"
+    },
+    {
+      "code": "EB03-013",
+      "name": "Carrot",
+      "color": "Green",
+      "cost": 6,
+      "type": "Character"
+    },
+    {
+      "code": "EB03-017",
+      "name": "Jewelry Bonney",
+      "color": "Green",
+      "cost": 5,
+      "type": "Character"
+    },
+    {
+      "code": "EB03-034",
+      "name": "Charlotte Linlin",
+      "color": "Purple",
+      "cost": 7,
+      "type": "Character"
+    },
+    {
+      "code": "EB03-037",
+      "name": "Lim",
+      "color": "Purple",
+      "cost": 4,
+      "type": "Character"
+    },
+    {
+      "code": "EB03-041",
+      "name": "Kujyaku",
+      "color": "Black",
+      "cost": 4,
+      "type": "Character"
+    },
+    {
+      "code": "EB03-052",
+      "name": "Shirahoshi",
+      "color": "Yellow",
+      "cost": 3,
+      "type": "Character"
+    },
+    {
+      "code": "EB03-058",
+      "name": "Lilith",
+      "color": "Yellow",
+      "cost": 5,
+      "type": "Character"
+    },
+    {
+      "code": "P-069",
+      "name": "Koala",
+      "color": "Red",
+      "cost": 1,
+      "type": "Character"
     }
   ],
   "cards": [
     {
       "code": "OP16-022",
-      "name": null,
+      "name": "Monkey.D.Luffy",
       "owned": 1,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -496,7 +496,7 @@
     },
     {
       "code": "OP16-045",
-      "name": null,
+      "name": "Crocodile",
       "owned": 4,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -509,7 +509,7 @@
     },
     {
       "code": "OP16-034",
-      "name": null,
+      "name": "Monkey.D.Luffy",
       "owned": 4,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -522,7 +522,7 @@
     },
     {
       "code": "OP16-055",
-      "name": null,
+      "name": "Mr.2.Bon.Kurei(Bentham)",
       "owned": 4,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -535,7 +535,7 @@
     },
     {
       "code": "OP16-054",
-      "name": null,
+      "name": "Mr.1(Daz.Bonez)",
       "owned": 4,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -548,7 +548,7 @@
     },
     {
       "code": "OP16-027",
-      "name": null,
+      "name": "Jinbe",
       "owned": 1,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -561,7 +561,7 @@
     },
     {
       "code": "OP16-038",
-      "name": null,
+      "name": "Let's Go!! To the Navy Headquarters!!",
       "owned": 3,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -574,7 +574,7 @@
     },
     {
       "code": "OP16-042",
-      "name": null,
+      "name": "Prisoner of Impel Down",
       "owned": 1,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -587,7 +587,7 @@
     },
     {
       "code": "OP02-068",
-      "name": null,
+      "name": "Gum-Gum Rain",
       "owned": 1,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -600,7 +600,7 @@
     },
     {
       "code": "OP05-057",
-      "name": null,
+      "name": "Hound Blaze",
       "owned": 4,
       "binderQuantity": 2,
       "deckAllocations": [
@@ -610,38 +610,38 @@
         }
       ],
       "binderLocation": {
-        "sheet": 1,
-        "side": "Back",
-        "slot": 7
+        "sheet": 4,
+        "side": "Front",
+        "slot": 6
       }
     },
     {
       "code": "ST06-015",
-      "name": null,
+      "name": "Great Eruption",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
-        "sheet": 1,
-        "side": "Back",
-        "slot": 4
-      }
-    },
-    {
-      "code": "EB01-028",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 2,
+        "sheet": 7,
         "side": "Front",
         "slot": 7
       }
     },
     {
+      "code": "EB01-028",
+      "name": "Gum-Gum Champion Rifle",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 4,
+        "side": "Front",
+        "slot": 2
+      }
+    },
+    {
       "code": "OP13-004",
-      "name": null,
+      "name": "Sabo",
       "owned": 2,
       "binderQuantity": 1,
       "deckAllocations": [
@@ -653,24 +653,24 @@
       "binderLocation": {
         "sheet": 1,
         "side": "Front",
-        "slot": 8
+        "slot": 1
       }
     },
     {
       "code": "OP13-093",
-      "name": null,
+      "name": "Morgans",
       "owned": 2,
       "binderQuantity": 2,
       "deckAllocations": [],
       "binderLocation": {
-        "sheet": 2,
+        "sheet": 7,
         "side": "Back",
-        "slot": 6
+        "slot": 7
       }
     },
     {
       "code": "OP12-093",
-      "name": null,
+      "name": "Morley",
       "owned": 8,
       "binderQuantity": 4,
       "deckAllocations": [
@@ -680,14 +680,14 @@
         }
       ],
       "binderLocation": {
-        "sheet": 3,
-        "side": "Back",
+        "sheet": 8,
+        "side": "Front",
         "slot": 4
       }
     },
     {
       "code": "OP13-017",
-      "name": null,
+      "name": "Monkey.D.Dragon",
       "owned": 13,
       "binderQuantity": 9,
       "deckAllocations": [
@@ -699,12 +699,12 @@
       "binderLocation": {
         "sheet": 2,
         "side": "Back",
-        "slot": 2
+        "slot": 8
       }
     },
     {
       "code": "OP13-005",
-      "name": null,
+      "name": "Inazuma",
       "owned": 8,
       "binderQuantity": 4,
       "deckAllocations": [
@@ -716,12 +716,12 @@
       "binderLocation": {
         "sheet": 2,
         "side": "Front",
-        "slot": 9
+        "slot": 7
       }
     },
     {
       "code": "ST35-003",
-      "name": null,
+      "name": "Karasu",
       "owned": 8,
       "binderQuantity": 4,
       "deckAllocations": [
@@ -731,79 +731,79 @@
         }
       ],
       "binderLocation": {
-        "sheet": 2,
-        "side": "Front",
-        "slot": 5
-      }
-    },
-    {
-      "code": "ST35-001",
-      "name": null,
-      "owned": 8,
-      "binderQuantity": 4,
-      "deckAllocations": [
-        {
-          "deck": "Sabo",
-          "quantity": 4
-        }
-      ],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Front",
-        "slot": 4
-      }
-    },
-    {
-      "code": "OP14-074",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 3,
+        "sheet": 7,
         "side": "Back",
         "slot": 8
       }
     },
     {
-      "code": "OP16-091",
-      "name": null,
+      "code": "ST35-001",
+      "name": "Hack",
+      "owned": 8,
+      "binderQuantity": 4,
+      "deckAllocations": [
+        {
+          "deck": "Sabo",
+          "quantity": 4
+        }
+      ],
+      "binderLocation": {
+        "sheet": 2,
+        "side": "Front",
+        "slot": 8
+      }
+    },
+    {
+      "code": "OP14-074",
+      "name": "Monet",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
-        "sheet": 2,
+        "sheet": 6,
         "side": "Front",
-        "slot": 2
+        "slot": 9
+      }
+    },
+    {
+      "code": "OP16-091",
+      "name": "Nami",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 6,
+        "side": "Back",
+        "slot": 9
       }
     },
     {
       "code": "EB03-041",
-      "name": null,
+      "name": "Kujyaku",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
-        "sheet": 3,
+        "sheet": 8,
         "side": "Front",
-        "slot": 5
+        "slot": 3
       }
     },
     {
       "code": "EB03-010",
-      "name": null,
+      "name": "Monet",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
         "sheet": 2,
         "side": "Back",
-        "slot": 9
+        "slot": 3
       }
     },
     {
       "code": "OP12-098",
-      "name": null,
+      "name": "Hair Removal Fist",
       "owned": 8,
       "binderQuantity": 6,
       "deckAllocations": [
@@ -813,50 +813,50 @@
         }
       ],
       "binderLocation": {
-        "sheet": 3,
-        "side": "Back",
-        "slot": 6
+        "sheet": 7,
+        "side": "Front",
+        "slot": 5
       }
     },
     {
       "code": "EB01-042",
-      "name": null,
+      "name": "Scarlet",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 7,
+        "side": "Back",
+        "slot": 2
+      }
+    },
+    {
+      "code": "EB03-008",
+      "name": "Hibari",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
         "sheet": 2,
         "side": "Front",
-        "slot": 8
+        "slot": 2
       }
     },
     {
-      "code": "EB03-008",
-      "name": null,
+      "code": "OP05-007",
+      "name": "Sabo",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
         "sheet": 2,
         "side": "Back",
-        "slot": 8
-      }
-    },
-    {
-      "code": "OP05-007",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Front",
-        "slot": 1
+        "slot": 7
       }
     },
     {
       "code": "OP12-090",
-      "name": null,
+      "name": "Belo Betty",
       "owned": 8,
       "binderQuantity": 4,
       "deckAllocations": [
@@ -866,134 +866,50 @@
         }
       ],
       "binderLocation": {
-        "sheet": 3,
+        "sheet": 7,
         "side": "Back",
-        "slot": 3
+        "slot": 6
       }
     },
     {
       "code": "OP05-051",
-      "name": null,
+      "name": "Borsalino",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
-        "sheet": 1,
+        "sheet": 5,
         "side": "Front",
-        "slot": 2
+        "slot": 6
       }
     },
     {
       "code": "EB03-058",
-      "name": null,
+      "name": "Lilith",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
-        "sheet": 3,
-        "side": "Front",
+        "sheet": 9,
+        "side": "Back",
         "slot": 7
       }
     },
     {
       "code": "OP13-113",
-      "name": null,
+      "name": "Lilith",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
-        "sheet": 2,
-        "side": "Back",
-        "slot": 7
-      }
-    },
-    {
-      "code": "OP07-016",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Back",
-        "slot": 2
-      }
-    },
-    {
-      "code": "OP07-015",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Back",
-        "slot": 1
-      }
-    },
-    {
-      "code": "EB03-017",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 3,
-        "side": "Front",
-        "slot": 2
-      }
-    },
-    {
-      "code": "OP11-008",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Front",
-        "slot": 5
-      }
-    },
-    {
-      "code": "EB03-037",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 3,
+        "sheet": 9,
         "side": "Front",
         "slot": 4
       }
     },
     {
-      "code": "OP13-012",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Front",
-        "slot": 9
-      }
-    },
-    {
-      "code": "P-069",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 3,
-        "side": "Back",
-        "slot": 9
-      }
-    },
-    {
-      "code": "OP08-046",
-      "name": null,
+      "code": "OP07-016",
+      "name": "Galaxy Wink",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
@@ -1004,34 +920,10 @@
       }
     },
     {
-      "code": "OP12-086",
-      "name": null,
+      "code": "OP07-015",
+      "name": "Monkey.D.Dragon",
       "owned": 1,
       "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 3,
-        "side": "Back",
-        "slot": 2
-      }
-    },
-    {
-      "code": "OP07-017",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Back",
-        "slot": 3
-      }
-    },
-    {
-      "code": "EB03-034",
-      "name": null,
-      "owned": 2,
-      "binderQuantity": 2,
       "deckAllocations": [],
       "binderLocation": {
         "sheet": 3,
@@ -1040,188 +932,296 @@
       }
     },
     {
-      "code": "EB02-017",
-      "name": null,
+      "code": "EB03-017",
+      "name": "Jewelry Bonney",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
         "sheet": 3,
         "side": "Back",
+        "slot": 3
+      }
+    },
+    {
+      "code": "OP11-008",
+      "name": "Doll",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 2,
+        "side": "Front",
+        "slot": 6
+      }
+    },
+    {
+      "code": "EB03-037",
+      "name": "Lim",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 6,
+        "side": "Front",
+        "slot": 5
+      }
+    },
+    {
+      "code": "OP13-012",
+      "name": "Nefeltari Vivi",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 1,
+        "side": "Front",
+        "slot": 2
+      }
+    },
+    {
+      "code": "P-069",
+      "name": "Koala",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 1,
+        "side": "Front",
+        "slot": 3
+      }
+    },
+    {
+      "code": "OP08-046",
+      "name": "Shakuyaku",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 4,
+        "side": "Back",
+        "slot": 6
+      }
+    },
+    {
+      "code": "OP12-086",
+      "name": "Koala",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 6,
+        "side": "Back",
+        "slot": 8
+      }
+    },
+    {
+      "code": "OP07-017",
+      "name": "Dragon Breath",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 1,
+        "side": "Back",
+        "slot": 7
+      }
+    },
+    {
+      "code": "EB03-034",
+      "name": "Charlotte Linlin",
+      "owned": 2,
+      "binderQuantity": 2,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 6,
+        "side": "Back",
+        "slot": 4
+      }
+    },
+    {
+      "code": "EB02-017",
+      "name": "Nami",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 3,
+        "side": "Front",
         "slot": 7
       }
     },
     {
       "code": "OP16-085",
-      "name": null,
+      "name": "Kouzuki Momonosuke",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
-        "sheet": 1,
+        "sheet": 8,
         "side": "Back",
         "slot": 9
       }
     },
     {
       "code": "OP16-096",
-      "name": null,
+      "name": "Yamato",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
-        "sheet": 2,
-        "side": "Front",
-        "slot": 3
-      }
-    },
-    {
-      "code": "OP16-086",
-      "name": null,
-      "owned": 2,
-      "binderQuantity": 2,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 2,
-        "side": "Front",
-        "slot": 1
-      }
-    },
-    {
-      "code": "OP16-099",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 2,
-        "side": "Front",
-        "slot": 4
-      }
-    },
-    {
-      "code": "OP10-062",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Front",
-        "slot": 3
-      }
-    },
-    {
-      "code": "OP05-042",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Back",
-        "slot": 6
-      }
-    },
-    {
-      "code": "OP13-051",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 2,
-        "side": "Back",
-        "slot": 4
-      }
-    },
-    {
-      "code": "EB03-052",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 3,
-        "side": "Front",
-        "slot": 6
-      }
-    },
-    {
-      "code": "OP05-069",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Back",
-        "slot": 8
-      }
-    },
-    {
-      "code": "OP03-110",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 3,
-        "side": "Front",
-        "slot": 8
-      }
-    },
-    {
-      "code": "EB01-022",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 2,
-        "side": "Front",
-        "slot": 6
-      }
-    },
-    {
-      "code": "OP07-054",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 3,
-        "side": "Front",
-        "slot": 9
-      }
-    },
-    {
-      "code": "OP08-043",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Front",
-        "slot": 6
-      }
-    },
-    {
-      "code": "OP05-034",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 1,
+        "sheet": 8,
         "side": "Back",
         "slot": 5
       }
     },
     {
+      "code": "OP16-086",
+      "name": "Sanji",
+      "owned": 2,
+      "binderQuantity": 2,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 8,
+        "side": "Back",
+        "slot": 4
+      }
+    },
+    {
+      "code": "OP16-099",
+      "name": "I've Come Here... To Cut Those Chains!!!",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 7,
+        "side": "Front",
+        "slot": 6
+      }
+    },
+    {
+      "code": "OP10-062",
+      "name": "Violet",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 6,
+        "side": "Front",
+        "slot": 1
+      }
+    },
+    {
+      "code": "OP05-042",
+      "name": "Issho",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 5,
+        "side": "Front",
+        "slot": 2
+      }
+    },
+    {
+      "code": "OP13-051",
+      "name": "Boa Hancock",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 4,
+        "side": "Back",
+        "slot": 2
+      }
+    },
+    {
+      "code": "EB03-052",
+      "name": "Shirahoshi",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 9,
+        "side": "Front",
+        "slot": 8
+      }
+    },
+    {
+      "code": "OP05-069",
+      "name": "Trafalgar Law",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 5,
+        "side": "Back",
+        "slot": 9
+      }
+    },
+    {
+      "code": "OP03-110",
+      "name": "Charlotte Smoothie",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 9,
+        "side": "Back",
+        "slot": 3
+      }
+    },
+    {
+      "code": "EB01-022",
+      "name": "Inazuma",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 5,
+        "side": "Front",
+        "slot": 1
+      }
+    },
+    {
+      "code": "OP07-054",
+      "name": "Marguerite",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 4,
+        "side": "Back",
+        "slot": 1
+      }
+    },
+    {
+      "code": "OP08-043",
+      "name": "Edward.Newgate",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 5,
+        "side": "Back",
+        "slot": 1
+      }
+    },
+    {
+      "code": "OP05-034",
+      "name": "Baby 5",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 3,
+        "side": "Front",
+        "slot": 8
+      }
+    },
+    {
       "code": "OP13-008",
-      "name": null,
+      "name": "Emporio.Ivankov",
       "owned": 8,
       "binderQuantity": 6,
       "deckAllocations": [
@@ -1231,14 +1231,14 @@
         }
       ],
       "binderLocation": {
-        "sheet": 2,
+        "sheet": 1,
         "side": "Back",
-        "slot": 1
+        "slot": 3
       }
     },
     {
       "code": "P-105",
-      "name": null,
+      "name": "Sabo",
       "owned": 8,
       "binderQuantity": 4,
       "deckAllocations": [
@@ -1248,31 +1248,31 @@
         }
       ],
       "binderLocation": {
-        "sheet": 4,
+        "sheet": 8,
         "side": "Front",
-        "slot": 1
-      }
-    },
-    {
-      "code": "OP13-081",
-      "name": null,
-      "owned": 8,
-      "binderQuantity": 4,
-      "deckAllocations": [
-        {
-          "deck": "Sabo",
-          "quantity": 4
-        }
-      ],
-      "binderLocation": {
-        "sheet": 2,
-        "side": "Back",
         "slot": 5
       }
     },
     {
+      "code": "OP13-081",
+      "name": "Koala",
+      "owned": 8,
+      "binderQuantity": 4,
+      "deckAllocations": [
+        {
+          "deck": "Sabo",
+          "quantity": 4
+        }
+      ],
+      "binderLocation": {
+        "sheet": 8,
+        "side": "Front",
+        "slot": 9
+      }
+    },
+    {
       "code": "OP13-019",
-      "name": null,
+      "name": "But Ace Here Said You Deserved It!!",
       "owned": 11,
       "binderQuantity": 9,
       "deckAllocations": [
@@ -1282,50 +1282,50 @@
         }
       ],
       "binderLocation": {
-        "sheet": 2,
-        "side": "Back",
-        "slot": 3
+        "sheet": 1,
+        "side": "Front",
+        "slot": 8
       }
     },
     {
       "code": "EB03-013",
-      "name": null,
-      "owned": 1,
-      "binderQuantity": 1,
-      "deckAllocations": [],
-      "binderLocation": {
-        "sheet": 3,
-        "side": "Front",
-        "slot": 1
-      }
-    },
-    {
-      "code": "OP12-062",
-      "name": null,
+      "name": "Carrot",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
         "sheet": 3,
         "side": "Back",
-        "slot": 1
+        "slot": 7
       }
     },
     {
-      "code": "OP12-097",
-      "name": null,
+      "code": "OP12-062",
+      "name": "Vinsmoke Sora",
       "owned": 1,
       "binderQuantity": 1,
       "deckAllocations": [],
       "binderLocation": {
-        "sheet": 3,
+        "sheet": 5,
         "side": "Back",
         "slot": 5
       }
     },
     {
+      "code": "OP12-097",
+      "name": "Captains Assembled",
+      "owned": 1,
+      "binderQuantity": 1,
+      "deckAllocations": [],
+      "binderLocation": {
+        "sheet": 7,
+        "side": "Front",
+        "slot": 4
+      }
+    },
+    {
       "code": "ST35-004",
-      "name": null,
+      "name": "Koala",
       "owned": 4,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -1338,7 +1338,7 @@
     },
     {
       "code": "ST35-002",
-      "name": null,
+      "name": "Lindbergh",
       "owned": 4,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -1351,7 +1351,7 @@
     },
     {
       "code": "ST35-005",
-      "name": null,
+      "name": "Bartholomew Kuma",
       "owned": 4,
       "binderQuantity": 0,
       "deckAllocations": [
@@ -1369,231 +1369,296 @@
       "side": "Front",
       "slots": [
         {
-          "code": "OP05-007",
-          "quantity": 1
-        },
-        {
-          "code": "OP05-051",
-          "quantity": 1
-        },
-        {
-          "code": "OP10-062",
-          "quantity": 1
-        },
-        {
-          "code": "ST35-001",
-          "quantity": 1
-        },
-        {
-          "code": "OP11-008",
-          "quantity": 1
-        },
-        {
-          "code": "OP08-043",
-          "quantity": 1
-        },
-        {
-          "code": "OP08-046",
-          "quantity": 1
-        },
-        {
           "code": "OP13-004",
           "quantity": 1
         },
         {
           "code": "OP13-012",
           "quantity": 1
-        }
-      ]
-    },
-    {
-      "sheet": 1,
-      "side": "Back",
-      "slots": [
+        },
         {
-          "code": "OP07-015",
+          "code": "P-069",
           "quantity": 1
         },
+        null,
+        null,
+        null,
         {
           "code": "OP07-016",
-          "quantity": 1
-        },
-        {
-          "code": "OP07-017",
-          "quantity": 1
-        },
-        {
-          "code": "ST06-015",
-          "quantity": 1
-        },
-        {
-          "code": "OP05-034",
-          "quantity": 1
-        },
-        {
-          "code": "OP05-042",
-          "quantity": 1
-        },
-        {
-          "code": "OP05-057",
-          "quantity": 1
-        },
-        {
-          "code": "OP05-069",
-          "quantity": 1
-        },
-        {
-          "code": "OP16-085",
-          "quantity": 1
-        }
-      ]
-    },
-    {
-      "sheet": 2,
-      "side": "Front",
-      "slots": [
-        {
-          "code": "OP16-086",
-          "quantity": 1
-        },
-        {
-          "code": "OP16-091",
-          "quantity": 1
-        },
-        {
-          "code": "OP16-096",
-          "quantity": 1
-        },
-        {
-          "code": "OP16-099",
-          "quantity": 1
-        },
-        {
-          "code": "ST35-003",
-          "quantity": 1
-        },
-        {
-          "code": "EB01-022",
-          "quantity": 1
-        },
-        {
-          "code": "EB01-028",
-          "quantity": 1
-        },
-        {
-          "code": "EB01-042",
-          "quantity": 1
-        },
-        {
-          "code": "OP13-005",
-          "quantity": 1
-        }
-      ]
-    },
-    {
-      "sheet": 2,
-      "side": "Back",
-      "slots": [
-        {
-          "code": "OP13-008",
-          "quantity": 1
-        },
-        {
-          "code": "OP13-017",
           "quantity": 1
         },
         {
           "code": "OP13-019",
           "quantity": 1
         },
+        null
+      ]
+    },
+    {
+      "sheet": 1,
+      "side": "Back",
+      "slots": [
+        null,
+        null,
         {
-          "code": "OP13-051",
+          "code": "OP13-008",
           "quantity": 1
         },
+        null,
+        null,
+        null,
         {
-          "code": "OP13-081",
+          "code": "OP07-017",
           "quantity": 1
         },
-        {
-          "code": "OP13-093",
-          "quantity": 1
-        },
-        {
-          "code": "OP13-113",
-          "quantity": 1
-        },
+        null,
+        null
+      ]
+    },
+    {
+      "sheet": 2,
+      "side": "Front",
+      "slots": [
+        null,
         {
           "code": "EB03-008",
           "quantity": 1
         },
+        null,
+        null,
+        null,
+        {
+          "code": "OP11-008",
+          "quantity": 1
+        },
+        {
+          "code": "OP13-005",
+          "quantity": 1
+        },
+        {
+          "code": "ST35-001",
+          "quantity": 1
+        },
+        null
+      ]
+    },
+    {
+      "sheet": 2,
+      "side": "Back",
+      "slots": [
+        null,
+        null,
         {
           "code": "EB03-010",
           "quantity": 1
-        }
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "OP05-007",
+          "quantity": 1
+        },
+        {
+          "code": "OP13-017",
+          "quantity": 1
+        },
+        null
       ]
     },
     {
       "sheet": 3,
       "side": "Front",
       "slots": [
+        null,
+        null,
         {
-          "code": "EB03-013",
+          "code": "OP07-015",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "EB02-017",
           "quantity": 1
         },
         {
-          "code": "EB03-017",
+          "code": "OP05-034",
           "quantity": 1
         },
-        {
-          "code": "EB03-034",
-          "quantity": 1
-        },
-        {
-          "code": "EB03-037",
-          "quantity": 1
-        },
-        {
-          "code": "EB03-041",
-          "quantity": 1
-        },
-        {
-          "code": "EB03-052",
-          "quantity": 1
-        },
-        {
-          "code": "EB03-058",
-          "quantity": 1
-        },
-        {
-          "code": "OP03-110",
-          "quantity": 1
-        },
-        {
-          "code": "OP07-054",
-          "quantity": 1
-        }
+        null
       ]
     },
     {
       "sheet": 3,
       "side": "Back",
       "slots": [
+        null,
+        null,
+        {
+          "code": "EB03-017",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "EB03-013",
+          "quantity": 1
+        },
+        null,
+        null
+      ]
+    },
+    {
+      "sheet": 4,
+      "side": "Front",
+      "slots": [
+        null,
+        {
+          "code": "EB01-028",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "OP05-057",
+          "quantity": 1
+        },
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sheet": 4,
+      "side": "Back",
+      "slots": [
+        {
+          "code": "OP07-054",
+          "quantity": 1
+        },
+        {
+          "code": "OP13-051",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "OP08-046",
+          "quantity": 1
+        },
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sheet": 5,
+      "side": "Front",
+      "slots": [
+        {
+          "code": "EB01-022",
+          "quantity": 1
+        },
+        {
+          "code": "OP05-042",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "OP05-051",
+          "quantity": 1
+        },
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "sheet": 5,
+      "side": "Back",
+      "slots": [
+        {
+          "code": "OP08-043",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
         {
           "code": "OP12-062",
           "quantity": 1
         },
+        null,
+        null,
+        null,
+        {
+          "code": "OP05-069",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "sheet": 6,
+      "side": "Front",
+      "slots": [
+        {
+          "code": "OP10-062",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "EB03-037",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "OP14-074",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "sheet": 6,
+      "side": "Back",
+      "slots": [
+        null,
+        null,
+        null,
+        {
+          "code": "EB03-034",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
         {
           "code": "OP12-086",
           "quantity": 1
         },
         {
-          "code": "OP12-090",
+          "code": "OP16-091",
           "quantity": 1
-        },
-        {
-          "code": "OP12-093",
-          "quantity": 1
-        },
+        }
+      ]
+    },
+    {
+      "sheet": 7,
+      "side": "Front",
+      "slots": [
+        null,
+        null,
+        null,
         {
           "code": "OP12-097",
           "quantity": 1
@@ -1603,27 +1668,142 @@
           "quantity": 1
         },
         {
-          "code": "EB02-017",
+          "code": "OP16-099",
           "quantity": 1
         },
         {
-          "code": "OP14-074",
+          "code": "ST06-015",
+          "quantity": 1
+        },
+        null,
+        null
+      ]
+    },
+    {
+      "sheet": 7,
+      "side": "Back",
+      "slots": [
+        null,
+        {
+          "code": "EB01-042",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "OP12-090",
           "quantity": 1
         },
         {
-          "code": "P-069",
+          "code": "OP13-093",
+          "quantity": 1
+        },
+        {
+          "code": "ST35-003",
+          "quantity": 1
+        },
+        null
+      ]
+    },
+    {
+      "sheet": 8,
+      "side": "Front",
+      "slots": [
+        null,
+        null,
+        {
+          "code": "EB03-041",
+          "quantity": 1
+        },
+        {
+          "code": "OP12-093",
+          "quantity": 1
+        },
+        {
+          "code": "P-105",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "OP13-081",
           "quantity": 1
         }
       ]
     },
     {
-      "sheet": 4,
-      "side": "Front",
+      "sheet": 8,
+      "side": "Back",
       "slots": [
+        null,
+        null,
+        null,
         {
-          "code": "P-105",
+          "code": "OP16-086",
           "quantity": 1
         },
+        {
+          "code": "OP16-096",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "OP16-085",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "sheet": 9,
+      "side": "Front",
+      "slots": [
+        null,
+        null,
+        null,
+        {
+          "code": "OP13-113",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "EB03-052",
+          "quantity": 1
+        },
+        null
+      ]
+    },
+    {
+      "sheet": 9,
+      "side": "Back",
+      "slots": [
+        null,
+        null,
+        {
+          "code": "OP03-110",
+          "quantity": 1
+        },
+        null,
+        null,
+        null,
+        {
+          "code": "EB03-058",
+          "quantity": 1
+        },
+        null,
+        null
+      ]
+    },
+    {
+      "sheet": 10,
+      "side": "Front",
+      "slots": [
+        null,
         null,
         null,
         null,
@@ -1635,7 +1815,7 @@
       ]
     },
     {
-      "sheet": 4,
+      "sheet": 10,
       "side": "Back",
       "slots": [
         null,
@@ -1653,10 +1833,10 @@
   "binder": {
     "totalPossessedCards": 182,
     "totalUniqueCodes": 67,
-    "totalSheets": 4,
+    "totalSheets": 10,
     "totalDeckCards": 76,
     "totalBinderCards": 106,
-    "reservedSlots": 17,
+    "reservedSlots": 125,
     "overflowSheets": 0
   },
   "wanted": [
@@ -1697,7 +1877,7 @@
     }
   ],
   "sources": {
-    "generated": "2026-07-28T21:03:39.228Z",
+    "generated": "2026-07-29T06:48:05.993Z",
     "files": {
       "One Piece TCG Collection - All.csv": {
         "checksum": "f1cfbeb17fef3d32e7a70914caace3e71fd38500a8f6a0a09170e388e00d13c0",
@@ -1714,6 +1894,250 @@
       "Want to Buy.csv": {
         "checksum": "8f28ca896edb57674a5f66d7419aed25ef92359b6d5b836c2459d7dd5bffe76e",
         "rowCount": 7
+      },
+      ".vega/json/cards_569001.json": {
+        "checksum": "edddd2616996dd97804d0c3f3fdfbf7c4c6a6b0015864afd9a44ab4f9d75f9d0",
+        "rowCount": 17
+      },
+      ".vega/json/cards_569002.json": {
+        "checksum": "752b00264c7b5f91f75141173e29bc32ec610b7dbcfc0ec7308da6709b6ac533",
+        "rowCount": 17
+      },
+      ".vega/json/cards_569003.json": {
+        "checksum": "66df3879bad67d902c962491148fd65b9ae893f73dd39ec950f50b21ec97845d",
+        "rowCount": 17
+      },
+      ".vega/json/cards_569004.json": {
+        "checksum": "9290f8e27f5c7fd966780fcd24e5cb8dfe54199f1ce59059b72832bb8112d903",
+        "rowCount": 17
+      },
+      ".vega/json/cards_569005.json": {
+        "checksum": "41a73778912f415c3aa492b0867c774fc8b85417821f9284f00e01813af9b5bd",
+        "rowCount": 17
+      },
+      ".vega/json/cards_569006.json": {
+        "checksum": "1c80625de4bb2b6ac36709c4a727ee27e6d5d345c1f02125a6a39dd23bde9b75",
+        "rowCount": 17
+      },
+      ".vega/json/cards_569007.json": {
+        "checksum": "35435d5b7a64a04f8c7d04f938082c71a56d035b47a1f98a00cc4a47272ef6df",
+        "rowCount": 17
+      },
+      ".vega/json/cards_569008.json": {
+        "checksum": "df124b55514e3a03581960ca02d3aa7ae4e856bbdcdbadcfd934237504339ccd",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569009.json": {
+        "checksum": "94f5765497a3e8738ca2d61de4c38e9d1fee3c6d799dc887d99302b6748d5c18",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569010.json": {
+        "checksum": "924228b564923eda2d99b66feead3659bf1ab9c5c701b81e79a8c3c9c561f22d",
+        "rowCount": 19
+      },
+      ".vega/json/cards_569011.json": {
+        "checksum": "02ecd36a0cc5eb78c6926adfacec12ba8226dc37a4a705701f36e1567883ab5a",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569012.json": {
+        "checksum": "efa53a20440c495683036cf994f448bd0dd69bae033b9441fd017db396ce6ff7",
+        "rowCount": 17
+      },
+      ".vega/json/cards_569013.json": {
+        "checksum": "c2b7394ca815719bc00259c25c27ae3178a0ff98b25a0172f89365493734aa63",
+        "rowCount": 35
+      },
+      ".vega/json/cards_569014.json": {
+        "checksum": "54902075318b6c2757998a61824d6041ca94a54c1d5af03424576fd6e0a4607e",
+        "rowCount": 17
+      },
+      ".vega/json/cards_569015.json": {
+        "checksum": "e3f8abaa97f678562ac8d7a36c6257fc4d4c1c731ae5def5e647cbdb65417c84",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569016.json": {
+        "checksum": "99a457eb46489b3f9b99d528764dc0db55da5d982e8165f778f947546c61ee4c",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569017.json": {
+        "checksum": "2e36ac529d96755eb5ff9b61698e7e7d6a2649f4f645e7c450049dcb1a104c0d",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569018.json": {
+        "checksum": "d39cc086af3c515256df35b801cfe7671791f5b0215c177730e3d76e71997946",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569019.json": {
+        "checksum": "feabb71290e97c9a25454f0a28cd7c9070ea58ddb648e6614bc85f2569e3fe32",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569020.json": {
+        "checksum": "2456efeb8d572b51c4f7a1d736a21c4f071769e9b40c3767b1c4c816f0ca267e",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569021.json": {
+        "checksum": "81a8728bc6757f5b237f78ed8d15f773289a86b1bcef1cb646aa818f4b481a20",
+        "rowCount": 32
+      },
+      ".vega/json/cards_569022.json": {
+        "checksum": "e556be0defe0625e67fdc625c51d00723d263afbe84fa3713ad1d477dac03213",
+        "rowCount": 31
+      },
+      ".vega/json/cards_569023.json": {
+        "checksum": "59135ac7e35ac25bd0679760c7ccf7d0f816710ced6c40f534dfd01d16576737",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569024.json": {
+        "checksum": "b5c5944185b66e7f8b14ae1807040d0c4caea1e3a655ba604762f78c21aa6f9f",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569025.json": {
+        "checksum": "96111dee5afe1bec7218eeb401e52352c40bdd2942c6e64b29d401206759272d",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569026.json": {
+        "checksum": "f804142e468f0bbc21b1f2a586c9c0f57b6425f86458da37452ddf0667756972",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569027.json": {
+        "checksum": "8d01a93a64ad53983b624f19fd551588ac149b86eb08bdd6810d6a273c5481e8",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569028.json": {
+        "checksum": "f6158a9cdb0591da16c1d3d022dda943de3f3dff80dcebbd99991b521b22670d",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569029.json": {
+        "checksum": "64051b4b7c44a0a4761d6494cc1e39d699c445c21d362b2fa79504da6a2bb2a7",
+        "rowCount": 31
+      },
+      ".vega/json/cards_569030.json": {
+        "checksum": "d338a2f14fd1173a493192e397ff9c51530c899d1bd69b1585e412a440332e7c",
+        "rowCount": 34
+      },
+      ".vega/json/cards_569031.json": {
+        "checksum": "bad7684b304162802259512d778a1d270ab92783008ee463c462d8b005046cc4",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569032.json": {
+        "checksum": "b9f0b99353f10fef822cc67d57b7521a59e582671a22ea2b39cd611fe566b6bc",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569033.json": {
+        "checksum": "c23075a7fc6134052d79a40037a00b1ed2a0a95b8db00d2bed0a707d2010fc51",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569034.json": {
+        "checksum": "05160827b0f78fbc25c492c414b5cd00aaee5c933c59c35e44cdc4277bc7840f",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569035.json": {
+        "checksum": "9f3d43600b07afabad16c93206cad810647ad384694cd76136a4987823402466",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569036.json": {
+        "checksum": "2a6047a3eea1eff19a77f7c7f86aedd1f0a4f1453792d4d06ada1f6a18ff7cad",
+        "rowCount": 15
+      },
+      ".vega/json/cards_569101.json": {
+        "checksum": "5f9a0460532ca7c6637a80675098b5eed57e7c19e2c7f461cdee1e394d767c5b",
+        "rowCount": 154
+      },
+      ".vega/json/cards_569102.json": {
+        "checksum": "36a1ed1e8ce67e8eca819d63d5c6888b12f6df348bfca900fdf68a3681ab91c3",
+        "rowCount": 154
+      },
+      ".vega/json/cards_569103.json": {
+        "checksum": "8d7bab8c087abd8cdfd302d4867a2761fc56bbd8bad28d9723c6f4d2f55da0a2",
+        "rowCount": 154
+      },
+      ".vega/json/cards_569104.json": {
+        "checksum": "c9664139a5ac54a9f84c3c3d575a3321537e4fad9904a74a67febc6648b72a59",
+        "rowCount": 149
+      },
+      ".vega/json/cards_569105.json": {
+        "checksum": "86f328df31925787afab3103152d0eb1597e1b03b7d6670958b8e17a2d22686f",
+        "rowCount": 154
+      },
+      ".vega/json/cards_569106.json": {
+        "checksum": "3d64b766c864a0c9acefabe1c3372f495b69c5d714a17e922414926ace31dcc8",
+        "rowCount": 151
+      },
+      ".vega/json/cards_569107.json": {
+        "checksum": "980e9837edcfe4b01c8fd453c6aea9cb2b905bed8bf3b4a379ebc63b59813c70",
+        "rowCount": 151
+      },
+      ".vega/json/cards_569108.json": {
+        "checksum": "65ce5968cdf20bd0403da7bfe3236bff382f7e59ab6bb5a434f8220b9b41d1e8",
+        "rowCount": 151
+      },
+      ".vega/json/cards_569109.json": {
+        "checksum": "c962136dc75926362b4539b84355c67fbffd125edf0d876e1d7cb49fac1cd6a4",
+        "rowCount": 159
+      },
+      ".vega/json/cards_569110.json": {
+        "checksum": "a50a5dc6dd53e0a42081e7d53e0976ab3014a3117adc663bfdf431acb4bda4da",
+        "rowCount": 151
+      },
+      ".vega/json/cards_569111.json": {
+        "checksum": "0b97d63c4dd4f2a2dd3d0b122e8b7143142bb0f7fdd2c7c219852975861b195e",
+        "rowCount": 156
+      },
+      ".vega/json/cards_569112.json": {
+        "checksum": "32ac358014437a8b766fb5f2f02016a915baabc9cf6d8096c7a7b2be11a0c6cc",
+        "rowCount": 155
+      },
+      ".vega/json/cards_569113.json": {
+        "checksum": "9f97dc096e178061dfe4805b0fec2525190ca49abd4477bc34f0e6ed0fb5fb91",
+        "rowCount": 175
+      },
+      ".vega/json/cards_569114.json": {
+        "checksum": "91900cad77b3851d73425370c656e0ecd5b780e078f88eec157e8c695301d88b",
+        "rowCount": 199
+      },
+      ".vega/json/cards_569115.json": {
+        "checksum": "d015661a86f969bc1d050c807f4fcef6fcabe60ca8f1da2d4fd9e653aa937c8b",
+        "rowCount": 196
+      },
+      ".vega/json/cards_569116.json": {
+        "checksum": "5c2a5aa4b0163e7ca39e03250c63f663c4060932bef91159fb20b34ca8ffefee",
+        "rowCount": 155
+      },
+      ".vega/json/cards_569201.json": {
+        "checksum": "db68c9e3e4f2e901ec5580e6b706070c6ff6c3d495deca4e406d9eb13ff1e11a",
+        "rowCount": 80
+      },
+      ".vega/json/cards_569202.json": {
+        "checksum": "1d1e569adaac9168970b1b19a384617524945c24a57e033a0b13c9b0e576e31b",
+        "rowCount": 105
+      },
+      ".vega/json/cards_569203.json": {
+        "checksum": "9b8a4e54c918d3ce77c5d1687ec8c06a5462fbb58a1292351e88dfe17e1ed4b5",
+        "rowCount": 90
+      },
+      ".vega/json/cards_569301.json": {
+        "checksum": "f3f380de88bfb01bf1d9a525c01c03acfd0b18c44d4f5f07f9816dc8c8ebcbe0",
+        "rowCount": 319
+      },
+      ".vega/json/cards_569302.json": {
+        "checksum": "80b595d110272476f018ee928a20427cd614be06774944b54f54fa758ab4438a",
+        "rowCount": 316
+      },
+      ".vega/json/cards_569801.json": {
+        "checksum": "355ed165adbd7b21d3aee04bb0bc8bc5ba6e3f5d75dd5d8a6624006eaf75f52e",
+        "rowCount": 177
+      },
+      ".vega/json/cards_569901.json": {
+        "checksum": "52ec003fe87c19703764f7d8afa3536314a22c15d7437972db8edab3eb59f120",
+        "rowCount": 372
+      },
+      ".vega/json/packs.json": {
+        "checksum": "42bea82ac185695ebbc2437a74c7e8d880497345fc494da235a0c0cd6d3d9c46",
+        "rowCount": 59
+      },
+      ".vega/vega.meta.toml": {
+        "checksum": "20c29724c2f5092e1caa1c0bb6b703b00ae27b818bffd619cda98aa9b9713844",
+        "rowCount": 0
       }
     }
   },

@@ -149,9 +149,50 @@ describe('Generated Data Contract — src/data/generated/binder-data.json', () =
     validateBinderDataContract(data, 'src/data/generated/binder-data.json');
   });
 
-  it('data provenance marks this as a heuristic fixture (no live Vega)', () => {
-    expect(data.meta.catalogSource).toContain('heuristic');
-    expect(data.meta.dataProvenance.toLowerCase()).toContain('fixture');
+  it('data provenance marks this as a Vega snapshot source (not heuristic fixture)', () => {
+    expect(data.meta.catalogSource).toBe('Vega');
+    expect(data.meta.dataProvenance.toLowerCase()).not.toContain('fixture');
+    expect(data.meta.dataProvenance.toLowerCase()).toContain('vega snapshot');
+  });
+
+  it('catalog entries contain real card names from Vega (not null)', () => {
+    for (const entry of data.catalog) {
+      expect(entry.name, `catalog entry ${entry.code} should have a name`).not.toBeNull();
+    }
+  });
+
+  it('catalog entries contain real colors from Vega', () => {
+    for (const entry of data.catalog) {
+      expect(entry.color, `catalog entry ${entry.code} should have a color`).not.toBeNull();
+    }
+  });
+
+  it('catalog entries contain real costs from Vega', () => {
+    expect(data.catalog.some((entry: any) => entry.cost !== null)).toBe(true);
+  });
+
+  it('catalog entries contain real types from Vega', () => {
+    for (const entry of data.catalog) {
+      expect(entry.type, `catalog entry ${entry.code} should have a type`).not.toBeNull();
+    }
+  });
+
+  it('source manifest includes Vega JSON provenance and checksums', () => {
+    const files = Object.keys(data.sources.files);
+    expect(files).toContain('.vega/json/packs.json');
+    expect(files.some((file: string) => file.startsWith('.vega/json/cards_'))).toBe(true);
+    for (const file of files.filter((name: string) => name.startsWith('.vega/'))) {
+      expect(data.sources.files[file].checksum).toMatch(/^[a-f0-9]{64}$/);
+    }
+  });
+
+  it('publishes one image for every owned or wanted code', () => {
+    const ownedCodes = new Set(data.cards.map((card: any) => card.code));
+    const wantedCodes = new Set(data.wanted.map((entry: any) => entry.code));
+    const assetDir = resolve(projectRoot, 'public/data/card-images');
+    for (const code of new Set([...ownedCodes, ...wantedCodes])) {
+      expect(existsSync(resolve(assetDir, `${code}.png`))).toBe(true);
+    }
   });
 });
 
