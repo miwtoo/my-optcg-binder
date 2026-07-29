@@ -1,7 +1,8 @@
 # Deploy static site to GitHub Pages
 #
-# Pipeline: npm ci → validate → check → test → build → single Pages upload
+# Pipeline: npm ci → validate → check → test → build → browser test → upload
 # No double upload.  `.vega/` is gitignored and never available in CI.
+# The browser mobile test runs after build and does not require .vega.
 
 name: Deploy to GitHub Pages
 
@@ -44,13 +45,19 @@ jobs:
       - name: Run Astro check
         run: npm run check
 
-      - name: Run tests
+      - name: Run unit tests
         run: npm test
 
-      - name: Build & upload Pages artifact
-        uses: withastro/action@v6
+      - name: Build static site
+        run: npm run build
+
+      - name: Mobile browser verification (portable — no .vega required)
+        run: node tests/browser/mobile.test.mjs
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          path: dist
 
   deploy:
     runs-on: ubuntu-latest

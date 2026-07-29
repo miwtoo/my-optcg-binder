@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "npm@11.6.1",
   "description": "Static One Piece TCG player binder — collection inventory, deck tracking, and physical binder view",
   "scripts": {
     "validate": "tsx scripts/validate.js",
