@@ -118,22 +118,27 @@ export function parseCollectionCSV(filePath: string): CSVParseResult<CollectionR
   return parseCSVInternal<CollectionRow>(
     filePath,
     (fields, rowNum, errors) => {
+      if (fields.length < 2) {
+        errors.push({ file: filePath, row: rowNum, value: fields.join(','), reason: `Expected 2 columns (code,amount), got ${fields.length}` });
+        return null;
+      }
       const code = fields[0]!.trim();
       const amountStr = fields[1]!.trim();
       const amount = Number(amountStr);
 
       if (!code) {
-        errors.push({ file: filePath, row: rowNum, value: code, reason: 'Empty card code' });
+        errors.push({ file: filePath, row: rowNum, value: '(empty)', reason: 'Empty card code in field 0' });
         return null;
       }
       if (!Number.isInteger(amount) || amount < 1) {
-        errors.push({ file: filePath, row: rowNum, value: amountStr, reason: 'Amount must be a positive integer' });
+        errors.push({ file: filePath, row: rowNum, value: amountStr, reason: `Amount must be a positive integer, got "${amountStr}"` });
         return null;
       }
       return { code, amount };
     },
     true, // deduplicate
     2,   // expected columns: code,amount
+    HEADER_COLLECTION,
   );
 }
 
@@ -150,22 +155,27 @@ export function parseDecklistCSV(filePath: string): CSVParseResult<DecklistRow> 
       if (isSabo && fields.length === 2 && SABO_TOTAL_ROW.test(fields.join(','))) {
         return null; // silently skip — spec says this is the only permitted non-card row
       }
+      if (fields.length < 2) {
+        errors.push({ file: filePath, row: rowNum, value: fields.join(','), reason: `Expected 2 columns (code,amount), got ${fields.length}` });
+        return null;
+      }
       const code = fields[0]!.trim();
       const amountStr = fields[1]!.trim();
       const amount = Number(amountStr);
 
       if (!code) {
-        errors.push({ file: filePath, row: rowNum, value: code, reason: 'Empty card code' });
+        errors.push({ file: filePath, row: rowNum, value: '(empty)', reason: 'Empty card code in field 0' });
         return null;
       }
       if (!Number.isInteger(amount) || amount < 1) {
-        errors.push({ file: filePath, row: rowNum, value: amountStr, reason: 'Amount must be a positive integer' });
+        errors.push({ file: filePath, row: rowNum, value: amountStr, reason: `Amount must be a positive integer, got "${amountStr}"` });
         return null;
       }
       return { code, amount };
     },
     true, // deduplicate
     2,   // expected columns: code,amount
+    HEADER_DECKLIST,
   );
 }
 
@@ -175,27 +185,32 @@ export function parseWantedCSV(filePath: string): CSVParseResult<WantedRow> {
   return parseCSVInternal<WantedRow>(
     filePath,
     (fields, rowNum, errors) => {
+      if (fields.length < 3) {
+        errors.push({ file: filePath, row: rowNum, value: fields.join(','), reason: `Expected 3 columns (code,amount,target), got ${fields.length}` });
+        return null;
+      }
       const code = fields[0]!.trim();
       const amountStr = fields[1]!.trim();
       const target = fields[2]!.trim();
       const amount = Number(amountStr);
 
       if (!code) {
-        errors.push({ file: filePath, row: rowNum, value: code, reason: 'Empty card code' });
+        errors.push({ file: filePath, row: rowNum, value: '(empty)', reason: 'Empty card code in field 0' });
         return null;
       }
       if (!Number.isInteger(amount) || amount < 1) {
-        errors.push({ file: filePath, row: rowNum, value: amountStr, reason: 'Amount must be a positive integer' });
+        errors.push({ file: filePath, row: rowNum, value: amountStr, reason: `Amount must be a positive integer, got "${amountStr}"` });
         return null;
       }
       if (!target) {
-        errors.push({ file: filePath, row: rowNum, value: target, reason: 'Target must be non-empty (e.g. "binder" or a deck name)' });
+        errors.push({ file: filePath, row: rowNum, value: '(empty)', reason: 'Target must be non-empty (e.g. "binder" or a deck name)' });
         return null;
       }
       return { code, amount, target };
     },
     false, // no dedup for wanted — same code can have different targets
     3,   // expected columns: code,amount,target
+    HEADER_WANTED,
   );
 }
 
@@ -282,11 +297,47 @@ export function findDuplicateWantedTargets(rows: WantedRow[], file: string): CSV
 
 /* ─── Internal Parser ──────────────────────────────────────── */
 
+/**
+ * Expected header column names per CSV type.
+ */
+const HEADER_COLLECTION = ['code', 'amount'];
+const HEADER_DECKLIST = ['code', 'amount'];
+const HEADER_WANTED = ['code', 'amount', 'target'];
+
+function validateExactHeader(
+  fields: string[],
+  expected: string[],
+  filePath: string,
+): CSVError | null {
+  if (fields.length === 0) {
+    return { file: filePath, row: 1, value: '', reason: 'Header row is empty' };
+  }
+  const mismatch = fields.find((f, i) => {
+    const exp = expected[i];
+    return !exp || f.toLowerCase() !== exp;
+  });
+  if (mismatch !== undefined) {
+    const line = fields.join(',');
+    return {
+      file: filePath, row: 1, value: line,
+      reason: `Expected header: ${expected.join(',')}. Got: "${line}". First mismatch: "${mismatch}" (expected "${expected[fields.indexOf(mismatch)] ?? '<too many>'}")`,
+    };
+  }
+  if (fields.length !== expected.length) {
+    return {
+      file: filePath, row: 1, value: fields.join(','),
+      reason: `Expected ${expected.length} column(s), got ${fields.length}: "${fields.join(',')}"`,
+    };
+  }
+  return null;
+}
+
 function parseCSVInternal<T extends { code: string }>(
   filePath: string,
   rowParser: (fields: string[], rowNum: number, errors: CSVError[]) => T | null,
   deduplicateCodes: boolean,
   expectedColumns: number,
+  expectedHeader?: string[],
 ): CSVParseResult<T> {
   const errors: CSVError[] = [];
   const rows: T[] = [];
@@ -310,11 +361,20 @@ function parseCSVInternal<T extends { code: string }>(
     return { rows, errors: [{ file: filePath, row: 0, value: '', reason: 'File is empty' }], rowCount: 0 };
   }
 
-  // Validate header (first line)
-  const header = parsed[0]!.fields;
-  if (header.length < 2 || !header[0] || header[0].toLowerCase() !== 'code') {
-    errors.push({ file: filePath, row: 1, value: header.join(','), reason: `Expected header starting with "code", got "${header[0]}"` });
-    return { rows, errors, rowCount: 0 };
+  // Validate header (first line) — exact column names required
+  if (expectedHeader) {
+    const headerErr = validateExactHeader(parsed[0]!.fields, expectedHeader, filePath);
+    if (headerErr) {
+      errors.push(headerErr);
+      return { rows, errors, rowCount: 0 };
+    }
+  } else {
+    // Legacy fallback: just check first column is "code"
+    const header = parsed[0]!.fields;
+    if (header.length < 2 || !header[0] || header[0].toLowerCase() !== 'code') {
+      errors.push({ file: filePath, row: 1, value: header.join(','), reason: `Expected header starting with "code", got "${header[0]}"` });
+      return { rows, errors, rowCount: 0 };
+    }
   }
 
   // Parse data rows (skip header)

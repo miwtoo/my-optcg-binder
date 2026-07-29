@@ -1,8 +1,10 @@
 # Deploy static site to GitHub Pages
 #
-# Pipeline: npm ci → validate → check → test → build & upload (withastro) → browser test → deploy
+# Pipeline: npm ci → validate → check → test → build (withastro) →
+#           install chromium → browser test → deploy
 # No double upload.  `.vega/` is gitignored and never available in CI.
-# The browser mobile test runs after build and does not require .vega.
+# Unit/integration tests run before build without dist or .vega.
+# Browser test runs after build and requires Chromium (installed explicitly).
 
 name: Deploy to GitHub Pages
 
@@ -45,13 +47,16 @@ jobs:
       - name: Run Astro check
         run: npm run check
 
-      - name: Run unit tests
+      - name: Run unit/integration tests (no dist or .vega required)
         run: npm test
 
       - name: Build & upload Pages artifact
         uses: withastro/action@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Playwright Chromium for browser tests
+        run: npx playwright install chromium
 
       - name: Mobile browser verification (portable — no .vega required)
         run: node tests/browser/mobile.test.mjs

@@ -1,8 +1,8 @@
 ---
 title: Implement static One Piece TCG player binder
-status: open
+status: closed
 labels:
-  - ready-for-agent
+  - completed
 parent:
 blocked_by:
 assignee:

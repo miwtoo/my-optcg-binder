@@ -7,7 +7,7 @@
  *   - images/ (PNG files)
  *   - vega.meta.toml (pull metadata)
  *
- * Exports the two functions consumed by `scripts/generate.js`.
+ * Exports functions consumed by `scripts/generate.js`.
  */
 
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
@@ -18,7 +18,6 @@ import { resolve } from 'node:path';
 export function checkVegaSnapshot(projectRoot, vegaSnapshotDir) {
   const vegaPath = resolve(projectRoot, vegaSnapshotDir);
   if (!existsSync(vegaPath)) return { available: false, version: null, path: vegaPath };
-
   const entries = readdirSync(vegaPath).filter(e => !e.startsWith('.'));
   if (entries.length === 0) return { available: false, version: null, path: vegaPath };
 
@@ -35,20 +34,14 @@ export function checkVegaSnapshot(projectRoot, vegaSnapshotDir) {
       }
     } catch { /* non-fatal */ }
   }
-
   if (!version) {
     const vf = resolve(vegaPath, 'version.txt');
     if (existsSync(vf)) version = readFileSync(vf, 'utf-8').trim();
   }
-
   return { available: true, version, path: vegaPath };
 }
 
 /* ─── Parsing helpers ─────────────────────────────────────── */
-
-function toBaseCode(id) {
-  return id.replace(/_(p\d+|r\d+)$/, '');
-}
 
 function normalizeColor(v) {
   if (!v) return null;
@@ -73,23 +66,24 @@ function readJsonFile(filePath) {
 /* ─── Catalog builder ─────────────────────────────────────── */
 
 /**
+ * Strip _pN / _rN suffix to get the base card code for layout dedup.
+ */
+function toBaseCode(id) {
+  return id.replace(/_(p\d+|r\d+)$/, '');
+}
+
+/**
  * Build the canonical card catalog from the Vega snapshot.
  *
- * Scans all cards_*.json files, reads packs.json for set metadata,
- * and builds a Map of base card codes to CatalogEntry.
- *
- * Cards with parallel art (_pN) or reprint (_rN) variants are
- * deduplicated — the first-occurring base code entry supplies
- * canonical metadata.
- *
- * Vega `cost: null` (legitimate for counter Events) is mapped to
- * -1 so the placement engine can produce an exact layout.
- *
- * @param {string} vegaPath — absolute path to .vega/
- * @returns {{ catalog: Map<string, object>, imageAvailability: Map<string, string[]>, packCount: number, cardCount: number }}
+ * Returns:
+ *   catalog          — Map<baseCode, CatalogEntry> for layout/sorting
+ *   variantCodes     — Set<exactVegaId> for CSV validation
+ *   imageAvailability — Map<baseCode, string[]> for image copy
+ *   packCount, cardCount
  */
 export function buildCatalogFromSnapshot(vegaPath) {
   const catalog = new Map();
+  const variantCodes = new Set();
   const imageAvailability = new Map();
   const jsonDir = resolve(vegaPath, 'json');
   const imagesDir = resolve(vegaPath, 'images');
@@ -113,7 +107,13 @@ export function buildCatalogFromSnapshot(vegaPath) {
 
     for (const card of cards) {
       cardCount++;
-      const baseCode = toBaseCode(card.id);
+      const exactId = card.id;
+      const baseCode = toBaseCode(exactId);
+
+      // Track every exact Vega variant ID for validation
+      variantCodes.add(exactId);
+
+      // Catalog uses base code (layout dedup)
       if (seenBase.has(baseCode)) continue;
       seenBase.add(baseCode);
 
@@ -140,5 +140,5 @@ export function buildCatalogFromSnapshot(vegaPath) {
     }
   }
 
-  return { catalog, imageAvailability, packCount, cardCount };
+  return { catalog, variantCodes, imageAvailability, packCount, cardCount };
 }

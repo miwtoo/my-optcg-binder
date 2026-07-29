@@ -130,13 +130,13 @@ function main() {
 
   // ── Step 3: Build catalog from Vega ────────────────────────
   console.log('  Step 3/7: Building catalog from Vega...');
-  const { catalog, imageAvailability, packCount, cardCount } = buildCatalogFromSnapshot(snapshot.path);
+  const { catalog, variantCodes, imageAvailability, packCount, cardCount } = buildCatalogFromSnapshot(snapshot.path);
   if (catalog.size === 0) { console.error('❌ No catalog data.'); process.exit(1); }
-  console.log(`  ✔  ${catalog.size} codes from ${cardCount} entries, ${packCount} packs`);
+  console.log(`  ✔  ${catalog.size} base codes from ${cardCount} entries (${variantCodes.size} exact variant IDs), ${packCount} packs`);
 
-  // ── Step 1: Validate CSVs against FRESH Vega catalog ───────
+  // ── Step 1: Validate CSVs against FRESH Vega catalog (exact variant codes) ──
   console.log(`  Step 1/7: Validating source CSVs against Vega catalog...${label}`);
-  const validation = validateInputs(projectRoot, new Set(catalog.keys()));
+  const validation = validateInputs(projectRoot, variantCodes);
   if (!validation.valid) {
     console.error('❌ Validation failed:'); console.error(formatErrors(validation.errors)); process.exit(1);
   }
