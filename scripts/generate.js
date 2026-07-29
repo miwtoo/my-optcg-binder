@@ -222,7 +222,13 @@ function main() {
     totalDeckCards: totalDeck,
     totalBinderCards: totalBinder,
     reservedSlots,
-    overflowSheets: Math.max(0, totalSheets - 50),
+    // Overflow is a physical ledger kind, not a display-number threshold.
+    // A pair is created with one stable overflow id and Front+Back sides.
+    overflowSheets: new Set(
+      reconciled.layout.sheets
+        .filter(sheet => sheet.sheetId.startsWith('overflow-'))
+        .map(sheet => sheet.sheetId.replace(/-Back$/, '')),
+    ).size,
   };
 
   const sourcesFiles = { ...validation.sources.files };

@@ -139,9 +139,13 @@ function checkArtifactConsistency(projectRoot: string): CSVError[] {
           if (gen.sheet !== layoutSheet.sheet) errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].sheet`, reason: `Sheet number mismatch: generated=${gen.sheet} layout=${layoutSheet.sheet} (${layoutSheet.sheetId})` });
           if (gen.side !== layoutSheet.side) errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].side`, reason: `Sheet side mismatch: generated=${gen.side} layout=${layoutSheet.side}` });
           if (gen.slots.length !== layoutSheet.pockets.length) {
-            for (let p = 0; p < layoutSheet.pockets.length; p++) {
-              const pocket = layoutSheet.pockets[p]!;
-              const slot = gen.slots[p]!;
+            errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots`, reason: `Slot count mismatch: generated=${gen.slots.length} layout=${layoutSheet.pockets.length}` });
+          }
+          const slotCount = Math.max(gen.slots.length, layoutSheet.pockets.length);
+          for (let p = 0; p < slotCount; p++) {
+              const pocket = layoutSheet.pockets[p];
+              const slot = gen.slots[p];
+              if (!pocket || !slot) continue;
               // Card pockets must match code + quantity
               if (pocket.status === 'card') {
                 if (slot.status !== 'card') errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots[${p}]`, reason: `Expected 'card' status for pocket with code ${pocket.code}, got '${slot.status}'` });
@@ -156,7 +160,6 @@ function checkArtifactConsistency(projectRoot: string): CSVError[] {
               } else if (pocket.status === 'empty') {
                 if (slot.status !== 'empty') errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots[${p}]`, reason: `Expected 'empty' status, got '${slot.status}'` });
               }
-            }
           }
           genSheetIdx++;
         }
@@ -164,11 +167,27 @@ function checkArtifactConsistency(projectRoot: string): CSVError[] {
           errors.push({ file: GENERATED_DATA_PATH, row: 0, value: 'sheets', reason: `Generated has ${genSheets.length - genSheetIdx} extra sheet(s) beyond layout` });
         }
 
-        // Cross-validate every card's binderLocation against the canonical layout.
+        // Cross-validate every card's binderLocation against the canonical layout,
+        // including null locations (a missing location is invalid for a card
+        // occupying a canonical card pocket).
         if (Array.isArray(generated.cards)) {
+          const expectedLocations = new Map<string, { sheet: number; side: string; slot: number }>();
+          for (const layoutSheet of dataLayout.sheets) {
+            for (const pocket of layoutSheet.pockets) {
+              if (pocket.status === 'card' && pocket.code) {
+                expectedLocations.set(pocket.code, { sheet: layoutSheet.sheet, side: layoutSheet.side, slot: pocket.pocket });
+              }
+            }
+          }
           for (const card of generated.cards) {
             const loc = card.binderLocation;
-            if (loc !== null) {
+            const expected = expectedLocations.get(card.code);
+            if (loc === null && expected) {
+              errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `cards.${card.code}.binderLocation`, reason: `Missing binder location; expected ${expected.sheet}-${expected.side} slot ${expected.slot}` });
+            } else if (loc !== null && !expected) {
+              errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `cards.${card.code}.binderLocation`, reason: `Unexpected binder location ${loc.sheet}-${loc.side} slot ${loc.slot}; card has no canonical card pocket` });
+            } else if (loc !== null) {
+              const canonical = expected!;
               const layoutSheet = dataLayout.sheets.find(
                 (s: any) => s.sheet === loc.sheet && s.side === loc.side,
               );
@@ -180,6 +199,9 @@ function checkArtifactConsistency(projectRoot: string): CSVError[] {
                   errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `cards.${card.code}.binderLocation`, reason: `Slot ${loc.slot} not found in layout sheet ${loc.sheet}-${loc.side}` });
                 } else if (pocket.status !== 'card' || pocket.code !== card.code) {
                   errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `cards.${card.code}.binderLocation`, reason: `Layout pocket at ${loc.sheet}-${loc.side} slot ${loc.slot} has status=${pocket.status} code=${pocket.code}, expected 'card' with code=${card.code}` });
+                }
+                else if (canonical.sheet !== loc.sheet || canonical.side !== loc.side || canonical.slot !== loc.slot) {
+                  errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `cards.${card.code}.binderLocation`, reason: `Location does not match canonical layout; expected ${canonical.sheet}-${canonical.side} slot ${canonical.slot}` });
                 }
               }
             }

@@ -277,21 +277,30 @@ export function reconcileBinderLayout(
         ? `Leader:${entry.color}`
         : entry.color!;
 
-      // Find insertion point: after the last sheet of this color section.
-      // The insertion point must be at a complete pair boundary (Front side)
-      // to never split a Front/Back pair.
-      let insertAfter = next.sheets.length;
+      // Find the final physical pair belonging to this color.  Insertion is
+      // only ever made at a pair boundary: if the following color shares the
+      // pair, put the new pair before that pair; otherwise put it after it.
+      // This avoids both splitting a pair and accidentally stepping over one.
+      let lastSectionIndex = -1;
       for (let i = next.sheets.length - 1; i >= 0; i--) {
         if (next.sheets[i]!.pockets.some(p => p.section.startsWith(sectionColor))) {
-          insertAfter = i + 1;
+          lastSectionIndex = i;
           break;
         }
       }
-      // Walk forward to the next Front boundary: after a Back side, the
-      // next valid insertion is after it.
-      while (insertAfter > 0 && insertAfter < next.sheets.length) {
-        const before = next.sheets[insertAfter - 1]!;
-        if (before.side === 'Back') { insertAfter++; } else break;
+      let insertAfter = next.sheets.length;
+      if (lastSectionIndex >= 0) {
+        let pairStart = lastSectionIndex;
+        if (pairStart > 0 && next.sheets[pairStart - 1]!.side === 'Front' &&
+            next.sheets[pairStart]!.side === 'Back') pairStart--;
+        let pairEnd = lastSectionIndex + 1;
+        if (next.sheets[lastSectionIndex]?.side === 'Front' &&
+            next.sheets[lastSectionIndex + 1]?.side === 'Back') pairEnd++;
+        const pair = next.sheets.slice(pairStart, pairEnd);
+        const hasFollowingColor = pair.some(sheet => sheet.pockets.some(p =>
+          p.section !== '__UNASSIGNED__' && !p.section.startsWith(sectionColor),
+        ));
+        insertAfter = hasFollowingColor ? pairStart : pairEnd;
       }
 
       let overflowId = 1000;
