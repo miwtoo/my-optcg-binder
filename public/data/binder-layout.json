@@ -1,0 +1,1721 @@
+{
+  "version": 1,
+  "slotsPerSide": 9,
+  "sheets": [
+    {
+      "sheetId": "sheet-1-Front",
+      "sheet": 1,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-1-Front",
+          "section": "Leader:Red",
+          "pocket": 1,
+          "status": "card",
+          "code": "OP13-004",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-1-Front",
+          "section": "Leader:Red",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Leader:Red-1"
+        },
+        {
+          "sheetId": "sheet-1-Front",
+          "section": "Leader:Red",
+          "pocket": 3,
+          "status": "reserved",
+          "tag": "reserve-Leader:Red-2"
+        },
+        {
+          "sheetId": "sheet-1-Front",
+          "section": "Leader:Red",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Leader:Red-3"
+        },
+        {
+          "sheetId": "sheet-1-Front",
+          "section": "Leader:Green",
+          "pocket": 5,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-1-Front",
+          "section": "Leader:Green",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Leader:Green-1"
+        },
+        {
+          "sheetId": "sheet-1-Front",
+          "section": "Leader:Green",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Leader:Green-2"
+        },
+        {
+          "sheetId": "sheet-1-Front",
+          "section": "Leader:Green",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Leader:Green-3"
+        },
+        {
+          "sheetId": "sheet-1-Front",
+          "section": "Red:1:Character",
+          "pocket": 9,
+          "status": "card",
+          "code": "OP13-012",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-1-Back",
+      "sheet": 1,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-1-Back",
+          "section": "Red:1:Character",
+          "pocket": 1,
+          "status": "card",
+          "code": "P-069",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-1-Back",
+          "section": "Red:1:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Red:1:Character-1"
+        },
+        {
+          "sheetId": "sheet-1-Back",
+          "section": "Red:1:Character",
+          "pocket": 3,
+          "status": "reserved",
+          "tag": "reserve-Red:1:Character-2"
+        },
+        {
+          "sheetId": "sheet-1-Back",
+          "section": "Red:1:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Red:1:Character-3"
+        },
+        {
+          "sheetId": "sheet-1-Back",
+          "section": "Red:1:Event",
+          "pocket": 5,
+          "status": "card",
+          "code": "OP07-016",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-1-Back",
+          "section": "Red:1:Event",
+          "pocket": 6,
+          "status": "card",
+          "code": "OP13-019",
+          "quantity": 9
+        },
+        {
+          "sheetId": "sheet-1-Back",
+          "section": "Red:1:Event",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Red:1:Event-1"
+        },
+        {
+          "sheetId": "sheet-1-Back",
+          "section": "Red:1:Event",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Red:1:Event-2"
+        },
+        {
+          "sheetId": "sheet-1-Back",
+          "section": "Red:1:Event",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Red:1:Event-3"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-2-Front",
+      "sheet": 2,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-2-Front",
+          "section": "Red:2:Character",
+          "pocket": 1,
+          "status": "card",
+          "code": "OP13-008",
+          "quantity": 6
+        },
+        {
+          "sheetId": "sheet-2-Front",
+          "section": "Red:2:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Red:2:Character-1"
+        },
+        {
+          "sheetId": "sheet-2-Front",
+          "section": "Red:2:Character",
+          "pocket": 3,
+          "status": "reserved",
+          "tag": "reserve-Red:2:Character-2"
+        },
+        {
+          "sheetId": "sheet-2-Front",
+          "section": "Red:2:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Red:2:Character-3"
+        },
+        {
+          "sheetId": "sheet-2-Front",
+          "section": "Red:2:Event",
+          "pocket": 5,
+          "status": "card",
+          "code": "OP07-017",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-2-Front",
+          "section": "Red:2:Event",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Red:2:Event-1"
+        },
+        {
+          "sheetId": "sheet-2-Front",
+          "section": "Red:2:Event",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Red:2:Event-2"
+        },
+        {
+          "sheetId": "sheet-2-Front",
+          "section": "Red:2:Event",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Red:2:Event-3"
+        },
+        {
+          "sheetId": "sheet-2-Front",
+          "section": "Red:3:Character",
+          "pocket": 9,
+          "status": "card",
+          "code": "EB03-008",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-2-Back",
+      "sheet": 2,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-2-Back",
+          "section": "Red:3:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Red:3:Character-1"
+        },
+        {
+          "sheetId": "sheet-2-Back",
+          "section": "Red:3:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Red:3:Character-2"
+        },
+        {
+          "sheetId": "sheet-2-Back",
+          "section": "Red:3:Character",
+          "pocket": 3,
+          "status": "reserved",
+          "tag": "reserve-Red:3:Character-3"
+        },
+        {
+          "sheetId": "sheet-2-Back",
+          "section": "Red:4:Character",
+          "pocket": 4,
+          "status": "card",
+          "code": "OP11-008",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-2-Back",
+          "section": "Red:4:Character",
+          "pocket": 5,
+          "status": "card",
+          "code": "OP13-005",
+          "quantity": 4
+        },
+        {
+          "sheetId": "sheet-2-Back",
+          "section": "Red:4:Character",
+          "pocket": 6,
+          "status": "card",
+          "code": "ST35-001",
+          "quantity": 4
+        },
+        {
+          "sheetId": "sheet-2-Back",
+          "section": "Red:4:Character",
+          "pocket": 7,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-2-Back",
+          "section": "Red:4:Character",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Red:4:Character-1"
+        },
+        {
+          "sheetId": "sheet-2-Back",
+          "section": "Red:4:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Red:4:Character-2"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-3-Front",
+      "sheet": 3,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-3-Front",
+          "section": "Red:4:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Red:4:Character-3"
+        },
+        {
+          "sheetId": "sheet-3-Front",
+          "section": "Red:5:Character",
+          "pocket": 2,
+          "status": "card",
+          "code": "EB03-010",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-3-Front",
+          "section": "Red:5:Character",
+          "pocket": 3,
+          "status": "reserved",
+          "tag": "reserve-Red:5:Character-1"
+        },
+        {
+          "sheetId": "sheet-3-Front",
+          "section": "Red:5:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Red:5:Character-2"
+        },
+        {
+          "sheetId": "sheet-3-Front",
+          "section": "Red:5:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Red:5:Character-3"
+        },
+        {
+          "sheetId": "sheet-3-Front",
+          "section": "Red:6:Character",
+          "pocket": 6,
+          "status": "card",
+          "code": "OP05-007",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-3-Front",
+          "section": "Red:6:Character",
+          "pocket": 7,
+          "status": "card",
+          "code": "OP13-017",
+          "quantity": 9
+        },
+        {
+          "sheetId": "sheet-3-Front",
+          "section": "Red:6:Character",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Red:6:Character-1"
+        },
+        {
+          "sheetId": "sheet-3-Front",
+          "section": "Red:6:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Red:6:Character-2"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-3-Back",
+      "sheet": 3,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-3-Back",
+          "section": "Red:6:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Red:6:Character-3"
+        },
+        {
+          "sheetId": "sheet-3-Back",
+          "section": "Red:8:Character",
+          "pocket": 2,
+          "status": "card",
+          "code": "OP07-015",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-3-Back",
+          "section": "Red:8:Character",
+          "pocket": 3,
+          "status": "reserved",
+          "tag": "reserve-Red:8:Character-1"
+        },
+        {
+          "sheetId": "sheet-3-Back",
+          "section": "Red:8:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Red:8:Character-2"
+        },
+        {
+          "sheetId": "sheet-3-Back",
+          "section": "Red:8:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Red:8:Character-3"
+        },
+        {
+          "sheetId": "sheet-3-Back",
+          "section": "Green:1:Character",
+          "pocket": 6,
+          "status": "card",
+          "code": "EB02-017",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-3-Back",
+          "section": "Green:1:Character",
+          "pocket": 7,
+          "status": "card",
+          "code": "OP05-034",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-3-Back",
+          "section": "Green:1:Character",
+          "pocket": 8,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-3-Back",
+          "section": "Green:1:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Green:1:Character-1"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-4-Front",
+      "sheet": 4,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-4-Front",
+          "section": "Green:1:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Green:1:Character-2"
+        },
+        {
+          "sheetId": "sheet-4-Front",
+          "section": "Green:1:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Green:1:Character-3"
+        },
+        {
+          "sheetId": "sheet-4-Front",
+          "section": "Green:1:Event",
+          "pocket": 3,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-4-Front",
+          "section": "Green:1:Event",
+          "pocket": 4,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-4-Front",
+          "section": "Green:1:Event",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Green:1:Event-1"
+        },
+        {
+          "sheetId": "sheet-4-Front",
+          "section": "Green:1:Event",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Green:1:Event-2"
+        },
+        {
+          "sheetId": "sheet-4-Front",
+          "section": "Green:1:Event",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Green:1:Event-3"
+        },
+        {
+          "sheetId": "sheet-4-Front",
+          "section": "Green:2:Character",
+          "pocket": 8,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-4-Front",
+          "section": "Green:2:Character",
+          "pocket": 9,
+          "status": "vacant"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-4-Back",
+      "sheet": 4,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-4-Back",
+          "section": "Green:2:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Green:2:Character-1"
+        },
+        {
+          "sheetId": "sheet-4-Back",
+          "section": "Green:2:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Green:2:Character-2"
+        },
+        {
+          "sheetId": "sheet-4-Back",
+          "section": "Green:2:Character",
+          "pocket": 3,
+          "status": "reserved",
+          "tag": "reserve-Green:2:Character-3"
+        },
+        {
+          "sheetId": "sheet-4-Back",
+          "section": "Green:4:Character",
+          "pocket": 4,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-4-Back",
+          "section": "Green:4:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Green:4:Character-1"
+        },
+        {
+          "sheetId": "sheet-4-Back",
+          "section": "Green:4:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Green:4:Character-2"
+        },
+        {
+          "sheetId": "sheet-4-Back",
+          "section": "Green:4:Character",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Green:4:Character-3"
+        },
+        {
+          "sheetId": "sheet-4-Back",
+          "section": "Green:5:Character",
+          "pocket": 8,
+          "status": "card",
+          "code": "EB03-017",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-4-Back",
+          "section": "Green:5:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Green:5:Character-1"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-5-Front",
+      "sheet": 5,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-5-Front",
+          "section": "Green:5:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Green:5:Character-2"
+        },
+        {
+          "sheetId": "sheet-5-Front",
+          "section": "Green:5:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Green:5:Character-3"
+        },
+        {
+          "sheetId": "sheet-5-Front",
+          "section": "Green:6:Character",
+          "pocket": 3,
+          "status": "card",
+          "code": "EB03-013",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-5-Front",
+          "section": "Green:6:Character",
+          "pocket": 4,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-5-Front",
+          "section": "Green:6:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Green:6:Character-1"
+        },
+        {
+          "sheetId": "sheet-5-Front",
+          "section": "Green:6:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Green:6:Character-2"
+        },
+        {
+          "sheetId": "sheet-5-Front",
+          "section": "Green:6:Character",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Green:6:Character-3"
+        },
+        {
+          "sheetId": "sheet-5-Front",
+          "section": "Green:7:Character",
+          "pocket": 8,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-5-Front",
+          "section": "Green:7:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Green:7:Character-1"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-5-Back",
+      "sheet": 5,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-5-Back",
+          "section": "Green:7:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Green:7:Character-2"
+        },
+        {
+          "sheetId": "sheet-5-Back",
+          "section": "Green:7:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Green:7:Character-3"
+        },
+        {
+          "sheetId": "sheet-5-Back",
+          "section": "Blue:-1:Event",
+          "pocket": 3,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-5-Back",
+          "section": "Blue:-1:Event",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Blue:-1:Event-1"
+        },
+        {
+          "sheetId": "sheet-5-Back",
+          "section": "Blue:-1:Event",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Blue:-1:Event-2"
+        },
+        {
+          "sheetId": "sheet-5-Back",
+          "section": "Blue:-1:Event",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Blue:-1:Event-3"
+        },
+        {
+          "sheetId": "sheet-5-Back",
+          "section": "Blue:1:Event",
+          "pocket": 7,
+          "status": "card",
+          "code": "EB01-028",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-5-Back",
+          "section": "Blue:1:Event",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Blue:1:Event-1"
+        },
+        {
+          "sheetId": "sheet-5-Back",
+          "section": "Blue:1:Event",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Blue:1:Event-2"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-6-Front",
+      "sheet": 6,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-6-Front",
+          "section": "Blue:1:Event",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Blue:1:Event-3"
+        },
+        {
+          "sheetId": "sheet-6-Front",
+          "section": "Blue:2:Character",
+          "pocket": 2,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-6-Front",
+          "section": "Blue:2:Character",
+          "pocket": 3,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-6-Front",
+          "section": "Blue:2:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Blue:2:Character-1"
+        },
+        {
+          "sheetId": "sheet-6-Front",
+          "section": "Blue:2:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Blue:2:Character-2"
+        },
+        {
+          "sheetId": "sheet-6-Front",
+          "section": "Blue:2:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Blue:2:Character-3"
+        },
+        {
+          "sheetId": "sheet-6-Front",
+          "section": "Blue:2:Event",
+          "pocket": 7,
+          "status": "card",
+          "code": "OP05-057",
+          "quantity": 2
+        },
+        {
+          "sheetId": "sheet-6-Front",
+          "section": "Blue:2:Event",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Blue:2:Event-1"
+        },
+        {
+          "sheetId": "sheet-6-Front",
+          "section": "Blue:2:Event",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Blue:2:Event-2"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-6-Back",
+      "sheet": 6,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-6-Back",
+          "section": "Blue:2:Event",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Blue:2:Event-3"
+        },
+        {
+          "sheetId": "sheet-6-Back",
+          "section": "Blue:3:Character",
+          "pocket": 2,
+          "status": "card",
+          "code": "OP07-054",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-6-Back",
+          "section": "Blue:3:Character",
+          "pocket": 3,
+          "status": "card",
+          "code": "OP13-051",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-6-Back",
+          "section": "Blue:3:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Blue:3:Character-1"
+        },
+        {
+          "sheetId": "sheet-6-Back",
+          "section": "Blue:3:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Blue:3:Character-2"
+        },
+        {
+          "sheetId": "sheet-6-Back",
+          "section": "Blue:3:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Blue:3:Character-3"
+        },
+        {
+          "sheetId": "sheet-6-Back",
+          "section": "Blue:3:Event",
+          "pocket": 7,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-6-Back",
+          "section": "Blue:3:Event",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Blue:3:Event-1"
+        },
+        {
+          "sheetId": "sheet-6-Back",
+          "section": "Blue:3:Event",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Blue:3:Event-2"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-7-Front",
+      "sheet": 7,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-7-Front",
+          "section": "Blue:3:Event",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Blue:3:Event-3"
+        },
+        {
+          "sheetId": "sheet-7-Front",
+          "section": "Blue:4:Character",
+          "pocket": 2,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-7-Front",
+          "section": "Blue:4:Character",
+          "pocket": 3,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-7-Front",
+          "section": "Blue:4:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Blue:4:Character-1"
+        },
+        {
+          "sheetId": "sheet-7-Front",
+          "section": "Blue:4:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Blue:4:Character-2"
+        },
+        {
+          "sheetId": "sheet-7-Front",
+          "section": "Blue:4:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Blue:4:Character-3"
+        },
+        {
+          "sheetId": "sheet-7-Front",
+          "section": "Blue:5:Character",
+          "pocket": 7,
+          "status": "card",
+          "code": "OP08-046",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-7-Front",
+          "section": "Blue:5:Character",
+          "pocket": 8,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-7-Front",
+          "section": "Blue:5:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Blue:5:Character-1"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-7-Back",
+      "sheet": 7,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-7-Back",
+          "section": "Blue:5:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Blue:5:Character-2"
+        },
+        {
+          "sheetId": "sheet-7-Back",
+          "section": "Blue:5:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Blue:5:Character-3"
+        },
+        {
+          "sheetId": "sheet-7-Back",
+          "section": "Blue:6:Character",
+          "pocket": 3,
+          "status": "card",
+          "code": "EB01-022",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-7-Back",
+          "section": "Blue:6:Character",
+          "pocket": 4,
+          "status": "card",
+          "code": "OP05-042",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-7-Back",
+          "section": "Blue:6:Character",
+          "pocket": 5,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-7-Back",
+          "section": "Blue:6:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Blue:6:Character-1"
+        },
+        {
+          "sheetId": "sheet-7-Back",
+          "section": "Blue:6:Character",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Blue:6:Character-2"
+        },
+        {
+          "sheetId": "sheet-7-Back",
+          "section": "Blue:6:Character",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Blue:6:Character-3"
+        },
+        {
+          "sheetId": "sheet-7-Back",
+          "section": "Blue:7:Character",
+          "pocket": 9,
+          "status": "card",
+          "code": "OP05-051",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-8-Front",
+      "sheet": 8,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-8-Front",
+          "section": "Blue:7:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Blue:7:Character-1"
+        },
+        {
+          "sheetId": "sheet-8-Front",
+          "section": "Blue:7:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Blue:7:Character-2"
+        },
+        {
+          "sheetId": "sheet-8-Front",
+          "section": "Blue:7:Character",
+          "pocket": 3,
+          "status": "reserved",
+          "tag": "reserve-Blue:7:Character-3"
+        },
+        {
+          "sheetId": "sheet-8-Front",
+          "section": "Blue:10:Character",
+          "pocket": 4,
+          "status": "card",
+          "code": "OP08-043",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-8-Front",
+          "section": "Blue:10:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Blue:10:Character-1"
+        },
+        {
+          "sheetId": "sheet-8-Front",
+          "section": "Blue:10:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Blue:10:Character-2"
+        },
+        {
+          "sheetId": "sheet-8-Front",
+          "section": "Blue:10:Character",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Blue:10:Character-3"
+        },
+        {
+          "sheetId": "sheet-8-Front",
+          "section": "Purple:1:Character",
+          "pocket": 8,
+          "status": "card",
+          "code": "OP12-062",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-8-Front",
+          "section": "Purple:1:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Purple:1:Character-1"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-8-Back",
+      "sheet": 8,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-8-Back",
+          "section": "Purple:1:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Purple:1:Character-2"
+        },
+        {
+          "sheetId": "sheet-8-Back",
+          "section": "Purple:1:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Purple:1:Character-3"
+        },
+        {
+          "sheetId": "sheet-8-Back",
+          "section": "Purple:3:Character",
+          "pocket": 3,
+          "status": "card",
+          "code": "OP05-069",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-8-Back",
+          "section": "Purple:3:Character",
+          "pocket": 4,
+          "status": "card",
+          "code": "OP10-062",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-8-Back",
+          "section": "Purple:3:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Purple:3:Character-1"
+        },
+        {
+          "sheetId": "sheet-8-Back",
+          "section": "Purple:3:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Purple:3:Character-2"
+        },
+        {
+          "sheetId": "sheet-8-Back",
+          "section": "Purple:3:Character",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Purple:3:Character-3"
+        },
+        {
+          "sheetId": "sheet-8-Back",
+          "section": "Purple:4:Character",
+          "pocket": 8,
+          "status": "card",
+          "code": "EB03-037",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-8-Back",
+          "section": "Purple:4:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Purple:4:Character-1"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-9-Front",
+      "sheet": 9,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-9-Front",
+          "section": "Purple:4:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Purple:4:Character-2"
+        },
+        {
+          "sheetId": "sheet-9-Front",
+          "section": "Purple:4:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Purple:4:Character-3"
+        },
+        {
+          "sheetId": "sheet-9-Front",
+          "section": "Purple:5:Character",
+          "pocket": 3,
+          "status": "card",
+          "code": "OP14-074",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-9-Front",
+          "section": "Purple:5:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Purple:5:Character-1"
+        },
+        {
+          "sheetId": "sheet-9-Front",
+          "section": "Purple:5:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Purple:5:Character-2"
+        },
+        {
+          "sheetId": "sheet-9-Front",
+          "section": "Purple:5:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Purple:5:Character-3"
+        },
+        {
+          "sheetId": "sheet-9-Front",
+          "section": "Purple:7:Character",
+          "pocket": 7,
+          "status": "card",
+          "code": "EB03-034",
+          "quantity": 2
+        },
+        {
+          "sheetId": "sheet-9-Front",
+          "section": "Purple:7:Character",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Purple:7:Character-1"
+        },
+        {
+          "sheetId": "sheet-9-Front",
+          "section": "Purple:7:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Purple:7:Character-2"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-9-Back",
+      "sheet": 9,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-9-Back",
+          "section": "Purple:7:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Purple:7:Character-3"
+        },
+        {
+          "sheetId": "sheet-9-Back",
+          "section": "Black:1:Character",
+          "pocket": 2,
+          "status": "card",
+          "code": "OP12-086",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-9-Back",
+          "section": "Black:1:Character",
+          "pocket": 3,
+          "status": "card",
+          "code": "OP16-091",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-9-Back",
+          "section": "Black:1:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Black:1:Character-1"
+        },
+        {
+          "sheetId": "sheet-9-Back",
+          "section": "Black:1:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Black:1:Character-2"
+        },
+        {
+          "sheetId": "sheet-9-Back",
+          "section": "Black:1:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Black:1:Character-3"
+        },
+        {
+          "sheetId": "sheet-9-Back",
+          "section": "Black:1:Event",
+          "pocket": 7,
+          "status": "card",
+          "code": "OP12-097",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-9-Back",
+          "section": "Black:1:Event",
+          "pocket": 8,
+          "status": "card",
+          "code": "OP12-098",
+          "quantity": 6
+        },
+        {
+          "sheetId": "sheet-9-Back",
+          "section": "Black:1:Event",
+          "pocket": 9,
+          "status": "card",
+          "code": "OP16-099",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-10-Front",
+      "sheet": 10,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-10-Front",
+          "section": "Black:1:Event",
+          "pocket": 1,
+          "status": "card",
+          "code": "ST06-015",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-10-Front",
+          "section": "Black:1:Event",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Black:1:Event-1"
+        },
+        {
+          "sheetId": "sheet-10-Front",
+          "section": "Black:1:Event",
+          "pocket": 3,
+          "status": "reserved",
+          "tag": "reserve-Black:1:Event-2"
+        },
+        {
+          "sheetId": "sheet-10-Front",
+          "section": "Black:1:Event",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Black:1:Event-3"
+        },
+        {
+          "sheetId": "sheet-10-Front",
+          "section": "Black:2:Character",
+          "pocket": 5,
+          "status": "card",
+          "code": "EB01-042",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-10-Front",
+          "section": "Black:2:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Black:2:Character-1"
+        },
+        {
+          "sheetId": "sheet-10-Front",
+          "section": "Black:2:Character",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Black:2:Character-2"
+        },
+        {
+          "sheetId": "sheet-10-Front",
+          "section": "Black:2:Character",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Black:2:Character-3"
+        },
+        {
+          "sheetId": "sheet-10-Front",
+          "section": "Black:3:Character",
+          "pocket": 9,
+          "status": "card",
+          "code": "OP12-090",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-10-Back",
+      "sheet": 10,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-10-Back",
+          "section": "Black:3:Character",
+          "pocket": 1,
+          "status": "card",
+          "code": "OP13-093",
+          "quantity": 2
+        },
+        {
+          "sheetId": "sheet-10-Back",
+          "section": "Black:3:Character",
+          "pocket": 2,
+          "status": "card",
+          "code": "ST35-003",
+          "quantity": 4
+        },
+        {
+          "sheetId": "sheet-10-Back",
+          "section": "Black:3:Character",
+          "pocket": 3,
+          "status": "reserved",
+          "tag": "reserve-Black:3:Character-1"
+        },
+        {
+          "sheetId": "sheet-10-Back",
+          "section": "Black:3:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Black:3:Character-2"
+        },
+        {
+          "sheetId": "sheet-10-Back",
+          "section": "Black:3:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Black:3:Character-3"
+        },
+        {
+          "sheetId": "sheet-10-Back",
+          "section": "Black:4:Character",
+          "pocket": 6,
+          "status": "card",
+          "code": "EB03-041",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-10-Back",
+          "section": "Black:4:Character",
+          "pocket": 7,
+          "status": "card",
+          "code": "OP12-093",
+          "quantity": 4
+        },
+        {
+          "sheetId": "sheet-10-Back",
+          "section": "Black:4:Character",
+          "pocket": 8,
+          "status": "card",
+          "code": "P-105",
+          "quantity": 4
+        },
+        {
+          "sheetId": "sheet-10-Back",
+          "section": "Black:4:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Black:4:Character-1"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-11-Front",
+      "sheet": 11,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-11-Front",
+          "section": "Black:4:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Black:4:Character-2"
+        },
+        {
+          "sheetId": "sheet-11-Front",
+          "section": "Black:4:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Black:4:Character-3"
+        },
+        {
+          "sheetId": "sheet-11-Front",
+          "section": "Black:5:Character",
+          "pocket": 3,
+          "status": "card",
+          "code": "OP13-081",
+          "quantity": 4
+        },
+        {
+          "sheetId": "sheet-11-Front",
+          "section": "Black:5:Character",
+          "pocket": 4,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-11-Front",
+          "section": "Black:5:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Black:5:Character-1"
+        },
+        {
+          "sheetId": "sheet-11-Front",
+          "section": "Black:5:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Black:5:Character-2"
+        },
+        {
+          "sheetId": "sheet-11-Front",
+          "section": "Black:5:Character",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Black:5:Character-3"
+        },
+        {
+          "sheetId": "sheet-11-Front",
+          "section": "Black:7:Character",
+          "pocket": 8,
+          "status": "vacant"
+        },
+        {
+          "sheetId": "sheet-11-Front",
+          "section": "Black:7:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Black:7:Character-1"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-11-Back",
+      "sheet": 11,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-11-Back",
+          "section": "Black:7:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Black:7:Character-2"
+        },
+        {
+          "sheetId": "sheet-11-Back",
+          "section": "Black:7:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Black:7:Character-3"
+        },
+        {
+          "sheetId": "sheet-11-Back",
+          "section": "Black:8:Character",
+          "pocket": 3,
+          "status": "card",
+          "code": "OP16-086",
+          "quantity": 2
+        },
+        {
+          "sheetId": "sheet-11-Back",
+          "section": "Black:8:Character",
+          "pocket": 4,
+          "status": "card",
+          "code": "OP16-096",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-11-Back",
+          "section": "Black:8:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Black:8:Character-1"
+        },
+        {
+          "sheetId": "sheet-11-Back",
+          "section": "Black:8:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Black:8:Character-2"
+        },
+        {
+          "sheetId": "sheet-11-Back",
+          "section": "Black:8:Character",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Black:8:Character-3"
+        },
+        {
+          "sheetId": "sheet-11-Back",
+          "section": "Black:9:Character",
+          "pocket": 8,
+          "status": "card",
+          "code": "OP16-085",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-11-Back",
+          "section": "Black:9:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Black:9:Character-1"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-12-Front",
+      "sheet": 12,
+      "side": "Front",
+      "pockets": [
+        {
+          "sheetId": "sheet-12-Front",
+          "section": "Black:9:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Black:9:Character-2"
+        },
+        {
+          "sheetId": "sheet-12-Front",
+          "section": "Black:9:Character",
+          "pocket": 2,
+          "status": "reserved",
+          "tag": "reserve-Black:9:Character-3"
+        },
+        {
+          "sheetId": "sheet-12-Front",
+          "section": "Yellow:1:Character",
+          "pocket": 3,
+          "status": "card",
+          "code": "OP13-113",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-12-Front",
+          "section": "Yellow:1:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Yellow:1:Character-1"
+        },
+        {
+          "sheetId": "sheet-12-Front",
+          "section": "Yellow:1:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Yellow:1:Character-2"
+        },
+        {
+          "sheetId": "sheet-12-Front",
+          "section": "Yellow:1:Character",
+          "pocket": 6,
+          "status": "reserved",
+          "tag": "reserve-Yellow:1:Character-3"
+        },
+        {
+          "sheetId": "sheet-12-Front",
+          "section": "Yellow:3:Character",
+          "pocket": 7,
+          "status": "card",
+          "code": "EB03-052",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-12-Front",
+          "section": "Yellow:3:Character",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Yellow:3:Character-1"
+        },
+        {
+          "sheetId": "sheet-12-Front",
+          "section": "Yellow:3:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Yellow:3:Character-2"
+        }
+      ]
+    },
+    {
+      "sheetId": "sheet-12-Back",
+      "sheet": 12,
+      "side": "Back",
+      "pockets": [
+        {
+          "sheetId": "sheet-12-Back",
+          "section": "Yellow:3:Character",
+          "pocket": 1,
+          "status": "reserved",
+          "tag": "reserve-Yellow:3:Character-3"
+        },
+        {
+          "sheetId": "sheet-12-Back",
+          "section": "Yellow:4:Character",
+          "pocket": 2,
+          "status": "card",
+          "code": "OP03-110",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-12-Back",
+          "section": "Yellow:4:Character",
+          "pocket": 3,
+          "status": "reserved",
+          "tag": "reserve-Yellow:4:Character-1"
+        },
+        {
+          "sheetId": "sheet-12-Back",
+          "section": "Yellow:4:Character",
+          "pocket": 4,
+          "status": "reserved",
+          "tag": "reserve-Yellow:4:Character-2"
+        },
+        {
+          "sheetId": "sheet-12-Back",
+          "section": "Yellow:4:Character",
+          "pocket": 5,
+          "status": "reserved",
+          "tag": "reserve-Yellow:4:Character-3"
+        },
+        {
+          "sheetId": "sheet-12-Back",
+          "section": "Yellow:5:Character",
+          "pocket": 6,
+          "status": "card",
+          "code": "EB03-058",
+          "quantity": 1
+        },
+        {
+          "sheetId": "sheet-12-Back",
+          "section": "Yellow:5:Character",
+          "pocket": 7,
+          "status": "reserved",
+          "tag": "reserve-Yellow:5:Character-1"
+        },
+        {
+          "sheetId": "sheet-12-Back",
+          "section": "Yellow:5:Character",
+          "pocket": 8,
+          "status": "reserved",
+          "tag": "reserve-Yellow:5:Character-2"
+        },
+        {
+          "sheetId": "sheet-12-Back",
+          "section": "Yellow:5:Character",
+          "pocket": 9,
+          "status": "reserved",
+          "tag": "reserve-Yellow:5:Character-3"
+        }
+      ]
+    }
+  ]
+}

@@ -27,8 +27,10 @@ describe('stable binder layout', () => {
   it('projects a zero quantity as vacant rather than empty', () => {
     const initial = createInitialBinderLayout(catalog, ['L1']);
     const result = reconcileBinderLayout(initial, new Map([['L1', 0]]), catalog);
-    const pocket = result.layout.sheets.flatMap(s => s.pockets).find(p => p.code === 'L1');
-    expect(pocket?.status).toBe('vacant');
+    // The pocket that held L1 is now vacant; code is removed, so search by section
+    const vacant = result.layout.sheets.flatMap(s => s.pockets).find(p => p.status === 'vacant' && p.section.includes('Leader:Red'));
+    expect(vacant).toBeDefined();
+    expect(vacant!.status).toBe('vacant');
   });
 
   it('rejects an incomplete catalog for exact placement', () => {

@@ -22,7 +22,7 @@ The sorting convention used to assign card codes to binder slots. Priority is: *
 
 ## Reserved Slot
 
-A deliberately empty binder slot set aside for a future card code (e.g., an unreleased set). Reserved slots are skipped during automatic placement so the ordering of current cards is not disturbed when the target card is later added.
+A deliberately empty binder slot set aside for a future card code (e.g., an unreleased set). Reserved slots are consumed first when a new card code arrives in that group. They are never relocated.
 
 ## Stable physical layout (resolved)
 
@@ -35,10 +35,20 @@ pockets. A zero-quantity owned card remains assigned as `vacant`; `empty` means
 an unassigned physical pocket, and `card` carries the actual stacked quantity.
 
 When a new code arrives, reconciliation consumes a matching reserve first. If no
-reserve exists it appends an overflow sheet to that section. Deck quantities are
+reserve exists it appends a complete Front+Back overflow sheet directly after
+that color section, reusing the first empty pocket. Deck quantities are
 allocations of the collection: absent codes and allocations above owned quantity
-are errors. Wanted rows are unique by `(code,target)`.
+are errors. Existing cards are never relocated to make room.
 
-The current Sabo CSV summary row `,51` is intentionally reported as a source
-conflict. It must be corrected in the source file deliberately; validation does
-not silently discard it.
+The Sabo CSV summary row `,51` is the **sole ignored exception** — it is silently
+skipped during parsing (not an error). All other CSV rows must have correct column
+counts and valid positive-integer quantities; blank lines and extra columns are
+rejected.
+
+## Normal generation behaviour (resolved)
+
+`npm run generate` in normal mode loads the committed `data/binder-layout.json`,
+reconciles current collection/deck quantities against it, copies Vega card images,
+and emits the canonical 8-key BinderData. The committed ledger is never
+overwritten. Bootstrap with `--init-layout` creates a fresh ledger from the
+Vega catalog.

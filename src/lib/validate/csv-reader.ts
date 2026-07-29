@@ -73,14 +73,43 @@ function normalizeCSV(text: string): string {
 
 /**
  * Parse a generic CSV string into rows.
+ *
+ * Rules:
+ *   - blank lines between data rows are REJECTED (not silently filtered)
+ *   - a trailing empty line from a final `\n` is allowed (common CSV convention)
+ *   - every data row must have exactly the expected column count
+ *   - fields are trimmed
+ *   - no quoted fields expected in our data
  */
-function parseCSVLines(text: string): string[][] {
+function parseCSVLines(text: string, expectedColumns: number): { fields: string[]; lineNumber: number }[] {
   const normalized = normalizeCSV(text);
-  const lines = normalized.split('\n').filter(Boolean);
-  return lines.map(line => {
-    // Simple CSV parsing (no quoted fields expected in our data)
-    return line.split(',').map(s => s.trim());
-  });
+  const lines = normalized.split('\n');
+  const result: { fields: string[]; lineNumber: number }[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const isLast = i === lines.length - 1;
+    const line = lines[i]!;
+    const trimmed = line.trim();
+
+    // Allow a trailing empty line (from final `\n`), but reject interior blank lines
+    if (trimmed.length === 0) {
+      if (isLast) continue; // trailing newline is legal
+      throw new Error(`Blank row at line ${i + 1} — blank lines are not permitted`);
+    }
+
+    const fields = line.split(',').map(s => s.trim());
+
+    // Extra columns are rejected
+    if (fields.length > expectedColumns) {
+      throw new Error(
+        `Line ${i + 1}: expected ${expectedColumns} column(s), got ${fields.length}: "${line}"`,
+      );
+    }
+
+    result.push({ fields, lineNumber: i + 1 });
+  }
+
+  return result;
 }
 
 /* ─── Collection CSV ───────────────────────────────────────── */
@@ -89,10 +118,6 @@ export function parseCollectionCSV(filePath: string): CSVParseResult<CollectionR
   return parseCSVInternal<CollectionRow>(
     filePath,
     (fields, rowNum, errors) => {
-      if (fields.length < 2) {
-        errors.push({ file: filePath, row: rowNum, value: fields.join(','), reason: 'Expected at least 2 columns: code,amount' });
-        return null;
-      }
       const code = fields[0]!.trim();
       const amountStr = fields[1]!.trim();
       const amount = Number(amountStr);
@@ -108,6 +133,7 @@ export function parseCollectionCSV(filePath: string): CSVParseResult<CollectionR
       return { code, amount };
     },
     true, // deduplicate
+    2,   // expected columns: code,amount
   );
 }
 
@@ -124,10 +150,6 @@ export function parseDecklistCSV(filePath: string): CSVParseResult<DecklistRow> 
       if (isSabo && fields.length === 2 && SABO_TOTAL_ROW.test(fields.join(','))) {
         return null; // silently skip — spec says this is the only permitted non-card row
       }
-      if (fields.length < 2) {
-        errors.push({ file: filePath, row: rowNum, value: fields.join(','), reason: 'Expected at least 2 columns: code,amount' });
-        return null;
-      }
       const code = fields[0]!.trim();
       const amountStr = fields[1]!.trim();
       const amount = Number(amountStr);
@@ -143,6 +165,7 @@ export function parseDecklistCSV(filePath: string): CSVParseResult<DecklistRow> 
       return { code, amount };
     },
     true, // deduplicate
+    2,   // expected columns: code,amount
   );
 }
 
@@ -152,10 +175,6 @@ export function parseWantedCSV(filePath: string): CSVParseResult<WantedRow> {
   return parseCSVInternal<WantedRow>(
     filePath,
     (fields, rowNum, errors) => {
-      if (fields.length < 3) {
-        errors.push({ file: filePath, row: rowNum, value: fields.join(','), reason: 'Expected at least 3 columns: code,amount,target' });
-        return null;
-      }
       const code = fields[0]!.trim();
       const amountStr = fields[1]!.trim();
       const target = fields[2]!.trim();
@@ -176,6 +195,7 @@ export function parseWantedCSV(filePath: string): CSVParseResult<WantedRow> {
       return { code, amount, target };
     },
     false, // no dedup for wanted — same code can have different targets
+    3,   // expected columns: code,amount,target
   );
 }
 
@@ -266,6 +286,7 @@ function parseCSVInternal<T extends { code: string }>(
   filePath: string,
   rowParser: (fields: string[], rowNum: number, errors: CSVError[]) => T | null,
   deduplicateCodes: boolean,
+  expectedColumns: number,
 ): CSVParseResult<T> {
   const errors: CSVError[] = [];
   const rows: T[] = [];
@@ -276,24 +297,30 @@ function parseCSVInternal<T extends { code: string }>(
   }
 
   const content = readFileSync(absolutePath, 'utf-8');
-  const parsed = parseCSVLines(content);
+
+  let parsed: { fields: string[]; lineNumber: number }[];
+  try {
+    parsed = parseCSVLines(content, expectedColumns);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    return { rows, errors: [{ file: filePath, row: 0, value: '', reason: msg }], rowCount: 0 };
+  }
 
   if (parsed.length === 0) {
     return { rows, errors: [{ file: filePath, row: 0, value: '', reason: 'File is empty' }], rowCount: 0 };
   }
 
-  // Validate header
-  const header = parsed[0]!;
+  // Validate header (first line)
+  const header = parsed[0]!.fields;
   if (header.length < 2 || !header[0] || header[0].toLowerCase() !== 'code') {
     errors.push({ file: filePath, row: 1, value: header.join(','), reason: `Expected header starting with "code", got "${header[0]}"` });
     return { rows, errors, rowCount: 0 };
   }
 
-  // Parse data rows
+  // Parse data rows (skip header)
   for (let i = 1; i < parsed.length; i++) {
-    const fields = parsed[i]!;
-    const rowNum = i + 1;
-    const result = rowParser(fields, rowNum, errors);
+    const { fields, lineNumber } = parsed[i]!;
+    const result = rowParser(fields, lineNumber, errors);
     if (result !== null) {
       rows.push(result);
     }

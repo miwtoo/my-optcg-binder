@@ -6,7 +6,8 @@
     "catalogSourceVersion": "vegapull v1.2.3 (English, pulled 2026-07-29T05:11:46.714848+07:00, 72300ms)",
     "totalCards": 75,
     "totalSheets": 12,
-    "dataProvenance": "Generated from Vega snapshot at .vega/ — 4673 card entries, 2665 unique codes, 59 packs"
+    "dataProvenance": "Vega snapshot at .vega/ — 4673 entries, 2665 codes, 59 packs",
+    "layoutVersion": 1
   },
   "catalog": [
     {
@@ -622,11 +623,7 @@
           "quantity": 1
         }
       ],
-      "binderLocation": {
-        "sheet": 1,
-        "side": "Front",
-        "slot": 5
-      }
+      "binderLocation": null
     },
     {
       "code": "OP16-045",
@@ -639,11 +636,7 @@
           "quantity": 4
         }
       ],
-      "binderLocation": {
-        "sheet": 7,
-        "side": "Front",
-        "slot": 2
-      }
+      "binderLocation": null
     },
     {
       "code": "OP16-034",
@@ -656,11 +649,7 @@
           "quantity": 4
         }
       ],
-      "binderLocation": {
-        "sheet": 3,
-        "side": "Back",
-        "slot": 8
-      }
+      "binderLocation": null
     },
     {
       "code": "OP16-055",
@@ -673,11 +662,7 @@
           "quantity": 4
         }
       ],
-      "binderLocation": {
-        "sheet": 6,
-        "side": "Front",
-        "slot": 3
-      }
+      "binderLocation": null
     },
     {
       "code": "OP16-054",
@@ -690,11 +675,7 @@
           "quantity": 4
         }
       ],
-      "binderLocation": {
-        "sheet": 6,
-        "side": "Front",
-        "slot": 2
-      }
+      "binderLocation": null
     },
     {
       "code": "OP16-027",
@@ -707,11 +688,7 @@
           "quantity": 1
         }
       ],
-      "binderLocation": {
-        "sheet": 4,
-        "side": "Front",
-        "slot": 8
-      }
+      "binderLocation": null
     },
     {
       "code": "OP16-038",
@@ -724,11 +701,7 @@
           "quantity": 3
         }
       ],
-      "binderLocation": {
-        "sheet": 4,
-        "side": "Front",
-        "slot": 4
-      }
+      "binderLocation": null
     },
     {
       "code": "OP16-042",
@@ -741,11 +714,7 @@
           "quantity": 1
         }
       ],
-      "binderLocation": {
-        "sheet": 7,
-        "side": "Back",
-        "slot": 5
-      }
+      "binderLocation": null
     },
     {
       "code": "OP02-068",
@@ -758,11 +727,7 @@
           "quantity": 1
         }
       ],
-      "binderLocation": {
-        "sheet": 5,
-        "side": "Back",
-        "slot": 3
-      }
+      "binderLocation": null
     },
     {
       "code": "OP05-057",
@@ -1500,11 +1465,7 @@
           "quantity": 4
         }
       ],
-      "binderLocation": {
-        "sheet": 11,
-        "side": "Front",
-        "slot": 8
-      }
+      "binderLocation": null
     },
     {
       "code": "ST35-002",
@@ -1517,11 +1478,7 @@
           "quantity": 4
         }
       ],
-      "binderLocation": {
-        "sheet": 2,
-        "side": "Back",
-        "slot": 7
-      }
+      "binderLocation": null
     },
     {
       "code": "ST35-005",
@@ -1534,11 +1491,7 @@
           "quantity": 4
         }
       ],
-      "binderLocation": {
-        "sheet": 11,
-        "side": "Front",
-        "slot": 4
-      }
+      "binderLocation": null
     },
     {
       "code": "OP11-061",
@@ -1551,11 +1504,7 @@
           "quantity": 2
         }
       ],
-      "binderLocation": {
-        "sheet": 6,
-        "side": "Back",
-        "slot": 7
-      }
+      "binderLocation": null
     },
     {
       "code": "OP13-040",
@@ -1568,11 +1517,7 @@
           "quantity": 2
         }
       ],
-      "binderLocation": {
-        "sheet": 4,
-        "side": "Front",
-        "slot": 3
-      }
+      "binderLocation": null
     },
     {
       "code": "OP15-032",
@@ -1585,11 +1530,7 @@
           "quantity": 2
         }
       ],
-      "binderLocation": {
-        "sheet": 5,
-        "side": "Front",
-        "slot": 4
-      }
+      "binderLocation": null
     },
     {
       "code": "OP16-026",
@@ -1602,11 +1543,7 @@
           "quantity": 3
         }
       ],
-      "binderLocation": {
-        "sheet": 4,
-        "side": "Back",
-        "slot": 4
-      }
+      "binderLocation": null
     },
     {
       "code": "OP16-032",
@@ -1619,11 +1556,7 @@
           "quantity": 4
         }
       ],
-      "binderLocation": {
-        "sheet": 5,
-        "side": "Front",
-        "slot": 8
-      }
+      "binderLocation": null
     },
     {
       "code": "OP16-048",
@@ -1636,11 +1569,7 @@
           "quantity": 4
         }
       ],
-      "binderLocation": {
-        "sheet": 7,
-        "side": "Front",
-        "slot": 8
-      }
+      "binderLocation": null
     },
     {
       "code": "OP16-056",
@@ -1653,11 +1582,7 @@
           "quantity": 4
         }
       ],
-      "binderLocation": {
-        "sheet": 7,
-        "side": "Front",
-        "slot": 3
-      }
+      "binderLocation": null
     },
     {
       "code": "ST30-014",
@@ -1670,11 +1595,7 @@
           "quantity": 2
         }
       ],
-      "binderLocation": {
-        "sheet": 4,
-        "side": "Front",
-        "slot": 9
-      }
+      "binderLocation": null
     }
   ],
   "sheets": [
@@ -1685,21 +1606,19 @@
         {
           "status": "card",
           "code": "OP13-004",
-          "quantity": 2
-        },
-        {
-          "status": "reserved"
-        },
-        {
-          "status": "reserved"
-        },
-        {
-          "status": "reserved"
-        },
-        {
-          "status": "card",
-          "code": "OP16-022",
           "quantity": 1
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -1743,7 +1662,7 @@
         {
           "status": "card",
           "code": "OP13-019",
-          "quantity": 11
+          "quantity": 9
         },
         {
           "status": "reserved"
@@ -1763,7 +1682,7 @@
         {
           "status": "card",
           "code": "OP13-008",
-          "quantity": 8
+          "quantity": 6
         },
         {
           "status": "reserved"
@@ -1816,17 +1735,15 @@
         {
           "status": "card",
           "code": "OP13-005",
-          "quantity": 8
+          "quantity": 4
         },
         {
           "status": "card",
           "code": "ST35-001",
-          "quantity": 8
+          "quantity": 4
         },
         {
-          "status": "card",
-          "code": "ST35-002",
-          "quantity": 4
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -1865,7 +1782,7 @@
         {
           "status": "card",
           "code": "OP13-017",
-          "quantity": 13
+          "quantity": 9
         },
         {
           "status": "reserved"
@@ -1907,9 +1824,7 @@
           "quantity": 1
         },
         {
-          "status": "card",
-          "code": "OP16-034",
-          "quantity": 4
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -1927,14 +1842,10 @@
           "status": "reserved"
         },
         {
-          "status": "card",
-          "code": "OP13-040",
-          "quantity": 2
+          "status": "vacant"
         },
         {
-          "status": "card",
-          "code": "OP16-038",
-          "quantity": 3
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -1946,14 +1857,10 @@
           "status": "reserved"
         },
         {
-          "status": "card",
-          "code": "OP16-027",
-          "quantity": 1
+          "status": "vacant"
         },
         {
-          "status": "card",
-          "code": "ST30-014",
-          "quantity": 2
+          "status": "vacant"
         }
       ]
     },
@@ -1971,9 +1878,7 @@
           "status": "reserved"
         },
         {
-          "status": "card",
-          "code": "OP16-026",
-          "quantity": 3
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -2010,9 +1915,7 @@
           "quantity": 1
         },
         {
-          "status": "card",
-          "code": "OP15-032",
-          "quantity": 2
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -2024,9 +1927,7 @@
           "status": "reserved"
         },
         {
-          "status": "card",
-          "code": "OP16-032",
-          "quantity": 4
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -2044,9 +1945,7 @@
           "status": "reserved"
         },
         {
-          "status": "card",
-          "code": "OP02-068",
-          "quantity": 1
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -2078,14 +1977,10 @@
           "status": "reserved"
         },
         {
-          "status": "card",
-          "code": "OP16-054",
-          "quantity": 4
+          "status": "vacant"
         },
         {
-          "status": "card",
-          "code": "OP16-055",
-          "quantity": 4
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -2099,7 +1994,7 @@
         {
           "status": "card",
           "code": "OP05-057",
-          "quantity": 4
+          "quantity": 2
         },
         {
           "status": "reserved"
@@ -2136,9 +2031,7 @@
           "status": "reserved"
         },
         {
-          "status": "card",
-          "code": "OP11-061",
-          "quantity": 2
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -2156,14 +2049,10 @@
           "status": "reserved"
         },
         {
-          "status": "card",
-          "code": "OP16-045",
-          "quantity": 4
+          "status": "vacant"
         },
         {
-          "status": "card",
-          "code": "OP16-056",
-          "quantity": 4
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -2180,9 +2069,7 @@
           "quantity": 1
         },
         {
-          "status": "card",
-          "code": "OP16-048",
-          "quantity": 4
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -2210,9 +2097,7 @@
           "quantity": 1
         },
         {
-          "status": "card",
-          "code": "OP16-042",
-          "quantity": 1
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -2377,7 +2262,7 @@
         {
           "status": "card",
           "code": "OP12-098",
-          "quantity": 8
+          "quantity": 6
         },
         {
           "status": "card",
@@ -2421,7 +2306,7 @@
         {
           "status": "card",
           "code": "OP12-090",
-          "quantity": 8
+          "quantity": 4
         }
       ]
     },
@@ -2437,7 +2322,7 @@
         {
           "status": "card",
           "code": "ST35-003",
-          "quantity": 8
+          "quantity": 4
         },
         {
           "status": "reserved"
@@ -2456,12 +2341,12 @@
         {
           "status": "card",
           "code": "OP12-093",
-          "quantity": 8
+          "quantity": 4
         },
         {
           "status": "card",
           "code": "P-105",
-          "quantity": 8
+          "quantity": 4
         },
         {
           "status": "reserved"
@@ -2481,15 +2366,10 @@
         {
           "status": "card",
           "code": "OP13-081",
-          "quantity": 8
-        },
-        {
-          "status": "card",
-          "code": "ST35-005",
           "quantity": 4
         },
         {
-          "status": "reserved"
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -2498,9 +2378,10 @@
           "status": "reserved"
         },
         {
-          "status": "card",
-          "code": "ST35-004",
-          "quantity": 4
+          "status": "reserved"
+        },
+        {
+          "status": "vacant"
         },
         {
           "status": "reserved"
@@ -2933,7 +2814,7 @@
   },
   "attribution": {
     "copyright": "One Piece TCG card data and images © Bandai / Toei Animation. This is an unofficial fan project for personal reference only.",
-    "disclaimer": "Not affiliated with Bandai, Toei Animation, or Vega. All trademarks belong to their respective owners.",
+    "disclaimer": "Not affiliated with Bandai, Toei Animation, or Vega.",
     "dataSource": "Vega (One Piece TCG card database)",
     "dataSourceUrl": "https://vega.gg/",
     "toolUsed": "vegapull v1.2.3 (https://github.com/arashio/vegapull)"
