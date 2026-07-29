@@ -33,6 +33,44 @@ describe('CSV Validation', () => {
     }
   });
 
+  it('reports duplicate collection rows with source filename, row, value, and reason', () => {
+    const root = mkdtempSync(resolve(tmpdir(), 'optcg-validation-'));
+    try {
+      writeFileSync(resolve(root, 'One Piece TCG Collection - All.csv'), 'code,amount\nOP13-004,1\nOP13-004,2\n');
+      writeFileSync(resolve(root, 'One Piece TCG Collection - Sabo.csv'), 'code,amount\nOP13-004,1\n');
+      writeFileSync(resolve(root, 'One Piece TCG Collection - Lufy G_B [WIP].csv'), 'code,amount\nOP13-004,1\n');
+      writeFileSync(resolve(root, 'Want to Buy.csv'), 'code,amount,target\nOP13-004,1,binder\n');
+      const result = validateInputs(root, new Set(['OP13-004']));
+      expect(result.errors).toContainEqual({
+        file: resolve(root, 'One Piece TCG Collection - All.csv'),
+        row: 2,
+        value: 'OP13-004',
+        reason: 'Duplicate card code "OP13-004" appears 2 times (rows 2, 3)',
+      });
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('reports negative quantities with source filename, row, value, and reason', () => {
+    const root = mkdtempSync(resolve(tmpdir(), 'optcg-validation-'));
+    try {
+      writeFileSync(resolve(root, 'One Piece TCG Collection - All.csv'), 'code,amount\nOP13-004,-2\n');
+      writeFileSync(resolve(root, 'One Piece TCG Collection - Sabo.csv'), 'code,amount\nOP13-004,1\n');
+      writeFileSync(resolve(root, 'One Piece TCG Collection - Lufy G_B [WIP].csv'), 'code,amount\nOP13-004,1\n');
+      writeFileSync(resolve(root, 'Want to Buy.csv'), 'code,amount,target\nOP13-004,1,binder\n');
+      const result = validateInputs(root, new Set(['OP13-004']));
+      expect(result.errors).toContainEqual({
+        file: resolve(root, 'One Piece TCG Collection - All.csv'),
+        row: 2,
+        value: '-2',
+        reason: 'Amount must be a positive integer, got "-2"',
+      });
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it('parses all collection rows', () => {
     const result = validateAll(projectRoot);
     // After deduplication: original ~67 rows minus 3 duplicates = 64 unique codes

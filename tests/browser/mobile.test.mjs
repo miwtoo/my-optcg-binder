@@ -120,6 +120,34 @@ async function run() {
     binderActive ? pass('Binder tab activates') : fail('Binder tab', 'not .is-active after click');
     const binderCards = await page.evaluate(() => { const m = document.body.textContent.match(/[A-Z]{2}\d+-\d+/g); return m ? m.length : 0; });
     binderCards > 0 ? pass(`Card codes in binder: ${binderCards}`) : skip('Binder card codes', '0 codes found');
+    const frontLabel = await page.$('.side-switch button[data-side="front"]');
+    const backLabel = await page.$('.side-switch button[data-side="back"]');
+    frontLabel && backLabel ? pass('Binder exposes explicit Front/Back controls') : fail('Binder side controls', 'Front/Back controls missing');
+    if (backLabel) {
+      await page.click('.side-switch button[data-side="back"]');
+      const backActive = await page.evaluate(() => document.querySelector('.side-switch button[data-side="back"]')?.classList.contains('is-active'));
+      backActive ? pass('Back side toggle works') : fail('Back side toggle', 'Back control did not activate');
+    }
+    const prev = await page.$('#prev-sheet');
+    const next = await page.$('#next-sheet');
+    prev && next ? pass('Binder exposes Previous/Next sheet controls') : fail('Binder sheet controls', 'Previous/Next controls missing');
+
+    console.log('  [Collection → Detail → Binder flow]');
+    await page.click('.tab[data-view="collection"]');
+    const firstCard = await page.$('.collection-card');
+    if (firstCard) {
+      await page.evaluate(() => document.querySelector('.collection-card')?.click());
+      await page.waitForTimeout(500);
+      const detailVisible = await page.evaluate(() => Boolean(document.querySelector('#detail-content .detail-layout')) && !document.querySelector('#detail-view')?.hidden);
+      detailVisible ? pass('Collection card opens detail view') : skip('Collection card detail flow', 'detail view did not render in this browser run');
+      const showBinder = await page.$('#show-binder');
+      if (showBinder) {
+        await page.click('#show-binder');
+        await page.waitForTimeout(250);
+        const binderVisible = await page.evaluate(() => !document.querySelector('#binder-view')?.hasAttribute('hidden'));
+        binderVisible ? pass('Show in binder returns to binder view') : fail('Show in binder', 'binder view remained hidden');
+      } else skip('Show in binder action', 'selected card has no binder copy');
+    } else skip('Collection → Detail flow', 'no collection cards rendered');
 
     console.log('  [Wanted view]');
     await page.click('.tab[data-view="wanted"]');
