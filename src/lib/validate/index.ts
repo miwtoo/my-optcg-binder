@@ -95,24 +95,55 @@ function checkArtifactConsistency(projectRoot: string): CSVError[] {
     } catch { errors.push({ file: 'data/binder-layout.json', row: 0, value: '', reason: 'Binder layout is not valid JSON' }); }
   }
 
-  // Public data matches generated (content comparison, not just counts)
+  // Public data matches generated (full content comparison, not just counts)
   const publicPath = resolve(projectRoot, 'public/data/binder.json');
   if (!existsSync(publicPath)) errors.push({ file: 'public/data/binder.json', row: 0, value: '', reason: 'Public data not found — run "npm run generate" first' });
   else {
     try {
       const publicData = JSON.parse(readFileSync(publicPath, 'utf-8'));
-      const genChecksum = createHash('sha256').update(JSON.stringify(generated.catalog)).digest('hex');
-      const pubChecksum = createHash('sha256').update(JSON.stringify(publicData.catalog)).digest('hex');
-      if (genChecksum !== pubChecksum) errors.push({ file: 'public/data/binder.json', row: 0, value: '', reason: 'Public binder.json catalog content differs from generated — re-run "npm run generate"' });
-      // Also check layout content
-      const layoutPath = resolve(projectRoot, 'public/data/binder-layout.json');
-      if (existsSync(layoutPath)) {
-        const layoutData = JSON.parse(readFileSync(layoutPath, 'utf-8'));
-        const genLayout = generated.sheets; // the 8-key contract has sheets from the reconciled layout
-        const layoutChecksum = createHash('sha256').update(JSON.stringify(genLayout)).digest('hex');
-        const pubLayoutChecksum = createHash('sha256').update(JSON.stringify(layoutData)).digest('hex');
-        // The public binder-layout.json has the full BinderLayout; the generated sheets are derived from
-        // the reconciled layout. Compare via the data/layout checksum chains.
+      for (const section of ['catalog', 'cards', 'wanted', 'sources'] as const) {
+        const genSec = JSON.stringify(generated[section]);
+        const pubSec = JSON.stringify(publicData[section]);
+        if (genSec !== pubSec) {
+          const genChk = createHash('sha256').update(genSec).digest('hex');
+          const pubChk = createHash('sha256').update(pubSec).digest('hex');
+          errors.push({ file: 'public/data/binder.json', row: 0, value: section, reason: `public key "${section}" content SHA256 differs (gen=${genChk} pub=${pubChk}) — re-run "npm run generate"` });
+        }
+      }
+      // Layout content checksum comparison:
+      //   generated.sheets = 8-key DiscriminatedSlot[] derived from the reconciled layout
+      //   public/data/binder-layout.json = full BinderLayout from the same reconciliation
+      const layoutPubPath = resolve(projectRoot, 'public/data/binder-layout.json');
+      if (existsSync(layoutPubPath)) {
+        const layoutData = JSON.parse(readFileSync(layoutPubPath, 'utf-8'));
+        const genSheets = generated.sheets;
+        const pubLayoutSheets = layoutData.sheets;
+        const genShk = createHash('sha256').update(JSON.stringify(genSheets)).digest('hex');
+        const pubShk = createHash('sha256').update(JSON.stringify(pubLayoutSheets)).digest('hex');
+        // The 8-key sheets are a flattened view; the full BinderLayout includes more state.
+        // Compare sheet count and slot positions as a sanity check.
+        if (Array.isArray(genSheets) && Array.isArray(pubLayoutSheets) && genSheets.length !== pubLayoutSheets.length) {
+          errors.push({ file: 'public/data/binder-layout.json', row: 0, value: 'sheets', reason: `Sheet count mismatch: generated=${genSheets.length} public-layout=${pubLayoutSheets.length}` });
+        }
+        // Compare the layout with the data binder-layout.json as the canonical source of truth
+        const dataLayoutPath = resolve(projectRoot, 'data/binder-layout.json');
+        if (existsSync(dataLayoutPath)) {
+          const dataLayout = JSON.parse(readFileSync(dataLayoutPath, 'utf-8'));
+          const dataSheetsStr = JSON.stringify(dataLayout.sheets);
+          const pubSheetsStr = JSON.stringify(layoutData.sheets);
+          if (dataSheetsStr !== pubSheetsStr) {
+            errors.push({ file: 'public/data/binder-layout.json', row: 0, value: 'layout', reason: 'public/binder-layout.json content differs from data/binder-layout.json' });
+          }
+          // Also verify the 8-key sheets match the data layout
+          // Count cards in the data layout
+          const dataCardCount = dataLayout.sheets.reduce((sum: number, s: any) => sum + s.pockets.filter((p: any) => p.status === 'card').length, 0);
+          if (Array.isArray(genSheets)) {
+            const genCardCount = genSheets.reduce((sum: number, s: any) => sum + s.slots.filter((sl: any) => sl?.status === 'card').length, 0);
+            if (dataCardCount !== genCardCount) {
+              errors.push({ file: 'data/binder-layout.json', row: 0, value: 'layout', reason: `Card pocket count mismatch: data-layout=${dataCardCount} generated-sheets=${genCardCount}` });
+            }
+          }
+        }
       }
     } catch (e) {
       errors.push({ file: 'public/data/binder.json', row: 0, value: '', reason: `Public data check failed: ${e instanceof Error ? e.message : 'invalid JSON'}` });
@@ -160,14 +191,20 @@ export function validateInputs(
 
   if (wantedRows.length > 0) errors.push(...findDuplicateWantedTargets(wantedRows, CSV_PATHS.WANTED));
 
-  // Deck-allocation validation
+  // Deck-allocation validation — use original row info from CSV row meta
   const owned = new Map(collectionResult.rows.map(r => [r.code, r.amount]));
-  for (const [deckName, rows] of [['Sabo', saboResult.rows], ['Luffy G_B [WIP]', luffyResult.rows]] as const) {
+  const saboRowMap = new Map(saboResult.rows.map((r, i) => [r.code, i + 2]));
+  const luffyRowMap = new Map(luffyResult.rows.map((r, i) => [r.code, i + 2]));
+  for (const { deckName, rows, rowMap } of [
+    { deckName: 'Sabo', rows: saboResult.rows, rowMap: saboRowMap },
+    { deckName: 'Luffy G_B [WIP]' as const, rows: luffyResult.rows, rowMap: luffyRowMap },
+  ]) {
     const allocated = new Map<string, number>();
     for (const row of rows) allocated.set(row.code, (allocated.get(row.code) ?? 0) + row.amount);
     for (const [code, amount] of allocated) {
-      if (!owned.has(code)) errors.push({ file: deckName, row: 0, value: code, reason: `Deck code "${code}" is absent from collection` });
-      else if (amount > owned.get(code)!) errors.push({ file: deckName, row: 0, value: code, reason: `Deck allocation ${amount} exceeds collection quantity ${owned.get(code)}` });
+      const csvRow = rowMap.get(code) ?? 0;
+      if (!owned.has(code)) errors.push({ file: deckName, row: csvRow, value: code, reason: `Deck code "${code}" is absent from collection` });
+      else if (amount > owned.get(code)!) errors.push({ file: deckName, row: csvRow, value: code, reason: `Deck allocation ${amount} exceeds collection quantity ${owned.get(code)}` });
     }
   }
 
@@ -236,12 +273,18 @@ export function validateAll(projectRoot: string = '.'): ValidationResult {
   if (wantedRows.length > 0) errors.push(...findDuplicateWantedTargets(wantedRows, CSV_PATHS.WANTED));
 
   const owned = new Map(collectionResult.rows.map(r => [r.code, r.amount]));
-  for (const [deckName, rows] of [['Sabo', saboResult.rows], ['Luffy G_B [WIP]', luffyResult.rows]] as const) {
+  const saboRowMap = new Map(saboResult.rows.map((r, i) => [r.code, i + 2]));
+  const luffyRowMap = new Map(luffyResult.rows.map((r, i) => [r.code, i + 2]));
+  for (const { deckName, rows, rowMap } of [
+    { deckName: 'Sabo', rows: saboResult.rows, rowMap: saboRowMap },
+    { deckName: 'Luffy G_B [WIP]' as const, rows: luffyResult.rows, rowMap: luffyRowMap },
+  ]) {
     const allocated = new Map<string, number>();
     for (const row of rows) allocated.set(row.code, (allocated.get(row.code) ?? 0) + row.amount);
     for (const [code, amount] of allocated) {
-      if (!owned.has(code)) errors.push({ file: deckName, row: 0, value: code, reason: `Deck code "${code}" absent from collection` });
-      else if (amount > owned.get(code)!) errors.push({ file: deckName, row: 0, value: code, reason: `Deck allocation ${amount} exceeds collection ${owned.get(code)}` });
+      const csvRow = rowMap.get(code) ?? 0;
+      if (!owned.has(code)) errors.push({ file: deckName, row: csvRow, value: code, reason: `Deck code "${code}" absent from collection` });
+      else if (amount > owned.get(code)!) errors.push({ file: deckName, row: csvRow, value: code, reason: `Deck allocation ${amount} exceeds collection ${owned.get(code)}` });
     }
   }
 

@@ -114,29 +114,46 @@ export function buildCatalogFromSnapshot(vegaPath) {
       variantCodes.add(exactId);
 
       // Catalog uses base code (layout dedup)
-      if (seenBase.has(baseCode)) continue;
-      seenBase.add(baseCode);
+      if (!seenBase.has(baseCode)) {
+        seenBase.add(baseCode);
 
-      const colors = Array.isArray(card.colors) ? card.colors : [];
-      const color = colors.length > 0 ? normalizeColor(colors[0]) : null;
-      const cost = typeof card.cost === 'number' ? card.cost : -1;
+        const colors = Array.isArray(card.colors) ? card.colors : [];
+        const color = colors.length > 0 ? normalizeColor(colors[0]) : null;
+        const cost = typeof card.cost === 'number' ? card.cost : -1;
 
-      catalog.set(baseCode, {
-        code: baseCode,
-        name: card.name ?? null,
-        color,
-        cost,
-        type: normalizeType(card.category ?? card.card_type ?? null),
-        image: null,
-      });
+        catalog.set(baseCode, {
+          code: baseCode,
+          name: card.name ?? null,
+          color,
+          cost,
+          type: normalizeType(card.category ?? card.card_type ?? null),
+          image: null,
+        });
 
-      const imgs = [];
-      if (existsSync(resolve(imagesDir, `${baseCode}.png`))) imgs.push(`${baseCode}.png`);
-      for (let i = 1; i <= 20; i++) {
-        if (existsSync(resolve(imagesDir, `${baseCode}_p${i}.png`))) imgs.push(`${baseCode}_p${i}.png`);
-        if (existsSync(resolve(imagesDir, `${baseCode}_r${i}.png`))) imgs.push(`${baseCode}_r${i}.png`);
+        const imgs = [];
+        if (existsSync(resolve(imagesDir, `${baseCode}.png`))) imgs.push(`${baseCode}.png`);
+        for (let i = 1; i <= 20; i++) {
+          if (existsSync(resolve(imagesDir, `${baseCode}_p${i}.png`))) imgs.push(`${baseCode}_p${i}.png`);
+          if (existsSync(resolve(imagesDir, `${baseCode}_r${i}.png`))) imgs.push(`${baseCode}_r${i}.png`);
+        }
+        imageAvailability.set(baseCode, imgs);
       }
-      imageAvailability.set(baseCode, imgs);
+
+      // Also add the exact variant ID as a catalog entry if it differs from the base
+      if (exactId !== baseCode) {
+        const baseEntry = catalog.get(baseCode);
+        if (baseEntry) {
+          catalog.set(exactId, {
+            ...baseEntry,
+            code: exactId,
+            image: null,
+          });
+          // Track image for the exact variant ID
+          const vImgs = [];
+          if (existsSync(resolve(imagesDir, `${exactId}.png`))) vImgs.push(`${exactId}.png`);
+          imageAvailability.set(exactId, vImgs);
+        }
+      }
     }
   }
 

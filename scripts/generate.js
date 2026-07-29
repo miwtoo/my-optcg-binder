@@ -267,21 +267,22 @@ function main() {
   // ── Step 7: Write outputs ──────────────────────────────────
   console.log('  Step 7/7: Writing outputs...');
 
-  // Write public/data/binder-layout.json (the deployed layout)
-  const publicLayout = resolve(projectRoot, 'public/data/binder-layout.json');
-  const pubDataDir = resolve(publicLayout, '..');
+  const binderLayoutDir = resolve(projectRoot, 'data');
+  if (!existsSync(binderLayoutDir)) mkdirSync(binderLayoutDir, { recursive: true });
+  writeFileSync(resolve(binderLayoutDir, 'binder-layout.json'), JSON.stringify(reconciled.layout, null, 2), 'utf-8');
+  console.log(`  ✔  Wrote data/binder-layout.json (reconciled)`);
+
+  const pubDataDir = resolve(projectRoot, 'public/data');
   if (!existsSync(pubDataDir)) mkdirSync(pubDataDir, { recursive: true });
-  writeFileSync(publicLayout, JSON.stringify(reconciled.layout, null, 2), 'utf-8');
+  writeFileSync(resolve(pubDataDir, 'binder-layout.json'), JSON.stringify(reconciled.layout, null, 2), 'utf-8');
   console.log(`  ✔  Wrote public/data/binder-layout.json`);
 
-  // Write src/data/generated/binder-data.json
   const outPath = resolve(projectRoot, GENERATED_DATA_PATH);
   const outDir = resolve(outPath, '..');
   if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
   writeFileSync(outPath, JSON.stringify(data, null, 2), 'utf-8');
   console.log(`  ✔  Wrote ${GENERATED_DATA_PATH}`);
 
-  // Write public/data/binder.json
   const pubPath = resolve(projectRoot, 'public/data/binder.json');
   writeFileSync(pubPath, JSON.stringify(data, null, 2), 'utf-8');
   console.log(`  ✔  Wrote public/data/binder.json`);
