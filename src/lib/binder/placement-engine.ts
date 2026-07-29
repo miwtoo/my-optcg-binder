@@ -22,6 +22,8 @@ import type {
   DeckAllocation,
   CardColor,
   CardType,
+  BinderLayout,
+  BinderLayoutPocket,
 } from '../data/types';
 import { COLOR_ORDER, TYPE_ORDER } from '../data/types';
 import { SLOTS_PER_SIDE, MAX_SHEETS, RESERVED_SLOTS_PER_GROUP } from '../data/constants';
@@ -56,6 +58,126 @@ export interface PlacementResult {
   cards: CardEntry[];
   sheets: BinderSheet[];
   cardLocationMap: Map<string, BinderLocation>;
+}
+
+export interface BinderInputError { code: string; reason: string }
+export interface LayoutReconciliation { layout: BinderLayout; locations: Map<string, BinderLocation> }
+
+type CatalogInput = Map<string, CatalogEntry> | CatalogEntry[];
+
+function catalogMap(input: CatalogInput): Map<string, CatalogEntry> {
+  return input instanceof Map ? input : new Map(input.map(entry => [entry.code, entry]));
+}
+
+function sectionFor(entry: CatalogEntry): string {
+  if (!entry.color || !entry.type) return '__UNKNOWN__';
+  return entry.type === 'Leader' ? `Leader:${entry.color}` : `${entry.color}:${entry.cost ?? 'unknown'}:${entry.type}`;
+}
+
+/** Return all fatal inventory/allocation issues without mutating either input. */
+export function validateBinderInputs(
+  collection: Map<string, number>,
+  decks: Map<string, Map<string, number>>,
+  catalog: CatalogInput,
+): BinderInputError[] {
+  const entries = catalogMap(catalog);
+  const errors: BinderInputError[] = [];
+  for (const [code, amount] of collection) {
+    const entry = entries.get(code);
+    if (!entry) errors.push({ code, reason: 'collection code is absent from catalog' });
+    else if (!entry.color || entry.cost === null || !entry.type) errors.push({ code, reason: 'catalog entry is incomplete; exact placement requires a complete catalog' });
+    if (!Number.isInteger(amount) || amount < 0) errors.push({ code, reason: 'collection quantity must be a non-negative integer' });
+  }
+  for (const [deck, cards] of decks) for (const [code, quantity] of cards) {
+    if (!collection.has(code)) errors.push({ code, reason: `deck ${deck} code is absent from collection` });
+    else if (!Number.isInteger(quantity) || quantity < 0) errors.push({ code, reason: `deck ${deck} quantity must be a non-negative integer` });
+    else if (quantity > (collection.get(code) ?? 0)) errors.push({ code, reason: `deck ${deck} allocation exceeds collection quantity` });
+  }
+  return errors;
+}
+
+function emptyPocket(sheetId: string, section: string, pocket: number, status: BinderLayoutPocket['status'], tag?: string): BinderLayoutPocket {
+  return { sheetId, section, pocket, status, ...(tag ? { tag } : {}) };
+}
+
+function makeLedger(sections: Array<{ section: string; codes: string[] }>): BinderLayout {
+  const sheets: BinderLayout['sheets'] = [];
+  let sheetNo = 1;
+  let side: 'Front' | 'Back' = 'Front';
+  let pocketNo = 1;
+  const next = () => {
+    pocketNo++;
+    if (pocketNo > SLOTS_PER_SIDE) { pocketNo = 1; side = side === 'Front' ? 'Back' : 'Front'; if (side === 'Front') sheetNo++; }
+  };
+  const getSheet = () => {
+    const sheetId = `sheet-${sheetNo}`;
+    let sheet = sheets.find(s => s.sheetId === `${sheetId}-${side}`);
+    if (!sheet) { sheet = { sheetId: `${sheetId}-${side}`, sheet: sheetNo, side, pockets: [] }; sheets.push(sheet); }
+    return sheet;
+  };
+  for (const group of sections) {
+    for (const code of group.codes) { getSheet().pockets.push({ ...emptyPocket(getSheet().sheetId, group.section, pocketNo, 'card'), code, quantity: 0 }); next(); }
+    for (let i = 0; i < RESERVED_SLOTS_PER_GROUP; i++) { getSheet().pockets.push(emptyPocket(getSheet().sheetId, group.section, pocketNo, 'reserved', `reserve-${group.section}-${i + 1}`)); next(); }
+  }
+  // Materialize all unused physical pockets so vacant/reserved/empty remain distinct.
+  for (const sheet of sheets) while (sheet.pockets.length < SLOTS_PER_SIDE) {
+    sheet.pockets.push(emptyPocket(sheet.sheetId, '__UNASSIGNED__', sheet.pockets.length + 1, 'empty'));
+  }
+  return { version: 1, slotsPerSide: SLOTS_PER_SIDE, sheets };
+}
+
+/** Build the immutable initial assignment from a complete catalog. */
+export function createInitialBinderLayout(catalogInput: CatalogInput, codes?: Iterable<string>): BinderLayout {
+  const catalog = catalogMap(catalogInput);
+  const selected = codes ? [...codes] : [...catalog.keys()];
+  for (const code of selected) {
+    const entry = catalog.get(code);
+    if (!entry || !entry.color || entry.cost === null || !entry.type) throw new Error(`Cannot create exact layout: incomplete catalog entry ${code}`);
+  }
+  const grouped = new Map<string, string[]>();
+  for (const code of sortCardsPlayerFirst(selected, catalog)) { const section = sectionFor(catalog.get(code)!); (grouped.get(section) ?? (grouped.set(section, []), grouped.get(section)!)).push(code); }
+  return makeLedger([...grouped].map(([section, groupCodes]) => ({ section, codes: groupCodes })));
+}
+
+export function validateLayout(layout: BinderLayout): string[] {
+  const errors: string[] = [];
+  const seen = new Set<string>();
+  for (const sheet of layout.sheets) for (const pocket of sheet.pockets) {
+    const key = `${sheet.sheetId}:${pocket.pocket}`;
+    if (seen.has(key)) errors.push(`duplicate pocket ${key}`); seen.add(key);
+    if (pocket.status === 'card' && !pocket.code) errors.push(`${key} card has no code`);
+    if (pocket.status === 'reserved' && !pocket.tag) errors.push(`${key} reserve has no tag`);
+  }
+  return errors;
+}
+
+/** Reconcile quantities and additions while preserving every existing assignment. */
+export function reconcileBinderLayout(layout: BinderLayout, collection: Map<string, number>, catalogInput: CatalogInput, decks = new Map<string, Map<string, number>>()): LayoutReconciliation {
+  const catalog = catalogMap(catalogInput);
+  const inputErrors = validateBinderInputs(collection, decks, catalog);
+  if (inputErrors.length) throw new Error(inputErrors.map(e => `${e.code}: ${e.reason}`).join('; '));
+  const next: BinderLayout = JSON.parse(JSON.stringify(layout));
+  const assigned = new Set<string>();
+  const locations = new Map<string, BinderLocation>();
+  for (const sheet of next.sheets) for (const pocket of sheet.pockets) if (pocket.status === 'card' && pocket.code) {
+    assigned.add(pocket.code); const qty = collection.get(pocket.code) ?? 0; pocket.quantity = qty; if (qty === 0) pocket.status = 'vacant';
+    if (qty > 0) locations.set(pocket.code, { sheet: sheet.sheet, side: sheet.side, slot: pocket.pocket });
+  }
+  const additions = sortCardsPlayerFirst([...collection.keys()].filter(code => (collection.get(code) ?? 0) > 0 && !assigned.has(code)), catalog);
+  for (const code of additions) {
+    const section = sectionFor(catalog.get(code)!);
+    let target: BinderLayoutPocket | undefined; let targetSheet: BinderLayout['sheets'][number] | undefined;
+    for (const sheet of next.sheets) { target = sheet.pockets.find(p => p.status === 'reserved' && p.section === section); if (target) { targetSheet = sheet; break; } }
+    if (!target) {
+      const no = next.sheets.length ? Math.max(...next.sheets.map(s => s.sheet)) + 1 : 1;
+      targetSheet = { sheetId: `sheet-${no}-Front`, sheet: no, side: 'Front', pockets: [] }; next.sheets.push(targetSheet);
+      for (let i = 1; i <= SLOTS_PER_SIDE; i++) targetSheet.pockets.push(emptyPocket(targetSheet.sheetId, section, i, 'empty'));
+      target = targetSheet.pockets[0];
+    }
+    target.status = 'card'; target.code = code; target.quantity = collection.get(code)!; delete target.tag;
+    locations.set(code, { sheet: targetSheet!.sheet, side: targetSheet!.side, slot: target.pocket });
+  }
+  return { layout: next, locations };
 }
 
 /**

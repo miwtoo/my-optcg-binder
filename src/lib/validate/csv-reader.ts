@@ -117,9 +117,11 @@ export function parseDecklistCSV(filePath: string): CSVParseResult<DecklistRow> 
   return parseCSVInternal<DecklistRow>(
     filePath,
     (fields, rowNum, errors) => {
-      // Sabo exception: ignore the trailing summary row
+      // A summary row is a source conflict, not data. It must be corrected
+      // deliberately rather than silently changing the source's meaning.
       if (isSabo && fields.length === 2 && SABO_TOTAL_ROW.test(fields.join(','))) {
-        return null; // silently skip
+        errors.push({ file: filePath, row: rowNum, value: fields.join(','), reason: 'Source conflict: summary row is not a card entry; correct the CSV deliberately' });
+        return null;
       }
       if (fields.length < 2) {
         errors.push({ file: filePath, row: rowNum, value: fields.join(','), reason: 'Expected at least 2 columns: code,amount' });
@@ -238,6 +240,22 @@ export function findDuplicateCodes<T extends { code: string }>(
     }
   }
   return errors;
+}
+
+/** Validate wanted rows by their meaningful composite identity. */
+export function findDuplicateWantedTargets(rows: WantedRow[], file: string): CSVError[] {
+  const seen = new Map<string, number[]>();
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i]!;
+    const key = `${row.code}\u0000${row.target}`;
+    const lines = seen.get(key) ?? [];
+    lines.push(i + 2);
+    seen.set(key, lines);
+  }
+  return [...seen.entries()].filter(([, lines]) => lines.length > 1).map(([key, lines]) => {
+    const [code, target] = key.split('\u0000');
+    return { file, row: lines[0]!, value: `${code},${target}`, reason: `Duplicate wanted pair (code,target) appears ${lines.length} times (rows ${lines.join(', ')})` };
+  });
 }
 
 /* ─── Internal Parser ──────────────────────────────────────── */

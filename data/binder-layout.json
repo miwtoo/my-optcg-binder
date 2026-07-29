@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "slotsPerSide": 9,
+  "sheets": [
+    {
+      "sheetId": "sheet-1-Front",
+      "sheet": 1,
+      "side": "Front",
+      "pockets": [
+        { "sheetId": "sheet-1-Front", "section": "Leader:Red", "pocket": 1, "status": "card", "code": "OP05-007", "quantity": 1 },
+        { "sheetId": "sheet-1-Front", "section": "Leader:Red", "pocket": 2, "status": "card", "code": "OP05-051", "quantity": 1 },
+        { "sheetId": "sheet-1-Front", "section": "Leader:Red", "pocket": 3, "status": "reserved", "tag": "reserve-Leader-Red-1" },
+        { "sheetId": "sheet-1-Front", "section": "Leader:Red", "pocket": 4, "status": "reserved", "tag": "reserve-Leader-Red-2" },
+        { "sheetId": "sheet-1-Front", "section": "Leader:Red", "pocket": 5, "status": "reserved", "tag": "reserve-Leader-Red-3" },
+        { "sheetId": "sheet-1-Front", "section": "__UNASSIGNED__", "pocket": 6, "status": "empty" },
+        { "sheetId": "sheet-1-Front", "section": "__UNASSIGNED__", "pocket": 7, "status": "empty" },
+        { "sheetId": "sheet-1-Front", "section": "__UNASSIGNED__", "pocket": 8, "status": "empty" },
+        { "sheetId": "sheet-1-Front", "section": "__UNASSIGNED__", "pocket": 9, "status": "empty" }
+      ]
+    }
+  ]
+}

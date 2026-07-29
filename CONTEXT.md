@@ -23,3 +23,22 @@ The sorting convention used to assign card codes to binder slots. Priority is: *
 ## Reserved Slot
 
 A deliberately empty binder slot set aside for a future card code (e.g., an unreleased set). Reserved slots are skipped during automatic placement so the ordering of current cards is not disturbed when the target card is later added.
+
+## Stable physical layout (resolved)
+
+`data/binder-layout.json` is the physical ledger. A `sheetId`, section, and pocket
+assignment are stable identifiers; reconciliation never relocates an existing code.
+The initial ledger is derived only from a complete catalog (color, cost, and type
+must all be present). Leaders are grouped by color. Other cards are grouped by
+color, cost, and type. Every populated group receives three tagged `reserved`
+pockets. A zero-quantity owned card remains assigned as `vacant`; `empty` means
+an unassigned physical pocket, and `card` carries the actual stacked quantity.
+
+When a new code arrives, reconciliation consumes a matching reserve first. If no
+reserve exists it appends an overflow sheet to that section. Deck quantities are
+allocations of the collection: absent codes and allocations above owned quantity
+are errors. Wanted rows are unique by `(code,target)`.
+
+The current Sabo CSV summary row `,51` is intentionally reported as a source
+conflict. It must be corrected in the source file deliberately; validation does
+not silently discard it.

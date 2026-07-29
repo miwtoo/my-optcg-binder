@@ -16,6 +16,7 @@ import {
   parseDecklistCSV,
   parseWantedCSV,
   validateCodes,
+  findDuplicateWantedTargets,
   type CSVError,
 } from './csv-reader';
 
@@ -86,6 +87,18 @@ export function validateAll(projectRoot: string = '.'): ValidationResult {
   }
   if (wantedRows.length > 0) {
     errors.push(...validateCodes(wantedRows, CSV_PATHS.WANTED, errors));
+    errors.push(...findDuplicateWantedTargets(wantedRows, CSV_PATHS.WANTED));
+  }
+
+  // Decklists are allocations of physical inventory, never independent stock.
+  const owned = new Map(collectionResult.rows.map(row => [row.code, row.amount]));
+  for (const [deckName, rows] of [['Sabo', saboResult.rows], ['Luffy G_B [WIP]', luffyResult.rows]] as const) {
+    const allocated = new Map<string, number>();
+    for (const row of rows) allocated.set(row.code, (allocated.get(row.code) ?? 0) + row.amount);
+    for (const [code, amount] of allocated) {
+      if (!owned.has(code)) errors.push({ file: deckName, row: 0, value: code, reason: `Deck code "${code}" is absent from collection` });
+      else if (amount > owned.get(code)!) errors.push({ file: deckName, row: 0, value: code, reason: `Deck allocation ${amount} exceeds collection quantity ${owned.get(code)}` });
+    }
   }
 
   // 6. Build source manifest

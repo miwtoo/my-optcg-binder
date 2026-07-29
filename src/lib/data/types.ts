@@ -67,6 +67,30 @@ export interface BinderLocation {
   slot: number; // 1–9, left-to-right top-to-bottom
 }
 
+export type BinderPocketStatus = 'reserved' | 'vacant' | 'empty' | 'card';
+
+/** Stable physical ledger assignment. sheetId is never reused or renumbered. */
+export interface BinderLayoutPocket {
+  sheetId: string;
+  section: string;
+  pocket: number;
+  status: BinderPocketStatus;
+  code?: string;
+  quantity?: number;
+  tag?: string;
+}
+
+export interface BinderLayout {
+  version: 1;
+  slotsPerSide: number;
+  sheets: Array<{
+    sheetId: string;
+    sheet: number;
+    side: 'Front' | 'Back';
+    pockets: BinderLayoutPocket[];
+  }>;
+}
+
 /* ─── Card Allocation ──────────────────────────────────────── */
 
 export interface DeckAllocation {
