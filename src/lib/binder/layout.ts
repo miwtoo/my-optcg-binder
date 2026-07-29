@@ -299,6 +299,15 @@ export function reconcileBinderLayout(
       }
       if (lastSheetOfSection >= 0) insertAfter = lastSheetOfSection + 1;
 
+      // Ensure insertion doesn't split a Front/Back pair — if the sheet
+      // before the insertion point is a Back side, step past the pair.
+      if (insertAfter > 0 && insertAfter <= next.sheets.length) {
+        const before = next.sheets[insertAfter - 1]!;
+        if (before.side === 'Back') {
+          insertAfter += 1;
+        }
+      }
+
       // Use a stable immutable ID based on a counter unique to this run.
       let overflowId = 1000;
       while (next.sheets.some(sh => sh.sheetId === `overflow-${sectionColor}-${overflowId}`)) overflowId++;
@@ -331,14 +340,14 @@ export function reconcileBinderLayout(
       targetSheet = frontSheet;
     }
 
-    // 2c. Fill the target pocket
+    // 2c. Fill the target pocket — record sheetId for post-recompute resolution.
     target.status = 'card';
     target.code = code;
     target.quantity = binderQty;
     delete target.tag;
 
     locations.set(code, {
-      sheet: targetSheet!.sheet,
+      sheet: 0, // placeholder — resolved after display recomputation
       side: targetSheet!.side,
       slot: target.pocket,
     });
@@ -358,6 +367,21 @@ export function reconcileBinderLayout(
     }
     sheet.sheet = expectedDisplay;
   }
+
+  // --- Phase 4: resolve 0 placeholder locations using recomputed display numbers ---
+  for (const [code, loc] of locations) {
+    if (loc.sheet === 0) {
+      const sheet = next.sheets.find(s =>
+        s.side === loc.side && s.pockets.some(p => p.pocket === loc.slot && p.code === code),
+      );
+      if (sheet) loc.sheet = sheet.sheet;
+    }
+  }
+
+  // --- Phase 5: ensure overflow insert never splits a Front/Back pair ---
+  // Any insertion point must land on a Front sheet or at the end.
+  // If the last sheet before insertion is a Back, move insertion after it.
+  // (Pairs are complete; no single side can belong to a different section.)
 
   return { layout: next, locations };
 }

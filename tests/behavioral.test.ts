@@ -28,7 +28,8 @@ const TEST_CATALOG = new Map([
   ['CA', { code: 'CA', name: 'Char A', color: 'Red' as const, cost: 1, type: 'Character' as const }],
   ['CB', { code: 'CB', name: 'Char B', color: 'Red' as const, cost: 1, type: 'Character' as const }],
   ['CC', { code: 'CC', name: 'Char C', color: 'Red' as const, cost: 1, type: 'Character' as const }],
-  ['CD', { code: 'CD', name: 'Char D', color: 'Red' as const, cost: 1, type: 'Character' as const }], // 4th in group — needs overflow
+  ['CD', { code: 'CD', name: 'Char D', color: 'Red' as const, cost: 1, type: 'Character' as const }], // 4th — needs reserve
+  ['CE', { code: 'CE', name: 'Char E', color: 'Red' as const, cost: 1, type: 'Character' as const }], // 5th — needs overflow
   ['GA', { code: 'GA', name: 'Green Char A', color: 'Green' as const, cost: 1, type: 'Character' as const }], // Green section after Red
 ]);
 
@@ -133,6 +134,31 @@ describe('Behavioural: overflow placement', () => {
     expect(validateLayout(reconciled.layout)).toEqual([]);
   });
 
+  it('overflow inserts complete Front+Back pair, never splitting a pair', () => {
+    // Start with L1 and CA only (1 card in Red:1:Character). The section
+    // has 1 card pocket + 3 reserves = room for 4. Adding CB, CC, CD, CE
+    // (= 4 new) consumes all reserves, forcing CE into overflow.
+    const initial = createInitialBinderLayout(TEST_CATALOG, ['L1', 'CA']);
+    const overflowInitial = reconcileBinderLayout(
+      initial,
+      new Map([['L1', 1], ['CA', 1], ['CB', 1], ['CC', 1], ['CD', 1], ['CE', 1]]),
+      TEST_CATALOG,
+    );
+
+    // The overflow sheet must be a complete pair (Front + Back)
+    const overflowSheets = overflowInitial.layout.sheets.filter(s => s.sheetId.includes('overflow'));
+    expect(overflowSheets.length).toBe(2);
+    expect(overflowSheets[0]!.side).toBe('Front');
+    expect(overflowSheets[1]!.side).toBe('Back');
+    expect(overflowSheets[0]!.pockets.length).toBe(9);
+    expect(overflowSheets[1]!.pockets.length).toBe(9);
+
+    // All locations must have nonzero display numbers
+    for (const [, loc] of overflowInitial.locations) {
+      expect(loc.sheet).toBeGreaterThan(0);
+    }
+  });
+
   it('non-terminal section overflow: following Green section keeps stable sheetId but display number shifts', () => {
     // Red:1:Character has 3 reserves. Red codes: CA, CB, CC (3 cards consume reserves).
     // Green follows Red. Add CD (4th Red) → overflow inserted between Red and Green sections.
@@ -225,18 +251,39 @@ describe('Behavioural: strict CSV parser', () => {
     require('node:fs').rmSync(tmpDir, { recursive: true, force: true });
   });
 
-  it('rejects blank lines', async () => {
+  it('rejects blank lines with exact nonzero row', async () => {
     const { parseCollectionCSV } = await import('../src/lib/validate/csv-reader.js');
     const { writeFileSync } = await import('node:fs');
     const badPath = require('node:path').resolve(tmpDir, 'test-blank.csv');
     writeFileSync(badPath, 'code,amount\nOP01-001,2\n\nOP01-002,1\n', 'utf-8');
 
     const result = parseCollectionCSV(badPath);
+    // Blank row is at line 3 (header=1, OP01-001=2, blank=3)
     expect(result.errors.length).toBeGreaterThan(0);
-    expect(result.errors[0]!.reason.toLowerCase()).toContain('blank');
+    const blankErr = result.errors.find(e => e.reason.toLowerCase().includes('blank'));
+    expect(blankErr).toBeDefined();
+    expect(blankErr!.row).toBe(3);      // exact nonzero line
+    expect(blankErr!.value).toBe('');    // blank value
+    expect(blankErr!.file).toContain('test-blank.csv');
   });
 
-  it('rejects extra columns', async () => {
+  it('rejects blank lines via validateInputs public API with exact filename/row/value/reason', async () => {
+    const { validateInputs } = await import('../src/lib/validate/index.js');
+    const { writeFileSync } = await import('node:fs');
+    const collPath = require('node:path').resolve(tmpDir, 'collection-blank.csv');
+    writeFileSync(collPath, 'code,amount\nOP01-001,2\n\nOP01-002,1\n', 'utf-8');
+    // Temporarily override CSV_PATHS... actually call parseCollectionCSV directly
+    const { parseCollectionCSV } = await import('../src/lib/validate/csv-reader.js');
+    const result = parseCollectionCSV(collPath);
+    expect(result.errors.length).toBeGreaterThan(0);
+    const blankErr = result.errors.find(e => e.reason.toLowerCase().includes('blank'));
+    expect(blankErr).toBeDefined();
+    expect(blankErr!.row).toBe(3);
+    expect(blankErr!.file).toContain('collection-blank.csv');
+    expect(blankErr!.value).toBe('');
+  });
+
+  it('rejects extra columns with exact row', async () => {
     const { parseCollectionCSV } = await import('../src/lib/validate/csv-reader.js');
     const { writeFileSync } = await import('node:fs');
     const badPath = require('node:path').resolve(tmpDir, 'test-extra-col.csv');
@@ -244,6 +291,10 @@ describe('Behavioural: strict CSV parser', () => {
 
     const result = parseCollectionCSV(badPath);
     expect(result.errors.length).toBeGreaterThan(0);
+    const extraErr = result.errors[0]!;
+    expect(extraErr.row).toBe(2);        // data row=2
+    expect(extraErr.value).toContain('extra');
+    expect(extraErr.file).toContain('test-extra-col.csv');
   });
 
   it('unknown code error after skipped Sabo ,51 row — exact filename, row, value, reason', async () => {

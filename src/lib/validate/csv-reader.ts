@@ -81,7 +81,12 @@ function normalizeCSV(text: string): string {
  *   - fields are trimmed
  *   - no quoted fields expected in our data
  */
-function parseCSVLines(text: string, expectedColumns: number): { fields: string[]; lineNumber: number }[] {
+function parseCSVLines(
+  text: string,
+  expectedColumns: number,
+  filePath: string,
+  errors: CSVError[],
+): { fields: string[]; lineNumber: number }[] {
   const normalized = normalizeCSV(text);
   const lines = normalized.split('\n');
   const result: { fields: string[]; lineNumber: number }[] = [];
@@ -93,17 +98,17 @@ function parseCSVLines(text: string, expectedColumns: number): { fields: string[
 
     // Allow a trailing empty line (from final `\n`), but reject interior blank lines
     if (trimmed.length === 0) {
-      if (isLast) continue; // trailing newline is legal
-      throw new Error(`Blank row at line ${i + 1} — blank lines are not permitted`);
+      if (isLast) continue;
+      errors.push({ file: filePath, row: i + 1, value: '', reason: 'Blank row — blank lines are not permitted' });
+      continue;
     }
 
     const fields = line.split(',').map(s => s.trim());
 
     // Extra columns are rejected
     if (fields.length > expectedColumns) {
-      throw new Error(
-        `Line ${i + 1}: expected ${expectedColumns} column(s), got ${fields.length}: "${line}"`,
-      );
+      errors.push({ file: filePath, row: i + 1, value: line, reason: `Expected ${expectedColumns} column(s), got ${fields.length}: "${line}"` });
+      continue;
     }
 
     result.push({ fields, lineNumber: i + 1 });
@@ -349,13 +354,7 @@ function parseCSVInternal<T extends { code: string }>(
 
   const content = readFileSync(absolutePath, 'utf-8');
 
-  let parsed: { fields: string[]; lineNumber: number }[];
-  try {
-    parsed = parseCSVLines(content, expectedColumns);
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
-    return { rows, errors: [{ file: filePath, row: 0, value: '', reason: msg }], rowCount: 0 };
-  }
+  const parsed = parseCSVLines(content, expectedColumns, filePath, errors);
 
   if (parsed.length === 0) {
     return { rows, errors: [{ file: filePath, row: 0, value: '', reason: 'File is empty' }], rowCount: 0 };

@@ -125,6 +125,44 @@ function checkArtifactConsistency(projectRoot: string): CSVError[] {
       if (dL !== pL) {
         errors.push({ file: 'public/data/binder-layout.json', row: 0, value: 'layout', reason: `Layout content SHA256 differs — public=${pL} data=${dL}` });
       }
+
+      // Slot-by-slot derivation check: the generated 8-key sheets must match the
+      // canonical data/binder-layout.json pocket-by-pocket.
+      if (Array.isArray(generated.sheets) && existsSync(dataLayoutPath)) {
+        const dataLayout = JSON.parse(dataBytes);
+        const genSheets = generated.sheets;
+        let genSheetIdx = 0;
+        for (const layoutSheet of dataLayout.sheets) {
+          const gen = genSheets[genSheetIdx];
+          if (!gen) { errors.push({ file: GENERATED_DATA_PATH, row: 0, value: 'sheets', reason: `Missing generated sheet at index ${genSheetIdx} — data layout has ${dataLayout.sheets.length} sides, generated has ${genSheets.length}` }); break; }
+          if (gen.slots.length !== layoutSheet.pockets.length) {
+            errors.push({ file: GENERATED_DATA_PATH, row: 0, value: 'slots', reason: `Slot count mismatch at ${layoutSheet.sheetId}: generated=${gen.slots.length} layout=${layoutSheet.pockets.length}` });
+          } else {
+            for (let p = 0; p < layoutSheet.pockets.length; p++) {
+              const pocket = layoutSheet.pockets[p]!;
+              const slot = gen.slots[p]!;
+              // Card pockets must match code + quantity
+              if (pocket.status === 'card') {
+                if (slot.status !== 'card') errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots[${p}]`, reason: `Expected 'card' status for pocket with code ${pocket.code}, got '${slot.status}'` });
+                else {
+                  if (slot.code !== pocket.code) errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots[${p}].code`, reason: `Code mismatch: generated="${slot.code}" layout="${pocket.code}"` });
+                  if (slot.quantity !== pocket.quantity) errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots[${p}].quantity`, reason: `Quantity mismatch for ${pocket.code}: generated=${slot.quantity} layout=${pocket.quantity}` });
+                }
+              } else if (pocket.status === 'vacant') {
+                if (slot.status !== 'vacant') errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots[${p}]`, reason: `Expected 'vacant' status, got '${slot.status}'` });
+              } else if (pocket.status === 'reserved') {
+                if (slot.status !== 'reserved') errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots[${p}]`, reason: `Expected 'reserved' status, got '${slot.status}'` });
+              } else if (pocket.status === 'empty') {
+                if (slot.status !== 'empty') errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots[${p}]`, reason: `Expected 'empty' status, got '${slot.status}'` });
+              }
+            }
+          }
+          genSheetIdx++;
+        }
+        if (genSheetIdx < genSheets.length) {
+          errors.push({ file: GENERATED_DATA_PATH, row: 0, value: 'sheets', reason: `Generated has ${genSheets.length - genSheetIdx} extra sheet(s) beyond layout` });
+        }
+      }
     } catch (e) {
       errors.push({ file: 'public/data/binder-layout.json', row: 0, value: '', reason: `Layout check failed: ${e instanceof Error ? e.message : 'invalid JSON'}` });
     }
