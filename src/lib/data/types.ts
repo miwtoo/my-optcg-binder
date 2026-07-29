@@ -8,17 +8,23 @@
 export interface CollectionRow {
   code: string;
   amount: number;
+  /** 1-based source CSV row (2 = first data row after header) */
+  row: number;
 }
 
 export interface DecklistRow {
   code: string;
   amount: number;
+  /** 1-based source CSV row (2 = first data row after header) */
+  row: number;
 }
 
 export interface WantedRow {
   code: string;
   amount: number;
   target: string; // "binder" or a deck/planning name
+  /** 1-based source CSV row (2 = first data row after header) */
+  row: number;
 }
 
 /* ─── Card Catalog ──────────────────────────────────────────── */

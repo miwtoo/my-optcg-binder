@@ -134,7 +134,7 @@ export function parseCollectionCSV(filePath: string): CSVParseResult<CollectionR
         errors.push({ file: filePath, row: rowNum, value: amountStr, reason: `Amount must be a positive integer, got "${amountStr}"` });
         return null;
       }
-      return { code, amount };
+      return { code, amount, row: rowNum };
     },
     true, // deduplicate
     2,   // expected columns: code,amount
@@ -171,7 +171,7 @@ export function parseDecklistCSV(filePath: string): CSVParseResult<DecklistRow> 
         errors.push({ file: filePath, row: rowNum, value: amountStr, reason: `Amount must be a positive integer, got "${amountStr}"` });
         return null;
       }
-      return { code, amount };
+      return { code, amount, row: rowNum };
     },
     true, // deduplicate
     2,   // expected columns: code,amount
@@ -206,7 +206,7 @@ export function parseWantedCSV(filePath: string): CSVParseResult<WantedRow> {
         errors.push({ file: filePath, row: rowNum, value: '(empty)', reason: 'Target must be non-empty (e.g. "binder" or a deck name)' });
         return null;
       }
-      return { code, amount, target };
+      return { code, amount, target, row: rowNum };
     },
     false, // no dedup for wanted — same code can have different targets
     3,   // expected columns: code,amount,target

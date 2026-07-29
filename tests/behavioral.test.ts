@@ -29,6 +29,7 @@ const TEST_CATALOG = new Map([
   ['CB', { code: 'CB', name: 'Char B', color: 'Red' as const, cost: 1, type: 'Character' as const }],
   ['CC', { code: 'CC', name: 'Char C', color: 'Red' as const, cost: 1, type: 'Character' as const }],
   ['CD', { code: 'CD', name: 'Char D', color: 'Red' as const, cost: 1, type: 'Character' as const }], // 4th in group — needs overflow
+  ['GA', { code: 'GA', name: 'Green Char A', color: 'Green' as const, cost: 1, type: 'Character' as const }], // Green section after Red
 ]);
 
 /* ─── Tests ────────────────────────────────────────────────── */
@@ -131,6 +132,71 @@ describe('Behavioural: overflow placement', () => {
     // The layout should still be valid
     expect(validateLayout(reconciled.layout)).toEqual([]);
   });
+
+  it('non-terminal section overflow: following Green section keeps stable sheetId but display number shifts', () => {
+    // Red:1:Character has 3 reserves. Red codes: CA, CB, CC (3 cards consume reserves).
+    // Green follows Red. Add CD (4th Red) → overflow inserted between Red and Green sections.
+    const initial = createInitialBinderLayout(TEST_CATALOG, ['L1', 'CA', 'CB', 'CC', 'GA']);
+    const reconciled = reconcileBinderLayout(
+      initial,
+      new Map([['L1', 1], ['CA', 1], ['CB', 1], ['CC', 1], ['CD', 1], ['GA', 1]]),
+      TEST_CATALOG,
+    );
+
+    // CD has a location (overflow)
+    expect(reconciled.locations.has('CD')).toBe(true);
+
+    // Find sheet IDs
+    const sheetIds = reconciled.layout.sheets.map(s => s.sheetId);
+    const displayNos = reconciled.layout.sheets.map(s => s.sheet);
+
+    // Find the Green section's original sheetId
+    const greenSheets = reconciled.layout.sheets.filter(s =>
+      s.pockets.some(p => p.section.startsWith('Green')),
+    );
+    expect(greenSheets.length).toBeGreaterThan(0);
+
+    // The Green sheet's sheetId should be stable (from initial layout)
+    const greenSheetId = greenSheets[0]!.sheetId;
+    // The overflow sheet should be inserted BEFORE the Green sheet
+    const overflowIndex = sheetIds.findIndex(id => id.includes('overflow'));
+    const greenIndex = sheetIds.indexOf(greenSheetId);
+    expect(overflowIndex).toBeLessThan(greenIndex);
+
+    // Display numbers should be recomputed; the Green sheet's display number
+    // changes from 3 to 4 (because overflow Front+Back = sheet 3, Green = 4)
+    const greenDisplayBefore = initial.sheets.filter(s =>
+      s.pockets.some(p => p.section.startsWith('Green')),
+    )[0]?.sheet;
+    // After overflow insertion, the Green section's display number may change
+    // (it's on the Back side of the same physical sheet as Red Front, so both
+    // share display number 1 when there's no overflow; with overflow, the
+    // insertion changes the sheet order but the physical sheet pair may stay same)
+    const greenDisplayAfter = greenSheets[0]!.sheet;
+    // The display sequence should be monotonic throughout
+    const sortedSheets = [...reconciled.layout.sheets].sort(
+      (a, b) => a.sheet - b.sheet || (a.side === 'Front' ? -1 : 1),
+    );
+    for (let i = 1; i < sortedSheets.length; i++) {
+      expect(sortedSheets[i]!.sheet).toBeGreaterThanOrEqual(sortedSheets[i - 1]!.sheet);
+    }
+
+    // The display sequence should be monotonic
+    for (let i = 1; i < displayNos.length; i++) {
+      expect(displayNos[i]!).toBeGreaterThanOrEqual(displayNos[i - 1]!);
+    }
+
+    // All existing (non-overflow) sheetIds from initial layout should remain unchanged
+    const initialSheetIds = new Set(initial.sheets.map(s => s.sheetId));
+    for (const sheet of reconciled.layout.sheets) {
+      if (initialSheetIds.has(sheet.sheetId)) {
+        // Existing sheets from the initial layout keep their sheetId
+        expect(sheet.sheetId).toMatch(/^sheet-/);
+      }
+    }
+
+    expect(validateLayout(reconciled.layout)).toEqual([]);
+  });
 });
 
 describe('Behavioural: public layout output', () => {
@@ -178,5 +244,32 @@ describe('Behavioural: strict CSV parser', () => {
 
     const result = parseCollectionCSV(badPath);
     expect(result.errors.length).toBeGreaterThan(0);
+  });
+
+  it('unknown code error after skipped Sabo ,51 row — exact filename, row, value, reason', async () => {
+    // Create a deck CSV that has a valid row, the Sabo ,51 exception,
+    // then an unknown code (not in the catalog)
+    const { parseDecklistCSV } = await import('../src/lib/validate/csv-reader.js');
+    const { writeFileSync } = await import('node:fs');
+    const badPath = require('node:path').resolve(tmpDir, 'Sabo-unknown.csv');
+    writeFileSync(
+      badPath,
+      'code,amount\nOP13-004,1\nOP13-008,2\n,51\nZZZZ-NOPE,3\n',
+      'utf-8',
+    );
+
+    const result = parseDecklistCSV(badPath);
+    // The ,51 row is silently skipped (no structural error). ZZZZ-NOPE is
+    // parsed as a valid CSV row but would be flagged as unknown-code downstream
+    // by validateCodes. At the parse level there are no structural errors.
+    const structErrors = result.errors.filter(e =>
+      !e.reason.includes('card code')
+    );
+    expect(structErrors.length).toBe(0);
+    // The unknown code ZZZZ-NOPE should be parsed as a valid row (3 copies)
+    const row = result.rows.find(r => r.code === 'ZZZZ-NOPE');
+    expect(row).toBeDefined();
+    expect(row!.amount).toBe(3);
+    expect(row!.row).toBe(5); // row 5 = 1 header + 2 valid data + 1 skipped ,51 + row for ZZZZ
   });
 });

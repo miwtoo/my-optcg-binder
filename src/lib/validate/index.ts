@@ -95,59 +95,42 @@ function checkArtifactConsistency(projectRoot: string): CSVError[] {
     } catch { errors.push({ file: 'data/binder-layout.json', row: 0, value: '', reason: 'Binder layout is not valid JSON' }); }
   }
 
-  // Public data matches generated (full content comparison, not just counts)
-  const publicPath = resolve(projectRoot, 'public/data/binder.json');
-  if (!existsSync(publicPath)) errors.push({ file: 'public/data/binder.json', row: 0, value: '', reason: 'Public data not found — run "npm run generate" first' });
+  // Public data matches generated — full byte-equivalence (JSON content SHA256)
+  const pubDataPath = resolve(projectRoot, 'public/data/binder.json');
+  if (!existsSync(pubDataPath)) errors.push({ file: 'public/data/binder.json', row: 0, value: '', reason: 'Public binder.json not found — run "npm run generate" first' });
   else {
     try {
-      const publicData = JSON.parse(readFileSync(publicPath, 'utf-8'));
-      for (const section of ['catalog', 'cards', 'wanted', 'sources'] as const) {
-        const genSec = JSON.stringify(generated[section]);
-        const pubSec = JSON.stringify(publicData[section]);
-        if (genSec !== pubSec) {
-          const genChk = createHash('sha256').update(genSec).digest('hex');
-          const pubChk = createHash('sha256').update(pubSec).digest('hex');
-          errors.push({ file: 'public/data/binder.json', row: 0, value: section, reason: `public key "${section}" content SHA256 differs (gen=${genChk} pub=${pubChk}) — re-run "npm run generate"` });
-        }
-      }
-      // Layout content checksum comparison:
-      //   generated.sheets = 8-key DiscriminatedSlot[] derived from the reconciled layout
-      //   public/data/binder-layout.json = full BinderLayout from the same reconciliation
-      const layoutPubPath = resolve(projectRoot, 'public/data/binder-layout.json');
-      if (existsSync(layoutPubPath)) {
-        const layoutData = JSON.parse(readFileSync(layoutPubPath, 'utf-8'));
-        const genSheets = generated.sheets;
-        const pubLayoutSheets = layoutData.sheets;
-        const genShk = createHash('sha256').update(JSON.stringify(genSheets)).digest('hex');
-        const pubShk = createHash('sha256').update(JSON.stringify(pubLayoutSheets)).digest('hex');
-        // The 8-key sheets are a flattened view; the full BinderLayout includes more state.
-        // Compare sheet count and slot positions as a sanity check.
-        if (Array.isArray(genSheets) && Array.isArray(pubLayoutSheets) && genSheets.length !== pubLayoutSheets.length) {
-          errors.push({ file: 'public/data/binder-layout.json', row: 0, value: 'sheets', reason: `Sheet count mismatch: generated=${genSheets.length} public-layout=${pubLayoutSheets.length}` });
-        }
-        // Compare the layout with the data binder-layout.json as the canonical source of truth
-        const dataLayoutPath = resolve(projectRoot, 'data/binder-layout.json');
-        if (existsSync(dataLayoutPath)) {
-          const dataLayout = JSON.parse(readFileSync(dataLayoutPath, 'utf-8'));
-          const dataSheetsStr = JSON.stringify(dataLayout.sheets);
-          const pubSheetsStr = JSON.stringify(layoutData.sheets);
-          if (dataSheetsStr !== pubSheetsStr) {
-            errors.push({ file: 'public/data/binder-layout.json', row: 0, value: 'layout', reason: 'public/binder-layout.json content differs from data/binder-layout.json' });
-          }
-          // Also verify the 8-key sheets match the data layout
-          // Count cards in the data layout
-          const dataCardCount = dataLayout.sheets.reduce((sum: number, s: any) => sum + s.pockets.filter((p: any) => p.status === 'card').length, 0);
-          if (Array.isArray(genSheets)) {
-            const genCardCount = genSheets.reduce((sum: number, s: any) => sum + s.slots.filter((sl: any) => sl?.status === 'card').length, 0);
-            if (dataCardCount !== genCardCount) {
-              errors.push({ file: 'data/binder-layout.json', row: 0, value: 'layout', reason: `Card pocket count mismatch: data-layout=${dataCardCount} generated-sheets=${genCardCount}` });
-            }
-          }
-        }
+      const publicData = readFileSync(pubDataPath, 'utf-8');
+      const genData = readFileSync(genPath, 'utf-8');
+      // Compare the full JSON payload via SHA256 — byte-for-byte equivalent content
+      const genAll = createHash('sha256').update(genData).digest('hex');
+      const pubAll = createHash('sha256').update(publicData).digest('hex');
+      if (genAll !== pubAll) {
+        errors.push({ file: 'public/data/binder.json', row: 0, value: '', reason: `Full content SHA256 differs (generated=${genAll} public=${pubAll}) — re-run "npm run generate"` });
       }
     } catch (e) {
-      errors.push({ file: 'public/data/binder.json', row: 0, value: '', reason: `Public data check failed: ${e instanceof Error ? e.message : 'invalid JSON'}` });
+      errors.push({ file: 'public/data/binder.json', row: 0, value: '', reason: `Public binder.json check failed: ${e instanceof Error ? e.message : 'invalid JSON'}` });
     }
+  }
+
+  // Layout byte-equivalence: data/binder-layout.json vs public/data/binder-layout.json
+  const dataLayoutPath = resolve(projectRoot, 'data/binder-layout.json');
+  const pubLayoutPath = resolve(projectRoot, 'public/data/binder-layout.json');
+  if (existsSync(dataLayoutPath) && existsSync(pubLayoutPath)) {
+    try {
+      const dataBytes = readFileSync(dataLayoutPath, 'utf-8');
+      const pubBytes = readFileSync(pubLayoutPath, 'utf-8');
+      const dL = createHash('sha256').update(dataBytes).digest('hex');
+      const pL = createHash('sha256').update(pubBytes).digest('hex');
+      if (dL !== pL) {
+        errors.push({ file: 'public/data/binder-layout.json', row: 0, value: 'layout', reason: `Layout content SHA256 differs — public=${pL} data=${dL}` });
+      }
+    } catch (e) {
+      errors.push({ file: 'public/data/binder-layout.json', row: 0, value: '', reason: `Layout check failed: ${e instanceof Error ? e.message : 'invalid JSON'}` });
+    }
+  } else {
+    if (!existsSync(dataLayoutPath)) errors.push({ file: 'data/binder-layout.json', row: 0, value: '', reason: 'data/binder-layout.json not found' });
+    if (!existsSync(pubLayoutPath)) errors.push({ file: 'public/data/binder-layout.json', row: 0, value: '', reason: 'public/data/binder-layout.json not found' });
   }
 
   return errors;
@@ -183,26 +166,24 @@ export function validateInputs(
 
   // Validate codes against provided catalog set, or fall back to committed artifact
   if (catalogCodes && catalogCodes.size > 0) {
-    for (const row of collectionResult.rows) { if (!catalogCodes.has(row.code)) errors.push({ file: CSV_PATHS.COLLECTION, row: 0, value: row.code, reason: `Unknown card code "${row.code}" — not in Vega catalog` }); }
-    for (const row of saboResult.rows) { if (!catalogCodes.has(row.code)) errors.push({ file: CSV_PATHS.DECK_SABO, row: 0, value: row.code, reason: `Unknown card code "${row.code}" — not in Vega catalog` }); }
-    for (const row of luffyResult.rows) { if (!catalogCodes.has(row.code)) errors.push({ file: CSV_PATHS.DECK_LUFFY, row: 0, value: row.code, reason: `Unknown card code "${row.code}" — not in Vega catalog` }); }
-    for (const row of wantedRows) { if (!catalogCodes.has(row.code)) errors.push({ file: CSV_PATHS.WANTED, row: 0, value: row.code, reason: `Unknown card code "${row.code}" — not in Vega catalog` }); }
+    for (const row of collectionResult.rows) { if (!catalogCodes.has(row.code)) errors.push({ file: CSV_PATHS.COLLECTION, row: row.row, value: row.code, reason: `Unknown card code "${row.code}" — not in Vega catalog` }); }
+    for (const row of saboResult.rows) { if (!catalogCodes.has(row.code)) errors.push({ file: CSV_PATHS.DECK_SABO, row: row.row, value: row.code, reason: `Unknown card code "${row.code}" — not in Vega catalog` }); }
+    for (const row of luffyResult.rows) { if (!catalogCodes.has(row.code)) errors.push({ file: CSV_PATHS.DECK_LUFFY, row: row.row, value: row.code, reason: `Unknown card code "${row.code}" — not in Vega catalog` }); }
+    for (const row of wantedRows) { if (!catalogCodes.has(row.code)) errors.push({ file: CSV_PATHS.WANTED, row: row.row, value: row.code, reason: `Unknown card code "${row.code}" — not in Vega catalog` }); }
   }
 
   if (wantedRows.length > 0) errors.push(...findDuplicateWantedTargets(wantedRows, CSV_PATHS.WANTED));
 
   // Deck-allocation validation — use original row info from CSV row meta
   const owned = new Map(collectionResult.rows.map(r => [r.code, r.amount]));
-  const saboRowMap = new Map(saboResult.rows.map((r, i) => [r.code, i + 2]));
-  const luffyRowMap = new Map(luffyResult.rows.map((r, i) => [r.code, i + 2]));
-  for (const { deckName, rows, rowMap } of [
-    { deckName: 'Sabo', rows: saboResult.rows, rowMap: saboRowMap },
-    { deckName: 'Luffy G_B [WIP]' as const, rows: luffyResult.rows, rowMap: luffyRowMap },
+  for (const { deckName, rows } of [
+    { deckName: 'Sabo' as const, rows: saboResult.rows },
+    { deckName: 'Luffy G_B [WIP]' as const, rows: luffyResult.rows },
   ]) {
     const allocated = new Map<string, number>();
     for (const row of rows) allocated.set(row.code, (allocated.get(row.code) ?? 0) + row.amount);
     for (const [code, amount] of allocated) {
-      const csvRow = rowMap.get(code) ?? 0;
+      const csvRow = rows.find(r => r.code === code)?.row ?? 0;
       if (!owned.has(code)) errors.push({ file: deckName, row: csvRow, value: code, reason: `Deck code "${code}" is absent from collection` });
       else if (amount > owned.get(code)!) errors.push({ file: deckName, row: csvRow, value: code, reason: `Deck allocation ${amount} exceeds collection quantity ${owned.get(code)}` });
     }
@@ -264,25 +245,23 @@ export function validateAll(projectRoot: string = '.'): ValidationResult {
   }
 
   if (knownCodes.size > 0) {
-    for (const row of collectionResult.rows) { if (!knownCodes.has(row.code)) errors.push({ file: CSV_PATHS.COLLECTION, row: 0, value: row.code, reason: `Unknown code "${row.code}"` }); }
-    for (const row of saboResult.rows) { if (!knownCodes.has(row.code)) errors.push({ file: CSV_PATHS.DECK_SABO, row: 0, value: row.code, reason: `Unknown code "${row.code}"` }); }
-    for (const row of luffyResult.rows) { if (!knownCodes.has(row.code)) errors.push({ file: CSV_PATHS.DECK_LUFFY, row: 0, value: row.code, reason: `Unknown code "${row.code}"` }); }
-    for (const row of wantedRows) { if (!knownCodes.has(row.code)) errors.push({ file: CSV_PATHS.WANTED, row: 0, value: row.code, reason: `Unknown code "${row.code}"` }); }
+    for (const row of collectionResult.rows) { if (!knownCodes.has(row.code)) errors.push({ file: CSV_PATHS.COLLECTION, row: row.row, value: row.code, reason: `Unknown code "${row.code}"` }); }
+    for (const row of saboResult.rows) { if (!knownCodes.has(row.code)) errors.push({ file: CSV_PATHS.DECK_SABO, row: row.row, value: row.code, reason: `Unknown code "${row.code}"` }); }
+    for (const row of luffyResult.rows) { if (!knownCodes.has(row.code)) errors.push({ file: CSV_PATHS.DECK_LUFFY, row: row.row, value: row.code, reason: `Unknown code "${row.code}"` }); }
+    for (const row of wantedRows) { if (!knownCodes.has(row.code)) errors.push({ file: CSV_PATHS.WANTED, row: row.row, value: row.code, reason: `Unknown code "${row.code}"` }); }
   }
 
   if (wantedRows.length > 0) errors.push(...findDuplicateWantedTargets(wantedRows, CSV_PATHS.WANTED));
 
   const owned = new Map(collectionResult.rows.map(r => [r.code, r.amount]));
-  const saboRowMap = new Map(saboResult.rows.map((r, i) => [r.code, i + 2]));
-  const luffyRowMap = new Map(luffyResult.rows.map((r, i) => [r.code, i + 2]));
-  for (const { deckName, rows, rowMap } of [
-    { deckName: 'Sabo', rows: saboResult.rows, rowMap: saboRowMap },
-    { deckName: 'Luffy G_B [WIP]' as const, rows: luffyResult.rows, rowMap: luffyRowMap },
+  for (const { deckName, rows } of [
+    { deckName: 'Sabo' as const, rows: saboResult.rows },
+    { deckName: 'Luffy G_B [WIP]' as const, rows: luffyResult.rows },
   ]) {
     const allocated = new Map<string, number>();
     for (const row of rows) allocated.set(row.code, (allocated.get(row.code) ?? 0) + row.amount);
     for (const [code, amount] of allocated) {
-      const csvRow = rowMap.get(code) ?? 0;
+      const csvRow = rows.find(r => r.code === code)?.row ?? 0;
       if (!owned.has(code)) errors.push({ file: deckName, row: csvRow, value: code, reason: `Deck code "${code}" absent from collection` });
       else if (amount > owned.get(code)!) errors.push({ file: deckName, row: csvRow, value: code, reason: `Deck allocation ${amount} exceeds collection ${owned.get(code)}` });
     }

@@ -299,17 +299,14 @@ export function reconcileBinderLayout(
       }
       if (lastSheetOfSection >= 0) insertAfter = lastSheetOfSection + 1;
 
-      // Assign a stable overflow sheet number that won't collide
-      let overflowNo = Math.max(...next.sheets.map(s => s.sheet), 0) + 1;
-      // If there's existing overflow, find the next available number
-      for (let s = overflowNo; ; s++) {
-        if (!next.sheets.some(sh => sh.sheet === s)) { overflowNo = s; break; }
-      }
+      // Use a stable immutable ID based on a counter unique to this run.
+      let overflowId = 1000;
+      while (next.sheets.some(sh => sh.sheetId === `overflow-${sectionColor}-${overflowId}`)) overflowId++;
 
-      const frontSid = `overflow-${sectionColor}-${overflowNo}`;
+      const frontSid = `overflow-${sectionColor}-${overflowId}`;
       const frontSheet = {
         sheetId: frontSid,
-        sheet: overflowNo,
+        sheet: 0, // placeholder — recomputed below from position
         side: 'Front' as const,
         pockets: [] as BinderLayoutPocket[],
       };
@@ -317,10 +314,10 @@ export function reconcileBinderLayout(
         frontSheet.pockets.push(emptyPocket(frontSid, sec, i, 'empty'));
       }
 
-      const backSid = `overflow-${sectionColor}-${overflowNo}-Back`;
+      const backSid = `overflow-${sectionColor}-${overflowId}-Back`;
       const backSheet = {
         sheetId: backSid,
-        sheet: overflowNo,
+        sheet: 0, // placeholder — recomputed from position
         side: 'Back' as const,
         pockets: [] as BinderLayoutPocket[],
       };
@@ -345,6 +342,21 @@ export function reconcileBinderLayout(
       side: targetSheet!.side,
       slot: target.pocket,
     });
+  }
+
+  // --- Phase 3: recompute display sheet numbers -----------------
+  // Display numbers are derived from position in the ordered array.
+  // sheetId is the stable immutable identifier; `sheet` is the display
+  // number that the UI projects.  After any insertion, both front+back
+  // halves of the same physical sheet share the same display number.
+  let displayNo = 1;
+  let expectedDisplay = 1;
+  for (const sheet of next.sheets) {
+    if (sheet.side === 'Front') {
+      expectedDisplay = displayNo;
+      displayNo++;
+    }
+    sheet.sheet = expectedDisplay;
   }
 
   return { layout: next, locations };
