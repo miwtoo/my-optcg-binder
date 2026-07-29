@@ -40,7 +40,9 @@
           "sheetId": "sheet-1-Front",
           "section": "Leader:Green",
           "pocket": 5,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-022",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-1-Front",
@@ -273,7 +275,9 @@
           "sheetId": "sheet-2-Back",
           "section": "Red:4:Character",
           "pocket": 7,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "ST35-002",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-2-Back",
@@ -425,7 +429,9 @@
           "sheetId": "sheet-3-Back",
           "section": "Green:1:Character",
           "pocket": 8,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-034",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-3-Back",
@@ -459,13 +465,17 @@
           "sheetId": "sheet-4-Front",
           "section": "Green:1:Event",
           "pocket": 3,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP13-040",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-4-Front",
           "section": "Green:1:Event",
           "pocket": 4,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-038",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-4-Front",
@@ -492,13 +502,17 @@
           "sheetId": "sheet-4-Front",
           "section": "Green:2:Character",
           "pocket": 8,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-027",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-4-Front",
           "section": "Green:2:Character",
           "pocket": 9,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "ST30-014",
+          "quantity": 0
         }
       ]
     },
@@ -532,7 +546,9 @@
           "sheetId": "sheet-4-Back",
           "section": "Green:4:Character",
           "pocket": 4,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-026",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-4-Back",
@@ -603,7 +619,9 @@
           "sheetId": "sheet-5-Front",
           "section": "Green:6:Character",
           "pocket": 4,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP15-032",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-5-Front",
@@ -630,7 +648,9 @@
           "sheetId": "sheet-5-Front",
           "section": "Green:7:Character",
           "pocket": 8,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-032",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-5-Front",
@@ -664,7 +684,9 @@
           "sheetId": "sheet-5-Back",
           "section": "Blue:-1:Event",
           "pocket": 3,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP02-068",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-5-Back",
@@ -727,13 +749,17 @@
           "sheetId": "sheet-6-Front",
           "section": "Blue:2:Character",
           "pocket": 2,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-054",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-6-Front",
           "section": "Blue:2:Character",
           "pocket": 3,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-055",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-6-Front",
@@ -833,7 +859,9 @@
           "sheetId": "sheet-6-Back",
           "section": "Blue:3:Event",
           "pocket": 7,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP11-061",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-6-Back",
@@ -867,13 +895,17 @@
           "sheetId": "sheet-7-Front",
           "section": "Blue:4:Character",
           "pocket": 2,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-045",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-7-Front",
           "section": "Blue:4:Character",
           "pocket": 3,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-056",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-7-Front",
@@ -908,7 +940,9 @@
           "sheetId": "sheet-7-Front",
           "section": "Blue:5:Character",
           "pocket": 8,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-048",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-7-Front",
@@ -958,7 +992,9 @@
           "sheetId": "sheet-7-Back",
           "section": "Blue:6:Character",
           "pocket": 5,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "OP16-042",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-7-Back",
@@ -1462,7 +1498,9 @@
           "sheetId": "sheet-11-Front",
           "section": "Black:5:Character",
           "pocket": 4,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "ST35-005",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-11-Front",
@@ -1489,7 +1527,9 @@
           "sheetId": "sheet-11-Front",
           "section": "Black:7:Character",
           "pocket": 8,
-          "status": "vacant"
+          "status": "vacant",
+          "code": "ST35-004",
+          "quantity": 0
         },
         {
           "sheetId": "sheet-11-Front",

@@ -211,10 +211,10 @@ export function reconcileBinderLayout(
   const assigned = new Set<string>();
   const locations = new Map<string, BinderLocation>();
 
-  // --- Phase 1: update existing card pockets ------------------
+  // --- Phase 1: update existing card/vacant pockets -----------
   for (const sheet of next.sheets) {
     for (const pocket of sheet.pockets) {
-      if (pocket.status === 'card' && pocket.code) {
+      if ((pocket.status === 'card' || pocket.status === 'vacant') && pocket.code) {
         const owned = collection.get(pocket.code) ?? 0;
         let totalInDecks = 0;
         for (const [, deckMap] of decks) {
@@ -232,11 +232,11 @@ export function reconcileBinderLayout(
             slot: pocket.pocket,
           });
         } else {
+          // Retain code + quantity for stable slot restoration when the
+          // card later has positive binder quantity again.
           pocket.status = 'vacant';
-          delete pocket.quantity;
-          delete pocket.code;
+          pocket.quantity = 0;
           delete pocket.tag;
-          // pocket still retains section/pocket identity for potential re-use
         }
       }
     }
@@ -271,40 +271,45 @@ export function reconcileBinderLayout(
       if (target) { targetSheet = sheet; break; }
     }
 
-    // 2b. No reserve found — append a complete Front+Back overflow
+    // 2b. No reserve found — try to reuse an overflow empty pocket
+    //     that is in the same section.
+    if (!target) {
+      for (const sheet of next.sheets) {
+        target = sheet.pockets.find(p => p.status === 'empty' && p.section === sec);
+        if (target) { targetSheet = sheet; break; }
+      }
+    }
+
+    // 2c. Still no pocket — append a complete Front+Back overflow
     //     sheet directly after the owning color section.
     if (!target) {
-      // Find the last sheet index that belongs to this color section
       const sectionColor = entry.type === 'Leader'
         ? `Leader:${entry.color}`
         : entry.color!;
 
-      let insertAfter = next.sheets.length; // default: append at end
+      // Determine where to insert (after the last sheet of this section)
+      let insertAfter = next.sheets.length;
+      let lastSheetOfSection = -1;
       for (let i = next.sheets.length - 1; i >= 0; i--) {
         const sh = next.sheets[i]!;
-        // A sheet belongs to sectionColor if any of its pockets match
-        const belongs = sh.pockets.some(p => p.section.startsWith(sectionColor));
-        if (belongs) { insertAfter = i + 1; break; }
+        if (sh.pockets.some(p => p.section.startsWith(sectionColor))) {
+          lastSheetOfSection = i;
+          break;
+        }
+      }
+      if (lastSheetOfSection >= 0) insertAfter = lastSheetOfSection + 1;
+
+      // Assign a stable overflow sheet number that won't collide
+      let overflowNo = Math.max(...next.sheets.map(s => s.sheet), 0) + 1;
+      // If there's existing overflow, find the next available number
+      for (let s = overflowNo; ; s++) {
+        if (!next.sheets.some(sh => sh.sheet === s)) { overflowNo = s; break; }
       }
 
-      // Determine a new sheet number (1-based) that preserves ordering
-      let newSheetNo = 1;
-      if (insertAfter > 0 && insertAfter <= next.sheets.length) {
-        const prevSheet = next.sheets[insertAfter - 1]!;
-        newSheetNo = prevSheet.sheet;
-        // If the previous sheet is the Back side, advance to the next sheet number
-        if (prevSheet.side === 'Back') newSheetNo++;
-      } else {
-        newSheetNo = next.sheets.length > 0
-          ? Math.max(...next.sheets.map(s => s.sheet)) + 1
-          : 1;
-      }
-
-      // Create Front sheet
-      const frontSid = `sheet-${newSheetNo}-Front`;
+      const frontSid = `overflow-${sectionColor}-${overflowNo}`;
       const frontSheet = {
         sheetId: frontSid,
-        sheet: newSheetNo,
+        sheet: overflowNo,
         side: 'Front' as const,
         pockets: [] as BinderLayoutPocket[],
       };
@@ -312,11 +317,10 @@ export function reconcileBinderLayout(
         frontSheet.pockets.push(emptyPocket(frontSid, sec, i, 'empty'));
       }
 
-      // Create Back sheet
-      const backSid = `sheet-${newSheetNo}-Back`;
+      const backSid = `overflow-${sectionColor}-${overflowNo}-Back`;
       const backSheet = {
         sheetId: backSid,
-        sheet: newSheetNo,
+        sheet: overflowNo,
         side: 'Back' as const,
         pockets: [] as BinderLayoutPocket[],
       };
@@ -324,10 +328,8 @@ export function reconcileBinderLayout(
         backSheet.pockets.push(emptyPocket(backSid, sec, i, 'empty'));
       }
 
-      // Insert: Front first, then Back
       next.sheets.splice(insertAfter, 0, frontSheet, backSheet);
 
-      // Target is the first empty pocket on the Front sheet
       target = frontSheet.pockets.find(p => p.status === 'empty')!;
       targetSheet = frontSheet;
     }

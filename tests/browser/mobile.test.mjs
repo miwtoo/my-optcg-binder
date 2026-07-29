@@ -2,11 +2,11 @@
  * Mobile browser verification — Playwright (headless Chromium).
  *
  * Tests at 412 CSS px viewport against the built static site.
- * If the Playwright module cannot be resolved, exits with code 77.
  *
- * Requirements:
- *   - Built site in dist/ (run `npm run build` first)
- *   - Playwright module available in node_modules or npx cache
+ * Dependency: `@playwright/test` or `playwright-core` must be installed.
+ * Runs after `npm run build` (requires dist/).
+ *
+ * Exits: 0 = all passed, 1 = failures, 77 = blocked (module or dist missing).
  */
 
 import { createRequire } from 'node:module';
@@ -20,21 +20,22 @@ const projectRoot = resolve(__dirname, '..', '..');
 const distDir = resolve(projectRoot, 'dist');
 const distIndex = resolve(distDir, 'index.html');
 
-/* ─── Resolve Playwright via createRequire (CJS bridge) ────── */
+/* ─── Resolve Playwright (portable — no absolute paths) ────── */
 
 let chromium;
 try {
-  const req = createRequire(import.meta.url);
-  const pwPaths = [
-    resolve(projectRoot, 'node_modules/playwright-core/index.js'),
-    '/Users/miwtoo/.npm/_npx/e41f203b7505f1fb/node_modules/playwright-core/index.js',
-  ];
-  let pwPath = pwPaths.find(existsSync);
-  if (!pwPath) pwPath = req.resolve('playwright-core');
-  chromium = req(pwPath).chromium;
+  const req = createRequire(resolve(projectRoot, 'package.json'));
+  // Try @playwright/test first (the declared dependency), fall back to playwright-core
+  try {
+    chromium = req('@playwright/test').chromium;
+  } catch {
+    chromium = req('playwright-core').chromium;
+  }
   if (!chromium) throw new Error('chromium not found');
 } catch (e) {
-  console.log(`PLAYWRIGHT_BLOCKED: Cannot resolve Playwright — ${e.message}`);
+  console.log(`BLOCKED: Playwright module not available — ${e.message}`);
+  console.log('  Install: npm install @playwright/test');
+  console.log('  Then run: npx playwright install chromium');
   process.exit(77);
 }
 
@@ -44,7 +45,6 @@ function serveDist() {
   return new Promise((resolveServer) => {
     const server = createServer((req, res) => {
       const url = new URL(req.url, 'http://localhost');
-      // Strip the Astro base prefix so files resolve under dist/
       let cleanPath = decodeURIComponent(url.pathname).replace(/^\/my-optcg-binder/, '') || '/';
       let fp = resolve(distDir, cleanPath === '/' ? 'index.html' : cleanPath.slice(1));
       if (!existsSync(fp)) fp = resolve(distDir, 'index.html');
@@ -72,7 +72,7 @@ async function run() {
   const baseUrl = `http://127.0.0.1:${port}`;
 
   let passed = 0, failed = 0, skipped = 0;
-  const pass = (name) => { console.log(`  ✔ ${name}`); passed++; };
+  const pass = name => { console.log(`  ✔ ${name}`); passed++; };
   const fail = (name, msg) => { console.log(`  ✘ ${name}: ${msg}`); failed++; };
   const skip = (name, reason) => { console.log(`  ○ SKIP ${name}: ${reason}`); skipped++; };
 
@@ -86,101 +86,49 @@ async function run() {
     await page.goto(baseUrl, { waitUntil: 'networkidle' });
     await page.waitForSelector('.app-shell', { timeout: 5000 });
 
-    // ── 1. No horizontal overflow ──────────────────────────
     console.log('  [Layout integrity]');
-    const overflow = await page.evaluate(() =>
-      document.documentElement.scrollWidth > document.documentElement.clientWidth
-    );
-    overflow ? fail('No horizontal overflow', `scroll > client`) : pass('No horizontal document overflow');
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+    overflow ? fail('No horizontal overflow', 'scroll > client') : pass('No horizontal document overflow');
 
-    // ── 2. Collection renders ──────────────────────────────
     console.log('  [Collection view]');
     await page.waitForSelector('.tab.is-active[data-view="collection"]', { timeout: 3000 });
     pass('Collection tab is active by default');
+    await page.waitForFunction(() => { const el = document.querySelector('[data-count="collection"]'); return el && el.textContent.trim().length > 0; }, { timeout: 5000 }).catch(() => {});
+    const collCount = await page.evaluate(() => document.querySelector('[data-count="collection"]')?.textContent?.trim() || '');
+    collCount && parseInt(collCount) > 0 ? pass(`Collection count: ${collCount}`) : skip('Collection count', `got "${collCount}"`);
 
-    // Wait for the JS to hydrate and populate counts
-    await page.waitForFunction(() => {
-      const el = document.querySelector('[data-count="collection"]');
-      return el && el.textContent.trim().length > 0;
-    }, { timeout: 5000 }).catch(() => {});
-
-    const collCount = await page.evaluate(() =>
-      document.querySelector('[data-count="collection"]')?.textContent?.trim() || ''
-    );
-    if (collCount && parseInt(collCount) > 0) {
-      pass(`Collection count: ${collCount}`);
-    } else {
-      skip('Collection count visible', `got "${collCount}" — may need JS hydration wait`);
-    }
-
-    // ── 3. Filters ─────────────────────────────────────────
     console.log('  [Filters]');
+    (await page.$('#search')) ? pass('Search input rendered') : fail('Search input', 'not found');
+    (await page.$('#color'))  ? pass('Color filter rendered')  : fail('Color filter', 'not found');
+    (await page.$('#cost'))   ? pass('Cost filter rendered')   : fail('Cost filter', 'not found');
+    (await page.$('#type'))   ? pass('Type filter rendered')   : fail('Type filter', 'not found');
+
     const searchEl = await page.$('#search');
-    searchEl ? pass('Search input rendered') : fail('Search input', 'not found');
-
-    const colorEl = await page.$('#color');
-    colorEl ? pass('Color filter rendered') : fail('Color filter', 'not found');
-
-    const costEl = await page.$('#cost');
-    costEl ? pass('Cost filter rendered') : fail('Cost filter', 'not found');
-
-    const typeEl = await page.$('#type');
-    typeEl ? pass('Type filter rendered') : fail('Type filter', 'not found');
-
-    // No-results: search for a string that won't match any card
     if (searchEl) {
       await searchEl.fill('ZZZZ-NONEXISTENT');
       await page.waitForTimeout(800);
-      const noResultText = await page.evaluate(() => {
-        const body = document.body.textContent;
-        return /no result|no card|empty|not found|0 cards/i.test(body);
-      });
-      noResultText ? pass('No-results messaging detected') : skip('No-results state', 'no explicit empty-state text in DOM');
+      const noResult = await page.evaluate(() => /no result|no card|empty|0 cards/i.test(document.body.textContent));
+      noResult ? pass('No-results messaging detected') : skip('No-results state', 'no empty-state text in DOM');
       await searchEl.fill('');
       await page.waitForTimeout(300);
     }
 
-    // ── 4. Binder view ─────────────────────────────────────
     console.log('  [Binder view]');
     await page.click('.tab[data-view="binder"]');
     await page.waitForTimeout(800);
-
-    const binderActive = await page.evaluate(() =>
-      document.querySelector('.tab[data-view="binder"]')?.classList.contains('is-active')
-    );
+    const binderActive = await page.evaluate(() => document.querySelector('.tab[data-view="binder"]')?.classList.contains('is-active'));
     binderActive ? pass('Binder tab activates') : fail('Binder tab', 'not .is-active after click');
+    const binderCards = await page.evaluate(() => { const m = document.body.textContent.match(/[A-Z]{2}\d+-\d+/g); return m ? m.length : 0; });
+    binderCards > 0 ? pass(`Card codes in binder: ${binderCards}`) : skip('Binder card codes', '0 codes found');
 
-    // Check that card codes are visible somewhere in the binder view
-    const binderCards = await page.evaluate(() => {
-      const text = document.body.textContent;
-      const matches = text.match(/[A-Z]{2}\d+-\d+/g);
-      return matches ? matches.length : 0;
-    });
-    binderCards > 0 ? pass(`Card codes in binder: ${binderCards}`) : skip('Binder card codes', '0 codes found in page text');
-
-    // ── 5. Wanted view ─────────────────────────────────────
     console.log('  [Wanted view]');
     await page.click('.tab[data-view="wanted"]');
     await page.waitForTimeout(800);
-
-    const wantedActive = await page.evaluate(() =>
-      document.querySelector('.tab[data-view="wanted"]')?.classList.contains('is-active')
-    );
+    const wantedActive = await page.evaluate(() => document.querySelector('.tab[data-view="wanted"]')?.classList.contains('is-active'));
     wantedActive ? pass('Wanted tab activates') : fail('Wanted tab', 'not .is-active after click');
-
-    await page.waitForFunction(() => {
-      const el = document.querySelector('[data-count="wanted"]');
-      return el && el.textContent.trim().length > 0;
-    }, { timeout: 5000 }).catch(() => {});
-
-    const wantCount = await page.evaluate(() =>
-      document.querySelector('[data-count="wanted"]')?.textContent?.trim() || ''
-    );
-    if (wantCount && parseInt(wantCount) > 0) {
-      pass(`Wanted count: ${wantCount}`);
-    } else {
-      skip('Wanted count visible', `got "${wantCount}"`);
-    }
+    await page.waitForFunction(() => { const el = document.querySelector('[data-count="wanted"]'); return el && el.textContent.trim().length > 0; }, { timeout: 5000 }).catch(() => {});
+    const wantCount = await page.evaluate(() => document.querySelector('[data-count="wanted"]')?.textContent?.trim() || '');
+    wantCount && parseInt(wantCount) > 0 ? pass(`Wanted count: ${wantCount}`) : skip('Wanted count', `got "${wantCount}"`);
 
   } catch (err) {
     fail('Runtime error', err.message);
@@ -192,7 +140,7 @@ async function run() {
 
   const total = passed + failed + skipped;
   console.log(`\n  Results: ${passed} passed, ${failed} failed, ${skipped} skipped (${total} total)\n`);
-  if (failed > 0) { process.exit(1); }
+  if (failed > 0) { console.log(`❌ ${failed} test(s) failed — actionable failures above`); process.exit(1); }
   if (passed === 0 && skipped > 0) { process.exit(77); }
   console.log('✅ All browser tests passed');
   process.exit(0);

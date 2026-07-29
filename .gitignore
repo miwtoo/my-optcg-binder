@@ -33,3 +33,4 @@ public/images/cards/
 # Logs
 *.log
 npm-debug.log*
+pnpm-lock.yaml

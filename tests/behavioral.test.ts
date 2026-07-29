@@ -82,12 +82,11 @@ describe('Behavioural: deck-only / vacant', () => {
       TEST_CATALOG,
       new Map([['TestDeck', new Map([['CA', 2]])]]),
     );
-    // CA is 2 owned, 2 in deck → 0 binder → vacant
+    // CA is 2 owned, 2 in deck → 0 binder → vacant (code retained for restoration)
     const pocket = first.layout.sheets.flatMap(s => s.pockets).find(p => p.code === 'CA');
-    expect(pocket).toBeUndefined(); // code removed when vacant
-    const vacant = first.layout.sheets.flatMap(s => s.pockets)
-      .find(p => p.status === 'vacant' && p.section.includes('Red:1:Character'));
-    expect(vacant).toBeDefined();
+    expect(pocket).toBeDefined();
+    expect(pocket!.status).toBe('vacant');
+    expect(pocket!.quantity).toBe(0);
     // L1 still has 1 binder
     expect(first.locations.has('L1')).toBe(true);
   });

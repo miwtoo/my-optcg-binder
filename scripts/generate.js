@@ -24,7 +24,7 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync, mkdirSync, copyFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
-import { validateAll } from '../src/lib/validate/index.js';
+import { validateInputs } from '../src/lib/validate/index.js';
 import { formatErrors } from '../src/lib/validate/errors.js';
 import {
   createInitialBinderLayout,
@@ -120,15 +120,7 @@ function main() {
   console.log('📦 Generating static binder data...\n');
   const label = INIT_LAYOUT ? ' (init-layout mode — will write a new ledger)' : ' (normal mode — committed ledger preserved)';
 
-  // ── Step 1: Validate CSVs ──────────────────────────────────
-  console.log(`  Step 1/7: Validating source CSVs...${label}`);
-  const validation = validateAll(projectRoot);
-  if (!validation.valid) {
-    console.error('❌ Validation failed:'); console.error(formatErrors(validation.errors)); process.exit(1);
-  }
-  console.log(`  ✔  ${validation.collection.length} collection, ${validation.saboDeck.length} Sabo, ${validation.luffyDeck.length} Luffy, ${validation.wanted.length} wanted`);
-
-  // ── Step 2: Check Vega snapshot (needed for images + init) ─
+  // ── Step 2: Check Vega snapshot ────────────────────────────
   console.log('  Step 2/7: Checking Vega snapshot...');
   const snapshot = checkVegaSnapshot(projectRoot, VEGA_SNAPSHOT_DIR);
   if (!snapshot.available) {
@@ -141,6 +133,14 @@ function main() {
   const { catalog, imageAvailability, packCount, cardCount } = buildCatalogFromSnapshot(snapshot.path);
   if (catalog.size === 0) { console.error('❌ No catalog data.'); process.exit(1); }
   console.log(`  ✔  ${catalog.size} codes from ${cardCount} entries, ${packCount} packs`);
+
+  // ── Step 1: Validate CSVs against FRESH Vega catalog ───────
+  console.log(`  Step 1/7: Validating source CSVs against Vega catalog...${label}`);
+  const validation = validateInputs(projectRoot, new Set(catalog.keys()));
+  if (!validation.valid) {
+    console.error('❌ Validation failed:'); console.error(formatErrors(validation.errors)); process.exit(1);
+  }
+  console.log(`  ✔  ${validation.collection.length} collection, ${validation.saboDeck.length} Sabo, ${validation.luffyDeck.length} Luffy, ${validation.wanted.length} wanted`);
 
   // ── Step 4: Load or initialise the binder layout ledger ────
   console.log('  Step 4/7: Loading binder layout...');
