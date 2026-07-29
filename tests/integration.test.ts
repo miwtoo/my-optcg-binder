@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const generatedPath = resolve(projectRoot, 'src/data/generated/binder-data.json');
 const publicPath = resolve(projectRoot, 'public/data/binder.json');
+const binderLayoutPath = resolve(projectRoot, 'data/binder-layout.json');
 const buildOutputDir = resolve(projectRoot, 'dist');
 const buildDataPath = resolve(buildOutputDir, 'data/binder.json');
 
@@ -33,9 +34,11 @@ function validateBinderDataContract(data: any, label: string): void {
   expect(data.catalog.length, `${label}: catalog length`).toBeGreaterThan(0);
   for (const entry of data.catalog) {
     expect(entry).toHaveProperty('code');
+    expect(entry).toHaveProperty('name');
     expect(entry).toHaveProperty('color');
     expect(entry).toHaveProperty('cost');
     expect(entry).toHaveProperty('type');
+    expect(entry).toHaveProperty('image');
     expect(typeof entry.code).toBe('string');
     expect(entry.code).toMatch(/^[A-Z]+-?\d+(-\d+)?$/);
   }
@@ -177,6 +180,17 @@ describe('Generated Data Contract — src/data/generated/binder-data.json', () =
     }
   });
 
+  it('catalog entries contain image paths for owned codes', () => {
+    const ownedCodes = new Set(data.cards.map((card: any) => card.code));
+    for (const entry of data.catalog) {
+      if (ownedCodes.has(entry.code)) {
+        expect(entry.image, `catalog entry ${entry.code} should have an image path`).not.toBeNull();
+        expect(typeof entry.image).toBe('string');
+        expect(entry.image).toMatch(/^data\/card-images\/.+\.png$/);
+      }
+    }
+  });
+
   it('source manifest includes Vega JSON provenance and checksums', () => {
     const files = Object.keys(data.sources.files);
     expect(files).toContain('.vega/json/packs.json');
@@ -216,6 +230,59 @@ describe('Public Contract — public/data/binder.json', () => {
     expect(data.cards.length).toBe(internal.cards.length);
     expect(data.sheets.length).toBe(internal.sheets.length);
     expect(data.binder.totalPossessedCards).toBe(internal.binder.totalPossessedCards);
+  });
+});
+
+describe('Generated Binder Layout — data/binder-layout.json', () => {
+  it('exists and is valid JSON', () => {
+    expect(existsSync(binderLayoutPath), 'data/binder-layout.json must exist').toBe(true);
+    const raw = readFileSync(binderLayoutPath, 'utf-8');
+    const layout = JSON.parse(raw);
+    expect(layout).toHaveProperty('version');
+    expect(layout.version).toBe(1);
+    expect(layout).toHaveProperty('sheets');
+    expect(Array.isArray(layout.sheets)).toBe(true);
+    expect(layout.sheets.length).toBeGreaterThan(0);
+  });
+
+  it('every pocket has a valid discriminated status', () => {
+    const layout = JSON.parse(readFileSync(binderLayoutPath, 'utf-8'));
+    const validStatuses = ['reserved', 'vacant', 'empty', 'card'];
+    for (const sheet of layout.sheets) {
+      expect(sheet).toHaveProperty('sheetId');
+      expect(sheet).toHaveProperty('sheet');
+      expect(sheet).toHaveProperty('side');
+      expect(['Front', 'Back']).toContain(sheet.side);
+      expect(sheet).toHaveProperty('pockets');
+      expect(Array.isArray(sheet.pockets)).toBe(true);
+      for (const pocket of sheet.pockets) {
+        expect(validStatuses).toContain(pocket.status);
+        expect(pocket).toHaveProperty('sheetId');
+        expect(pocket).toHaveProperty('section');
+        expect(pocket).toHaveProperty('pocket');
+        if (pocket.status === 'card') {
+          expect(typeof pocket.code).toBe('string');
+          expect(typeof pocket.quantity).toBe('number');
+          expect(pocket.quantity).toBeGreaterThanOrEqual(0);
+        }
+        if (pocket.status === 'reserved') {
+          expect(typeof pocket.tag).toBe('string');
+        }
+      }
+    }
+  });
+
+  it('pocket positions are unique within each side', () => {
+    const layout = JSON.parse(readFileSync(binderLayoutPath, 'utf-8'));
+    for (const sheet of layout.sheets) {
+      const seen = new Set<number>();
+      for (const pocket of sheet.pockets) {
+        expect(seen.has(pocket.pocket)).toBe(false);
+        seen.add(pocket.pocket);
+        expect(pocket.pocket).toBeGreaterThanOrEqual(1);
+        expect(pocket.pocket).toBeLessThanOrEqual(9);
+      }
+    }
   });
 });
 

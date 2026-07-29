@@ -6,10 +6,10 @@ import { validateAll } from '../src/lib/validate/index.js';
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 describe('CSV Validation', () => {
-  it('reports the unresolved Sabo source conflict', () => {
+  it('passes on valid source data (the Sabo ,51 summary row is silently ignored per spec)', () => {
     const result = validateAll(projectRoot);
-    expect(result.valid).toBe(false);
-    expect(result.errors.some(e => e.reason.includes('Source conflict'))).toBe(true);
+    expect(result.valid).toBe(true);
+    expect(result.errors).toHaveLength(0);
   });
 
   it('parses all collection rows', () => {

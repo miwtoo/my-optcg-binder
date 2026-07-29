@@ -4,13 +4,11 @@
  * generate — Generate static binder data from validated CSV inputs.
  *
  * Reads strict-validated CSV inputs plus the Vega raw snapshot directory
- * (.vega/), and emits minimized generated JSON data containing:
- *   - Card catalog metadata (from Vega snapshot — exact card codes)
- *   - Inventory (from collection CSV)
- *   - Deck allocations (from deck CSVs)
- *   - Physical binder locations (computed by placement engine)
- *   - Source manifest with checksums
- *   - Card images copied into tracked public assets
+ * (.vega/), and emits:
+ *   - data/binder-layout.json  — stable initial physical ledger
+ *   - src/data/generated/binder-data.json — canonical 8-key BinderData
+ *   - public/data/binder.json  — same 8-key contract for the UI
+ *   - public/data/card-images/ — one selected card PNG per owned/wanted code
  *
  * REQUIREMENTS:
  *   - Must be run from project root
@@ -27,7 +25,10 @@ import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
 import { validateAll } from '../src/lib/validate/index.js';
 import { formatErrors } from '../src/lib/validate/errors.js';
-import { computeBinderPlacement, computeBinderSummary } from '../src/lib/binder/index.js';
+import {
+  createInitialBinderLayout,
+  reconcileBinderLayout,
+} from '../src/lib/binder/index.js';
 import { CSV_PATHS, GENERATED_DATA_PATH, VEGA_SNAPSHOT_DIR } from '../src/lib/data/constants.js';
 
 const projectRoot = resolve(import.meta.dirname, '..');
@@ -60,7 +61,6 @@ function checkVegaSnapshot() {
     }
   }
 
-  // Also check for version.txt as fallback
   if (!version) {
     const versionFile = resolve(vegaPath, 'version.txt');
     if (existsSync(versionFile)) {
@@ -73,19 +73,10 @@ function checkVegaSnapshot() {
 
 /* ─── Build Card Catalog from Vega snapshot ────────────────── */
 
-/**
- * Strip the _pN (parallel art) or _rN (reprint) suffix from a card ID
- * to get the canonical base card code.
- * @param {string} id
- */
 function toBaseCode(id) {
   return id.replace(/_(p\d+|r\d+)$/, '');
 }
 
-/**
- * Normalize a color string from Vega data to the canonical CardColor.
- * @param {string|null} v
- */
 function normalizeColor(v) {
   if (!v) return null;
   const upper = v.charAt(0).toUpperCase() + v.slice(1).toLowerCase();
@@ -93,10 +84,6 @@ function normalizeColor(v) {
   return valid.includes(upper) ? upper : null;
 }
 
-/**
- * Normalize a category string from Vega data to the canonical CardType.
- * @param {string|null} v
- */
 function normalizeType(v) {
   if (!v) return null;
   const lower = v.toLowerCase();
@@ -107,10 +94,6 @@ function normalizeType(v) {
   return null;
 }
 
-/**
- * Read and parse a JSON file, returning null on error.
- * @param {string} filePath
- */
 function readJsonFile(filePath) {
   try {
     const raw = readFileSync(filePath, 'utf-8');
@@ -123,27 +106,28 @@ function readJsonFile(filePath) {
 /**
  * Build the canonical card catalog from the Vega snapshot.
  *
- * Scans all cards_*.json files in .vega/json/, reads packs.json for
- * set metadata, and builds a Map of base card codes to CatalogEntry.
+ * Scans all cards_*.json files, reads packs.json for set metadata,
+ * and builds a Map of base card codes to CatalogEntry.
  *
- * For cards with parallel art (_pN) or reprint (_rN) variants, the
- * first encountered base code entry provides the canonical metadata.
+ * Cards with parallel art (_pN) or reprint (_rN) variants are deduplicated —
+ * the first-occurring base code entry supplies canonical metadata.
  *
- * @param {string} vegaPath - absolute path to .vega/
+ * Vega `cost: null` (legitimate for counter Events) is mapped to -1 so the
+ * placement engine can produce an exact layout.
+ *
+ * @param {string} vegaPath
  * @returns {{ catalog: Map<string, object>, imageAvailability: Map<string, string[]>, packCount: number, cardCount: number }}
  */
 function buildCatalogFromSnapshot(vegaPath) {
   const catalog = new Map();
-  const imageAvailability = new Map(); // code -> array of available image filenames
+  const imageAvailability = new Map();
   const jsonDir = resolve(vegaPath, 'json');
   const imagesDir = resolve(vegaPath, 'images');
 
-  // 1. Read packs.json for set metadata
   const packsPath = resolve(jsonDir, 'packs.json');
   const packsData = readJsonFile(packsPath);
   const packCount = packsData ? Object.keys(packsData).length : 0;
 
-  // 2. Read all cards_*.json files
   const cardFiles = [];
   if (existsSync(jsonDir)) {
     const entries = readdirSync(jsonDir);
@@ -166,38 +150,36 @@ function buildCatalogFromSnapshot(vegaPath) {
       cardCount++;
       const baseCode = toBaseCode(card.id);
 
-      // Only use the first encountered entry for each base code
       if (seenBaseCodes.has(baseCode)) continue;
       seenBaseCodes.add(baseCode);
 
-      // Extract metadata from actual card JSON
       const colors = Array.isArray(card.colors) ? card.colors : [];
       const color = colors.length > 0 ? normalizeColor(colors[0]) : null;
+
+      // Map null Vega cost (legitimate for counter Events) to -1
+      // so placement-engine exact-layout creation succeeds.
+      let cost = typeof card.cost === 'number' ? card.cost : -1;
 
       catalog.set(baseCode, {
         code: baseCode,
         name: card.name ?? null,
-        color: color,
-        cost: typeof card.cost === 'number' ? card.cost : null,
+        color,
+        cost,
         type: normalizeType(card.category ?? card.card_type ?? null),
+        image: null, // populated after image copy
       });
 
-      // Track image availability for this base code
+      // Track image availability
       const availableImages = [];
       const baseImg = `${baseCode}.png`;
       if (existsSync(resolve(imagesDir, baseImg))) {
         availableImages.push(baseImg);
       }
-      // Also check for variant images
       for (let i = 1; i <= 20; i++) {
         const pImg = `${baseCode}_p${i}.png`;
-        if (existsSync(resolve(imagesDir, pImg))) {
-          availableImages.push(pImg);
-        }
+        if (existsSync(resolve(imagesDir, pImg))) availableImages.push(pImg);
         const rImg = `${baseCode}_r${i}.png`;
-        if (existsSync(resolve(imagesDir, rImg))) {
-          availableImages.push(rImg);
-        }
+        if (existsSync(resolve(imagesDir, rImg))) availableImages.push(rImg);
       }
       imageAvailability.set(baseCode, availableImages);
     }
@@ -206,34 +188,22 @@ function buildCatalogFromSnapshot(vegaPath) {
   return { catalog, imageAvailability, packCount, cardCount };
 }
 
-/**
- * Select the best image filename for a card code.
- * Preference: base image (no suffix) > first _p1 > first _r1.
- * @param {string} code
- * @param {Map<string, string[]>} imageAvailability
- * @returns {string|null}
- */
 function selectBestImage(code, imageAvailability) {
   const available = imageAvailability.get(code);
   if (!available || available.length === 0) return null;
-
-  // Prefer base image (no suffix)
+  // Prefer base image (no suffix) > first parallel art > first reprint
   const base = available.find(img => !img.includes('_p') && !img.includes('_r'));
   if (base) return base;
-
-  // Prefer first parallel art (_p1, _p2, ...)
   const pImg = available.find(img => img.includes('_p'));
   if (pImg) return pImg;
-
-  // Fall back to first reprint (_r1, _r2, ...)
   const rImg = available.find(img => img.includes('_r'));
   if (rImg) return rImg;
-
   return available[0];
 }
 
 /**
  * Copy card images for all owned/wanted codes into tracked public assets.
+ * Returns a manifest mapping code → relative path.
  * @param {string} vegaPath
  * @param {Map<string, string[]>} imageAvailability
  * @param {Set<string>} codesToCopy
@@ -248,15 +218,11 @@ function copyCardImages(vegaPath, imageAvailability, codesToCopy) {
 
   let copied = 0;
   let skipped = 0;
-  /** @type {Record<string, string>} */
   const manifest = {};
 
   for (const code of codesToCopy) {
     const bestImage = selectBestImage(code, imageAvailability);
-    if (!bestImage) {
-      skipped++;
-      continue;
-    }
+    if (!bestImage) { skipped++; continue; }
 
     const srcPath = resolve(imagesDir, bestImage);
     const destPath = resolve(outputDir, `${code}.png`);
@@ -273,14 +239,27 @@ function copyCardImages(vegaPath, imageAvailability, codesToCopy) {
   return { copied, skipped, manifest };
 }
 
-/**
- * Compute SHA-256 checksum of a file.
- * @param {string} filePath
- */
 function computeFileChecksum(filePath) {
   if (!existsSync(filePath)) return null;
-  const content = readFileSync(filePath);
-  return createHash('sha256').update(content).digest('hex');
+  return createHash('sha256').update(readFileSync(filePath)).digest('hex');
+}
+
+/* ─── Helpers: convert BinderLayout → BinderSheet[] ────────── */
+
+function layoutToBinderSheets(layout) {
+  // BinderLayout uses discriminated pocket states; convert to
+  // BinderSheet[] where only 'card' pockets appear as SlotEntry.
+  return layout.sheets.map(sheet => {
+    const slots = [];
+    for (const pocket of sheet.pockets) {
+      if (pocket.status === 'card' && pocket.code) {
+        slots.push({ code: pocket.code, quantity: pocket.quantity ?? 1 });
+      } else {
+        slots.push(null);
+      }
+    }
+    return { sheet: sheet.sheet, side: sheet.side, slots };
+  });
 }
 
 /* ─── Main ─────────────────────────────────────────────────── */
@@ -288,8 +267,8 @@ function computeFileChecksum(filePath) {
 function main() {
   console.log('📦 Generating static binder data...\n');
 
-  // 1. Validate CSVs first
-  console.log('  Step 1/5: Validating source CSVs...');
+  // ── Step 1: Validate CSVs ──────────────────────────────────
+  console.log('  Step 1/7: Validating source CSVs...');
   const validation = validateAll(projectRoot);
   if (!validation.valid) {
     console.error('❌ Validation failed:');
@@ -298,38 +277,27 @@ function main() {
   }
   console.log(`  ✔  ${validation.collection.length} collection rows, ${validation.saboDeck.length} Sabo rows, ${validation.luffyDeck.length} Luffy rows, ${validation.wanted.length} wanted entries`);
 
-  // 2. Check Vega snapshot
-  console.log('  Step 2/5: Checking Vega snapshot...');
+  // ── Step 2: Check Vega snapshot ────────────────────────────
+  console.log('  Step 2/7: Checking Vega snapshot...');
   const snapshot = checkVegaSnapshot();
-
   if (!snapshot.available) {
-    console.error(`❌ No Vega snapshot found at expected path: ${VEGA_SNAPSHOT_DIR}/`);
-    console.error('');
-    console.error('  To generate binder data, you must first create a Vega snapshot:');
-    console.error('  1. Install vegapull: cargo install vegapull --version 1.2.3');
-    console.error('  2. Run: vega pull all');
-    console.error('  3. Select English-Asia locale');
-    console.error('  4. Choose .vega/ as the output directory');
-    console.error('  5. Confirm image download');
-    console.error('');
-    console.error('  Alternatively, use the pre-committed fixture:');
-    console.error('  src/data/generated/binder-data.json');
+    console.error(`❌ No Vega snapshot found at ${VEGA_SNAPSHOT_DIR}/`);
+    console.error('  Run: vega pull all (vegapull v1.2.3, English, images=yes)');
     process.exit(1);
   }
   console.log(`  ✔  Vega snapshot found at ${VEGA_SNAPSHOT_DIR}/`);
 
-  // 3. Build catalog from Vega snapshot (NO heuristic fallback)
-  console.log('  Step 3/5: Building catalog from Vega snapshot...');
+  // ── Step 3: Build catalog from Vega ────────────────────────
+  console.log('  Step 3/7: Building catalog from Vega snapshot...');
   const { catalog, imageAvailability, packCount, cardCount } = buildCatalogFromSnapshot(snapshot.path);
   if (catalog.size === 0) {
-    console.error('❌ Vega snapshot exists but no catalog data could be parsed.');
-    console.error(`   Checked .vega/json/ for cards_*.json and packs.json`);
+    console.error('❌ Vega snapshot exists but no catalog data parsed.');
     process.exit(1);
   }
-  console.log(`  ✔  Loaded ${catalog.size} unique card codes from ${cardCount} total card entries across ${packCount} packs`);
+  console.log(`  ✔  ${catalog.size} unique codes from ${cardCount} entries across ${packCount} packs`);
 
-  // 4. Copy card images for owned/wanted codes
-  console.log('  Step 4/5: Copying card images to tracked public assets...');
+  // ── Step 4: Create initial binder layout ledger ────────────
+  console.log('  Step 4/7: Creating immutable binder layout...');
 
   const collectionMap = new Map();
   for (const row of validation.collection) {
@@ -349,25 +317,101 @@ function main() {
   }
   deckAllocations.set('Luffy G_B [WIP]', luffyMap);
 
-  // Collect all codes that need images (owned + wanted). Deck-only cards are
-  // intentionally excluded: the asset lane is scoped to the owned/wanted
-  // inventory represented by the public binder catalog.
+  const allCollectionCodes = [...collectionMap.keys()];
+
+  // Build the immutable initial layout from the real Vega catalog.
+  const initialLayout = createInitialBinderLayout(catalog, allCollectionCodes);
+
+  // The layout is written to disk even though it will be reconciled
+  // before consumption — the .json file IS the canonical ledger source.
+  const binderLayoutPath = resolve(projectRoot, 'data', 'binder-layout.json');
+  const binderLayoutDir = resolve(binderLayoutPath, '..');
+  if (!existsSync(binderLayoutDir)) {
+    mkdirSync(binderLayoutDir, { recursive: true });
+  }
+  writeFileSync(binderLayoutPath, JSON.stringify(initialLayout, null, 2), 'utf-8');
+  const layoutPockets = initialLayout.sheets.reduce((sum, s) => sum + s.pockets.length, 0);
+  console.log(`  ✔  Wrote data/binder-layout.json — ${initialLayout.sheets.length} sides, ${layoutPockets} pockets`);
+
+  // ── Step 5: Reconcile quantities and write card images ─────
+  console.log('  Step 5/7: Reconciling layout and copying card images...');
+
+  const reconciled = reconcileBinderLayout(initialLayout, collectionMap, catalog, deckAllocations);
+  const locations = reconciled.locations;
+
+  // Copy card images
   const codesToCopy = new Set();
   for (const code of collectionMap.keys()) codesToCopy.add(code);
   for (const w of validation.wanted) codesToCopy.add(w.code);
 
   const imageResult = copyCardImages(snapshot.path, imageAvailability, codesToCopy);
-  console.log(`  ✔  Copied ${imageResult.copied} card images, ${imageResult.skipped} skipped (no image found)`);
+  console.log(`  ✔  Copied ${imageResult.copied} card images, ${imageResult.skipped} skipped`);
 
-  // 5. Compute binder placement + write generated data
-  console.log('  Step 5/5: Computing binder placement and writing data...');
+  // Attach image paths to catalog entries
+  for (const [code, path] of Object.entries(imageResult.manifest)) {
+    const entry = catalog.get(code);
+    if (entry) entry.image = path;
+  }
 
-  const placement = computeBinderPlacement(collectionMap, deckAllocations, catalog);
-  const summary = computeBinderSummary(placement.cards, placement.sheets);
+  // ── Step 6: Build 8-key BinderData ─────────────────────────
+  console.log('  Step 6/7: Building canonical 8-key BinderData...');
 
-  console.log(`  ✔  ${placement.cards.length} card entries`);
-  console.log(`  ✔  ${placement.sheets.length / 2} sheets (${placement.sheets.length} sides)`);
-  console.log(`  ✔  ${summary.totalBinderCards} cards in binder`);
+  // Compute summary metrics from reconciled layout
+  const binderSheets = layoutToBinderSheets(reconciled.layout);
+
+  let totalPossessedCards = 0;
+  let totalDeckCards = 0;
+  let totalBinderCards = 0;
+  let reservedSlots = 0;
+  let vacantSlots = 0;
+
+  const cardEntries = [];
+  for (const code of allCollectionCodes) {
+    const owned = collectionMap.get(code) ?? 0;
+    const deckAllocEntries = [];
+    for (const [deckName, deckMap] of deckAllocations) {
+      const dq = deckMap.get(code) ?? 0;
+      if (dq > 0) deckAllocEntries.push({ deck: deckName, quantity: dq });
+    }
+    const inDecks = deckAllocEntries.reduce((s, d) => s + d.quantity, 0);
+    const binderQty = Math.max(0, owned - inDecks);
+    totalPossessedCards += owned;
+    totalDeckCards += inDecks;
+    totalBinderCards += binderQty;
+
+    const loc = locations.get(code) ?? null;
+    const entry = catalog.get(code);
+
+    cardEntries.push({
+      code,
+      name: entry?.name ?? null,
+      owned,
+      binderQuantity: binderQty,
+      deckAllocations: deckAllocEntries,
+      binderLocation: loc,
+    });
+  }
+
+  // Count reserved and vacant pockets from reconciled layout
+  for (const sheet of reconciled.layout.sheets) {
+    for (const pocket of sheet.pockets) {
+      if (pocket.status === 'reserved') reservedSlots++;
+      if (pocket.status === 'vacant') vacantSlots++;
+    }
+  }
+
+  const totalSheets = binderSheets.length / 2;
+  const overflowSheets = Math.max(0, totalSheets - 50);
+
+  const summary = {
+    totalPossessedCards,
+    totalUniqueCodes: cardEntries.length,
+    totalSheets,
+    totalDeckCards,
+    totalBinderCards,
+    reservedSlots,
+    overflowSheets,
+  };
 
   // Build wanted entries
   const wantedEntries = validation.wanted.map(w => ({
@@ -376,36 +420,28 @@ function main() {
     target: w.target,
   }));
 
-  // Build source manifest with checksums (CSVs + Vega JSON files)
+  // Build source manifest
   const sourcesFiles = { ...validation.sources.files };
-
-  // Add Vega snapshot file checksums
   const jsonDir = resolve(snapshot.path, 'json');
   if (existsSync(jsonDir)) {
     const jsonEntries = readdirSync(jsonDir).filter(e => /^cards_\d+\.json$/.test(e));
-    let totalJsonCards = 0;
     for (const jsonFile of jsonEntries) {
       const jsonPath = resolve(jsonDir, jsonFile);
       const checksum = computeFileChecksum(jsonPath);
       if (checksum) {
-        // Count cards in this file for rowCount
         const data = readJsonFile(jsonPath);
-        const rowCount = Array.isArray(data) ? data.length : 0;
-        totalJsonCards += rowCount;
-        sourcesFiles[`${VEGA_SNAPSHOT_DIR}/json/${jsonFile}`] = { checksum, rowCount };
+        sourcesFiles[`${VEGA_SNAPSHOT_DIR}/json/${jsonFile}`] = {
+          checksum,
+          rowCount: Array.isArray(data) ? data.length : 0,
+        };
       }
     }
-
-    // packs.json
     const packsPath = resolve(jsonDir, 'packs.json');
     const packsChecksum = computeFileChecksum(packsPath);
     if (packsChecksum) {
-      const packsData = readJsonFile(packsPath);
-      const rowCount = packsData ? Object.keys(packsData).length : 0;
-      sourcesFiles[`${VEGA_SNAPSHOT_DIR}/json/packs.json`] = { checksum: packsChecksum, rowCount };
+      const pd = readJsonFile(packsPath);
+      sourcesFiles[`${VEGA_SNAPSHOT_DIR}/json/packs.json`] = { checksum: packsChecksum, rowCount: pd ? Object.keys(pd).length : 0 };
     }
-
-    // vega.meta.toml
     const metaPath = resolve(snapshot.path, 'vega.meta.toml');
     const metaChecksum = computeFileChecksum(metaPath);
     if (metaChecksum) {
@@ -420,13 +456,13 @@ function main() {
       generatorVersion: '0.1.0',
       catalogSource: 'Vega',
       catalogSourceVersion: snapshot.version ?? 'unknown',
-      totalCards: placement.cards.length,
-      totalSheets: placement.sheets.length / 2,
+      totalCards: cardEntries.length,
+      totalSheets,
       dataProvenance: `Generated from Vega snapshot at ${VEGA_SNAPSHOT_DIR}/ — ${cardCount} card entries, ${catalog.size} unique codes, ${packCount} packs`,
     },
     catalog: [...catalog.values()].filter(e => collectionMap.has(e.code)),
-    cards: placement.cards,
-    sheets: placement.sheets,
+    cards: cardEntries,
+    sheets: binderSheets,
     binder: summary,
     wanted: wantedEntries,
     sources: {
@@ -442,27 +478,27 @@ function main() {
     },
   };
 
-  // Write to src/data/generated/binder-data.json
+  // ── Step 7: Write outputs ─────────────────────────────────
+  console.log('  Step 7/7: Writing generated outputs...');
+
+  // Write src/data/generated/binder-data.json
   const outputPath = resolve(projectRoot, GENERATED_DATA_PATH);
   const outputDir = resolve(outputPath, '..');
-  if (!existsSync(outputDir)) {
-    mkdirSync(outputDir, { recursive: true });
-  }
+  if (!existsSync(outputDir)) mkdirSync(outputDir, { recursive: true });
   writeFileSync(outputPath, JSON.stringify(data, null, 2), 'utf-8');
-  const sizeBytes = Buffer.byteLength(JSON.stringify(data), 'utf-8');
-  console.log(`  ✔  Wrote ${GENERATED_DATA_PATH} (${sizeBytes} bytes)`);
+  console.log(`  ✔  Wrote ${GENERATED_DATA_PATH} (${Buffer.byteLength(JSON.stringify(data), 'utf-8')} bytes)`);
 
-  // Write to public/data/binder.json (canonical 8-key BinderData contract)
+  // Write public/data/binder.json
   const publicDataDir = resolve(projectRoot, 'public', 'data');
-  if (!existsSync(publicDataDir)) {
-    mkdirSync(publicDataDir, { recursive: true });
-  }
+  if (!existsSync(publicDataDir)) mkdirSync(publicDataDir, { recursive: true });
   const publicOutputPath = resolve(publicDataDir, 'binder.json');
   writeFileSync(publicOutputPath, JSON.stringify(data, null, 2), 'utf-8');
-  const publicSizeBytes = Buffer.byteLength(JSON.stringify(data), 'utf-8');
-  console.log(`  ✔  Wrote public/data/binder.json (${publicSizeBytes} bytes) — canonical 8-key BinderData contract`);
+  console.log(`  ✔  Wrote public/data/binder.json (${Buffer.byteLength(JSON.stringify(data), 'utf-8')} bytes)`);
 
   console.log(`\n✅ Generation complete.`);
+  console.log(`  Layout: ${initialLayout.sheets.length} sides, ${layoutPockets} pockets`);
+  console.log(`  Cards: ${totalBinderCards} in binder, ${totalDeckCards} in decks`);
+  console.log(`  Images: ${imageResult.copied} copied, ${imageResult.skipped} skipped`);
 }
 
 try {

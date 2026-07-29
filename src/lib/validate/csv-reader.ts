@@ -117,11 +117,9 @@ export function parseDecklistCSV(filePath: string): CSVParseResult<DecklistRow> 
   return parseCSVInternal<DecklistRow>(
     filePath,
     (fields, rowNum, errors) => {
-      // A summary row is a source conflict, not data. It must be corrected
-      // deliberately rather than silently changing the source's meaning.
+      // Per spec: the Sabo `,51` summary row is the sole ignored exception.
       if (isSabo && fields.length === 2 && SABO_TOTAL_ROW.test(fields.join(','))) {
-        errors.push({ file: filePath, row: rowNum, value: fields.join(','), reason: 'Source conflict: summary row is not a card entry; correct the CSV deliberately' });
-        return null;
+        return null; // silently skip — spec says this is the only permitted non-card row
       }
       if (fields.length < 2) {
         errors.push({ file: filePath, row: rowNum, value: fields.join(','), reason: 'Expected at least 2 columns: code,amount' });

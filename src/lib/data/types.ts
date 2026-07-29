@@ -46,6 +46,8 @@ export interface CatalogEntry {
   cost: number | null;
   /** Card type (null if unknown) */
   type: CardType | null;
+  /** Path to card image relative to public/, e.g. "data/card-images/OP05-057.png" (null/undefined when unavailable) */
+  image?: string | null;
 }
 
 /* ─── Binder Layout ────────────────────────────────────────── */
