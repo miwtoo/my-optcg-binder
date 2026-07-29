@@ -57,10 +57,25 @@ export interface SlotEntry {
   quantity: number;
 }
 
+/**
+ * Discriminated slot states that preserve the exact physical pocket
+ * status instead of collapsing reserved/vacant/empty to null.
+ *
+ * - card:    a card occupies the pocket
+ * - reserved: reserved for a specific color/cost/type group
+ * - vacant:   was a card pocket, but the card's quantity dropped to 0
+ * - empty:    no assignment and not reserved
+ */
+export type DiscriminatedSlot =
+  | { status: 'card'; code: string; quantity: number }
+  | { status: 'reserved' }
+  | { status: 'vacant' }
+  | { status: 'empty' };
+
 export interface BinderSheet {
   sheet: number;
   side: 'Front' | 'Back';
-  slots: (SlotEntry | null)[];
+  slots: DiscriminatedSlot[];
 }
 
 export interface BinderLocation {

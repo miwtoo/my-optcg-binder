@@ -98,11 +98,13 @@ describe('Binder Placement Engine', () => {
     expect(summary.totalPossessedCards).toBeGreaterThan(0);
   });
 
-  it('every sheet slot is either a SlotEntry or null', () => {
+  it('every sheet slot has a valid discriminated status', () => {
     const result = computeBinderPlacement(collectionMap, deckAllocations, catalog);
+    const validStatuses = ['card', 'reserved', 'vacant', 'empty'];
     for (const sheet of result.sheets) {
       for (const slot of sheet.slots) {
-        if (slot !== null) {
+        expect(validStatuses).toContain(slot.status);
+        if (slot.status === 'card') {
           expect(slot).toHaveProperty('code');
           expect(slot).toHaveProperty('quantity');
           expect(slot.quantity).toBeGreaterThan(0);

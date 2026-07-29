@@ -217,12 +217,15 @@ function copyCardImages(vegaPath, imageAvailability, codesToCopy) {
   }
 
   let copied = 0;
-  let skipped = 0;
   const manifest = {};
+  const missing = [];
 
   for (const code of codesToCopy) {
     const bestImage = selectBestImage(code, imageAvailability);
-    if (!bestImage) { skipped++; continue; }
+    if (!bestImage) {
+      missing.push(code);
+      continue;
+    }
 
     const srcPath = resolve(imagesDir, bestImage);
     const destPath = resolve(outputDir, `${code}.png`);
@@ -232,11 +235,19 @@ function copyCardImages(vegaPath, imageAvailability, codesToCopy) {
       copied++;
       manifest[code] = `data/card-images/${code}.png`;
     } else {
-      skipped++;
+      missing.push(code);
     }
   }
 
-  return { copied, skipped, manifest };
+  if (missing.length > 0) {
+    const list = missing.map(c => `    - ${c}: no image found in ${VEGA_SNAPSHOT_DIR}/images/`).join('\n');
+    throw new Error(
+      `Missing card images for ${missing.length} code(s):\n${list}\n\n` +
+      `These codes have no PNG in the Vega snapshot. Correct the source data or add the images.`
+    );
+  }
+
+  return { copied, manifest };
 }
 
 function computeFileChecksum(filePath) {
@@ -247,15 +258,24 @@ function computeFileChecksum(filePath) {
 /* ─── Helpers: convert BinderLayout → BinderSheet[] ────────── */
 
 function layoutToBinderSheets(layout) {
-  // BinderLayout uses discriminated pocket states; convert to
-  // BinderSheet[] where only 'card' pockets appear as SlotEntry.
+  // Preserve all four DiscriminatedSlot states from the BinderLayout pockets.
   return layout.sheets.map(sheet => {
     const slots = [];
     for (const pocket of sheet.pockets) {
-      if (pocket.status === 'card' && pocket.code) {
-        slots.push({ code: pocket.code, quantity: pocket.quantity ?? 1 });
-      } else {
-        slots.push(null);
+      switch (pocket.status) {
+        case 'card':
+          slots.push({ status: 'card', code: pocket.code, quantity: pocket.quantity ?? 1 });
+          break;
+        case 'reserved':
+          slots.push({ status: 'reserved' });
+          break;
+        case 'vacant':
+          slots.push({ status: 'vacant' });
+          break;
+        case 'empty':
+        default:
+          slots.push({ status: 'empty' });
+          break;
       }
     }
     return { sheet: sheet.sheet, side: sheet.side, slots };
@@ -345,7 +365,7 @@ function main() {
   for (const w of validation.wanted) codesToCopy.add(w.code);
 
   const imageResult = copyCardImages(snapshot.path, imageAvailability, codesToCopy);
-  console.log(`  ✔  Copied ${imageResult.copied} card images, ${imageResult.skipped} skipped`);
+  console.log(`  ✔  Copied ${imageResult.copied} card images`);
 
   // Attach image paths to catalog entries
   for (const [code, path] of Object.entries(imageResult.manifest)) {
@@ -498,7 +518,7 @@ function main() {
   console.log(`\n✅ Generation complete.`);
   console.log(`  Layout: ${initialLayout.sheets.length} sides, ${layoutPockets} pockets`);
   console.log(`  Cards: ${totalBinderCards} in binder, ${totalDeckCards} in decks`);
-  console.log(`  Images: ${imageResult.copied} copied, ${imageResult.skipped} skipped`);
+  console.log(`  Images: ${imageResult.copied} copied`);
 }
 
 try {

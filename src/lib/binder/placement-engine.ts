@@ -24,6 +24,7 @@ import type {
   CardType,
   BinderLayout,
   BinderLayoutPocket,
+  DiscriminatedSlot,
 } from '../data/types';
 import { COLOR_ORDER, TYPE_ORDER } from '../data/types';
 import { SLOTS_PER_SIDE, MAX_SHEETS, RESERVED_SLOTS_PER_GROUP } from '../data/constants';
@@ -383,25 +384,38 @@ function assignInGroupsWithReservedSlots(
 /* ─── Sheet Builder ────────────────────────────────────────── */
 
 function buildSheets(assignments: GroupedSheetAssignments): BinderSheet[] {
-  // Collect all occupied slot positions
-  const slotMap = new Map<string, SlotEntry>(); // "sheet-side-slot" -> entry
+  // Collect all occupied card slot positions
+  const slotMap = new Map<string, DiscriminatedSlot>(); // "sheet-side-slot" -> slot
 
   for (const [code, loc] of assignments.locations) {
     const key = `${loc.sheet}-${loc.side}-${loc.slot}`;
-    slotMap.set(key, { code, quantity: 1 }); // quantity is per-card-code placement
+    slotMap.set(key, { status: 'card', code, quantity: 1 });
   }
 
-  // Build sheet grid
+  // Build sheet grid with discriminated slots
   const sheets: BinderSheet[] = [];
   const maxSheet = assignments.totalSheets;
+  const reservedKeys = new Set<string>();
+
+  // Track which positions are reserved (interleaved 3-per-group).
+  // The old algorithm does not encode reserved slots explicitly, so
+  // mark all non-card positions as reserved up to the known count.
+  let reservedRemaining = assignments.reservedSlots;
 
   for (let s = 1; s <= maxSheet; s++) {
     for (const side of ['Front', 'Back'] as const) {
-      const slots: (SlotEntry | null)[] = [];
+      const slots: DiscriminatedSlot[] = [];
       for (let slot = 1; slot <= SLOTS_PER_SIDE; slot++) {
         const key = `${s}-${side}-${slot}`;
-        const entry = slotMap.get(key) ?? null;
-        slots.push(entry);
+        const existing = slotMap.get(key);
+        if (existing) {
+          slots.push(existing);
+        } else if (reservedRemaining > 0) {
+          slots.push({ status: 'reserved' });
+          reservedRemaining--;
+        } else {
+          slots.push({ status: 'empty' });
+        }
       }
       sheets.push({ sheet: s, side, slots });
     }
@@ -513,7 +527,7 @@ export function computeBinderSummary(
 
   for (const sheet of sheets) {
     for (const slot of sheet.slots) {
-      if (slot === null) {
+      if (slot.status === 'reserved') {
         reservedSlots++;
       }
     }

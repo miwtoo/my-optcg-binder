@@ -56,7 +56,7 @@ function validateBinderDataContract(data: any, label: string): void {
     expect(card.binderQuantity).toBeGreaterThanOrEqual(0);
   }
 
-  // sheets
+  // sheets — discriminated slot states
   expect(Array.isArray(data.sheets), `${label}: sheets array`).toBe(true);
   expect(data.sheets.length, `${label}: sheets length`).toBeGreaterThan(0);
   for (const sheet of data.sheets) {
@@ -66,8 +66,10 @@ function validateBinderDataContract(data: any, label: string): void {
     expect(sheet).toHaveProperty('slots');
     expect(Array.isArray(sheet.slots)).toBe(true);
     expect(sheet.slots).toHaveLength(9);
+    const validStatuses = ['card', 'reserved', 'vacant', 'empty'];
     for (const slot of sheet.slots) {
-      if (slot !== null) {
+      expect(validStatuses).toContain(slot.status);
+      if (slot.status === 'card') {
         expect(slot).toHaveProperty('code');
         expect(slot).toHaveProperty('quantity');
         expect(typeof slot.code).toBe('string');

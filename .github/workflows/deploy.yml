@@ -1,60 +1,63 @@
-# Static One Piece TCG Binder — GitHub Pages deployment
+# Deploy static site to GitHub Pages
 #
-# Triggers: push to main, manual workflow_dispatch.
-# Validates source CSVs, runs type checks, executes tests,
-# builds Astro site, and deploys to GitHub Pages.
-#
-# Based on Astro deploy guide:
-# https://docs.astro.build/en/guides/deploy/github-pages/
+# Pipeline: npm ci → validate → check → test → build → single Pages upload
+# No double upload.  `.vega/` is gitignored and never available in CI.
 
-name: Deploy binder site
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-# Grant GITHUB_TOKEN the permissions needed for Pages deployment
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: 20
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-
-      - name: Setup Node
-        uses: withastro/action@v6
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 24
-          package-manager: npm
-          build: npm run build
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate source data & artifact consistency
+        run: npm run validate
+
+      - name: Run Astro check
+        run: npm run check
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build static site
+        run: npm run build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@v4

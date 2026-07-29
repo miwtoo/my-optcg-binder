@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-07-29T07:04:42.743Z",
+    "generated": "2026-07-29T07:17:08.872Z",
     "generator": "my-optcg-binder generate.js",
     "generatorVersion": "0.1.0",
     "catalogSource": "Vega",
@@ -1684,20 +1684,35 @@
       "side": "Front",
       "slots": [
         {
+          "status": "card",
           "code": "OP13-004",
           "quantity": 2
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP16-022",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP13-012",
           "quantity": 1
         }
@@ -1708,23 +1723,38 @@
       "side": "Back",
       "slots": [
         {
+          "status": "card",
           "code": "P-069",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP07-016",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP13-019",
           "quantity": 11
         },
-        null,
-        null,
-        null
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
@@ -1732,20 +1762,35 @@
       "side": "Front",
       "slots": [
         {
+          "status": "card",
           "code": "OP13-008",
           "quantity": 8
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP07-017",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB03-008",
           "quantity": 1
         }
@@ -1755,102 +1800,159 @@
       "sheet": 2,
       "side": "Back",
       "slots": [
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP11-008",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP13-005",
           "quantity": 8
         },
         {
+          "status": "card",
           "code": "ST35-001",
           "quantity": 8
         },
         {
+          "status": "card",
           "code": "ST35-002",
           "quantity": 4
         },
-        null,
-        null
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 3,
       "side": "Front",
       "slots": [
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB03-010",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP05-007",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP13-017",
           "quantity": 13
         },
-        null,
-        null
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 3,
       "side": "Back",
       "slots": [
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP07-015",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB02-017",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP05-034",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP16-034",
           "quantity": 4
         },
-        null
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 4,
       "side": "Front",
       "slots": [
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP13-040",
           "quantity": 2
         },
         {
+          "status": "card",
           "code": "OP16-038",
           "quantity": 3
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP16-027",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "ST30-014",
           "quantity": 2
         }
@@ -1860,165 +1962,270 @@
       "sheet": 4,
       "side": "Back",
       "slots": [
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP16-026",
           "quantity": 3
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB03-017",
           "quantity": 1
         },
-        null
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 5,
       "side": "Front",
       "slots": [
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB03-013",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP15-032",
           "quantity": 2
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP16-032",
           "quantity": 4
         },
-        null
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 5,
       "side": "Back",
       "slots": [
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP02-068",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB01-028",
           "quantity": 1
         },
-        null,
-        null
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 6,
       "side": "Front",
       "slots": [
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP16-054",
           "quantity": 4
         },
         {
+          "status": "card",
           "code": "OP16-055",
           "quantity": 4
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP05-057",
           "quantity": 4
         },
-        null,
-        null
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 6,
       "side": "Back",
       "slots": [
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP07-054",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP13-051",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP11-061",
           "quantity": 2
         },
-        null,
-        null
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 7,
       "side": "Front",
       "slots": [
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP16-045",
           "quantity": 4
         },
         {
+          "status": "card",
           "code": "OP16-056",
           "quantity": 4
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP08-046",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP16-048",
           "quantity": 4
         },
-        null
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 7,
       "side": "Back",
       "slots": [
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB01-022",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP05-042",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP16-042",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP05-051",
           "quantity": 1
         }
@@ -2028,93 +2235,153 @@
       "sheet": 8,
       "side": "Front",
       "slots": [
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP08-043",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP12-062",
           "quantity": 1
         },
-        null
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 8,
       "side": "Back",
       "slots": [
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP05-069",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP10-062",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB03-037",
           "quantity": 1
         },
-        null
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 9,
       "side": "Front",
       "slots": [
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP14-074",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB03-034",
           "quantity": 2
         },
-        null,
-        null
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 9,
       "side": "Back",
       "slots": [
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP12-086",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP16-091",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP12-097",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP12-098",
           "quantity": 8
         },
         {
+          "status": "card",
           "code": "OP16-099",
           "quantity": 1
         }
@@ -2125,20 +2392,35 @@
       "side": "Front",
       "slots": [
         {
+          "status": "card",
           "code": "ST06-015",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB01-042",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP12-090",
           "quantity": 8
         }
@@ -2149,119 +2431,194 @@
       "side": "Back",
       "slots": [
         {
+          "status": "card",
           "code": "OP13-093",
           "quantity": 2
         },
         {
+          "status": "card",
           "code": "ST35-003",
           "quantity": 8
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB03-041",
           "quantity": 1
         },
         {
+          "status": "card",
           "code": "OP12-093",
           "quantity": 8
         },
         {
+          "status": "card",
           "code": "P-105",
           "quantity": 8
         },
-        null
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 11,
       "side": "Front",
       "slots": [
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP13-081",
           "quantity": 8
         },
         {
+          "status": "card",
           "code": "ST35-005",
           "quantity": 4
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "ST35-004",
           "quantity": 4
         },
-        null
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 11,
       "side": "Back",
       "slots": [
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP16-086",
           "quantity": 2
         },
         {
+          "status": "card",
           "code": "OP16-096",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP16-085",
           "quantity": 1
         },
-        null
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 12,
       "side": "Front",
       "slots": [
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP13-113",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB03-052",
           "quantity": 1
         },
-        null,
-        null
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        }
       ]
     },
     {
       "sheet": 12,
       "side": "Back",
       "slots": [
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "OP03-110",
           "quantity": 1
         },
-        null,
-        null,
-        null,
         {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "card",
           "code": "EB03-058",
           "quantity": 1
         },
-        null,
-        null,
-        null
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        },
+        {
+          "status": "reserved"
+        }
       ]
     }
   ],
@@ -2312,7 +2669,7 @@
     }
   ],
   "sources": {
-    "generated": "2026-07-29T07:04:42.331Z",
+    "generated": "2026-07-29T07:17:08.379Z",
     "files": {
       "One Piece TCG Collection - All.csv": {
         "checksum": "952ab78fb9aaec9571ebef55a8e6b6308dbc25fa87ece52eb369ec47b3a53c8e",

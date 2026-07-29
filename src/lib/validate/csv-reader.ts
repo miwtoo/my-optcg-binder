@@ -25,40 +25,43 @@ export interface CSVParseResult<T> {
  */
 const SABO_TOTAL_ROW = /^,51$/;
 
-/* ─── Helpers ──────────────────────────────────────────────── */
+/* ─── Catalog Code Loading ─────────────────────────────────── */
 
-function knownCardCodeSet(): Set<string> {
-  // This is populated from the Vega catalog; for validation we use a
-  // comprehensive set of known OP/ST/EB/P codes from the One Piece TCG.
-  // In practice this should come from the Vega snapshot, but for the
-  // committed fixture we use a reference set covering all codes in the CSVs.
-  return new Set([
-    // OP sets
-    'P-069', 'P-105',
-    'OP02-068', 'OP03-110',
-    'OP05-007', 'OP05-034', 'OP05-042', 'OP05-051', 'OP05-057', 'OP05-069',
-    'OP07-015', 'OP07-016', 'OP07-017', 'OP07-054',
-    'OP08-043', 'OP08-046',
-    'OP10-062',
-    'OP11-008', 'OP11-061',
-    'OP12-062', 'OP12-086', 'OP12-090', 'OP12-093', 'OP12-097', 'OP12-098',
-    'OP13-004', 'OP13-005', 'OP13-008', 'OP13-012', 'OP13-017', 'OP13-019',
-    'OP13-040', 'OP13-051', 'OP13-081', 'OP13-093', 'OP13-113',
-    'OP14-074',
-    'OP15-032',
-    'OP16-022', 'OP16-026', 'OP16-027', 'OP16-032', 'OP16-034', 'OP16-038',
-    'OP16-042', 'OP16-045', 'OP16-048', 'OP16-054', 'OP16-055', 'OP16-056',
-    'OP16-085', 'OP16-086', 'OP16-091', 'OP16-096', 'OP16-099',
-    // ST decks
-    'ST06-015',
-    'ST30-014',
-    'ST35-001', 'ST35-002', 'ST35-003', 'ST35-004', 'ST35-005',
-    // EB sets
-    'EB01-022', 'EB01-028', 'EB01-042',
-    'EB02-017',
-    'EB03-008', 'EB03-010', 'EB03-013', 'EB03-017', 'EB03-034', 'EB03-037',
-    'EB03-041', 'EB03-052', 'EB03-058',
-  ]);
+/**
+ * Load the canonical set of known card codes from the committed
+ * Vega-derived catalog artifact.  Falls back to an empty set if the
+ * generated data has not been produced yet (e.g. first bootstrap).
+ *
+ * In CI the artifact is always present because `npm run validate`
+ * runs after `npm run generate` or on a committed seed.
+ */
+function loadCatalogCodes(projectRoot: string): Set<string> {
+  const catalogPath = resolve(projectRoot, 'src/data/generated/binder-data.json');
+  if (!existsSync(catalogPath)) return new Set();
+  try {
+    const raw = readFileSync(catalogPath, 'utf-8');
+    const data = JSON.parse(raw);
+    const catalog = data?.catalog;
+    if (!Array.isArray(catalog)) return new Set();
+    return new Set(catalog.map((e: any) => e?.code).filter(Boolean));
+  } catch {
+    return new Set();
+  }
+}
+
+/** Module-scoped cache; populated once the first time a project root is provided. */
+let _knownCodes: Set<string> | null = null;
+let _knownCodesRoot: string | null = null;
+
+/**
+ * Ensure the known-code set has been loaded for the given project root.
+ * Idempotent: only reads the artifact once per root.
+ */
+export function ensureKnownCodes(projectRoot: string): Set<string> {
+  if (_knownCodes !== null && _knownCodesRoot === projectRoot) return _knownCodes;
+  _knownCodes = loadCatalogCodes(projectRoot);
+  _knownCodesRoot = projectRoot;
+  return _knownCodes;
 }
 
 /**
@@ -178,28 +181,29 @@ export function parseWantedCSV(filePath: string): CSVParseResult<WantedRow> {
 
 /* ─── Generic CSV Validator ────────────────────────────────── */
 
-const KNOWN_CODES = knownCardCodeSet();
-
-export function validateCardCode(code: string): boolean {
-  return KNOWN_CODES.has(code);
+export function validateCardCode(code: string, projectRoot?: string): boolean {
+  return ensureKnownCodes(projectRoot ?? process.cwd()).has(code);
 }
 
-export function getKnownCodes(): Set<string> {
-  return KNOWN_CODES;
+export function getKnownCodes(projectRoot?: string): Set<string> {
+  return ensureKnownCodes(projectRoot ?? process.cwd());
 }
 
 /**
  * Validate that all card codes in parsed rows are known Vega catalog codes.
+ * Requires `projectRoot` to resolve the committed catalog artifact.
  */
 export function validateCodes<T extends { code: string }>(
   rows: T[],
   file: string,
   _existingErrors: CSVError[],
+  projectRoot?: string,
 ): CSVError[] {
+  const known = ensureKnownCodes(projectRoot ?? process.cwd());
   const errors: CSVError[] = [];
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i]!;
-    if (!KNOWN_CODES.has(row.code)) {
+    if (!known.has(row.code)) {
       errors.push({
         file,
         row: i + 2, // +2 because header is row 1, data starts at row 2
