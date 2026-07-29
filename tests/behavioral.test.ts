@@ -214,12 +214,37 @@ describe('Behavioural: overflow placement', () => {
 
     // All existing (non-overflow) sheetIds from initial layout should remain unchanged
     const initialSheetIds = new Set(initial.sheets.map(s => s.sheetId));
+    const initialLocations = new Map<string, { sheet: number; side: 'Front' | 'Back'; slot: number }>();
+    for (const sheet of initial.sheets) {
+      for (const pocket of sheet.pockets) {
+        if (pocket.code) initialLocations.set(pocket.code, { sheet: sheet.sheet, side: sheet.side, slot: pocket.pocket });
+      }
+    }
     for (const sheet of reconciled.layout.sheets) {
       if (initialSheetIds.has(sheet.sheetId)) {
         // Existing sheets from the initial layout keep their sheetId
         expect(sheet.sheetId).toMatch(/^sheet-/);
       }
     }
+
+    // Insertion must preserve every original ID and project every location
+    // from the final layout, including the shifted Green section and new CD.
+    for (const [code, before] of initialLocations) {
+      expect(reconciled.locations.get(code)).toEqual(
+        expect.objectContaining({ side: before.side, slot: before.slot }),
+      );
+      const finalPocket = reconciled.layout.sheets.flatMap(s => s.pockets).find(p => p.code === code);
+      expect(finalPocket).toBeDefined();
+      expect(reconciled.locations.get(code)).toEqual({
+        sheet: reconciled.layout.sheets.find(s => s.pockets.includes(finalPocket!))!.sheet,
+        side: reconciled.layout.sheets.find(s => s.pockets.includes(finalPocket!))!.side,
+        slot: finalPocket!.pocket,
+      });
+    }
+    const cdPocket = reconciled.layout.sheets.flatMap(s => s.pockets).find(p => p.code === 'CD');
+    expect(cdPocket).toBeDefined();
+    expect(reconciled.locations.get('CD')).toBeDefined();
+    expect(reconciled.locations.get('CD')!.sheet).toBeGreaterThan(0);
 
     expect(validateLayout(reconciled.layout)).toEqual([]);
   });

@@ -246,7 +246,7 @@ export function validateCodes<T extends { code: string }>(
     if (!known.has(row.code)) {
       errors.push({
         file,
-        row: i + 2, // +2 because header is row 1, data starts at row 2
+        row: (row as { row?: number }).row ?? i + 2,
         value: row.code,
         reason: `Unknown card code "${row.code}" — not in Vega catalog`,
       });

@@ -138,6 +138,11 @@ function checkArtifactConsistency(projectRoot: string): CSVError[] {
           // Verify sheet number and side match
           if (gen.sheet !== layoutSheet.sheet) errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].sheet`, reason: `Sheet number mismatch: generated=${gen.sheet} layout=${layoutSheet.sheet} (${layoutSheet.sheetId})` });
           if (gen.side !== layoutSheet.side) errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].side`, reason: `Sheet side mismatch: generated=${gen.side} layout=${layoutSheet.side}` });
+          if (!Array.isArray(gen.slots)) {
+            errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots`, reason: 'Generated sheet slots is not an array' });
+            genSheetIdx++;
+            continue;
+          }
           if (gen.slots.length !== layoutSheet.pockets.length) {
             errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots`, reason: `Slot count mismatch: generated=${gen.slots.length} layout=${layoutSheet.pockets.length}` });
           }
@@ -145,7 +150,14 @@ function checkArtifactConsistency(projectRoot: string): CSVError[] {
           for (let p = 0; p < slotCount; p++) {
               const pocket = layoutSheet.pockets[p];
               const slot = gen.slots[p];
-              if (!pocket || !slot) continue;
+              if (!pocket) {
+                errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots[${p}]`, reason: 'Generated slot has no canonical layout pocket' });
+                continue;
+              }
+              if (!slot) {
+                errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots[${p}]`, reason: `Missing generated slot for layout pocket ${pocket.pocket}` });
+                continue;
+              }
               // Card pockets must match code + quantity
               if (pocket.status === 'card') {
                 if (slot.status !== 'card') errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `sheets[${genSheetIdx}].slots[${p}]`, reason: `Expected 'card' status for pocket with code ${pocket.code}, got '${slot.status}'` });
@@ -179,7 +191,16 @@ function checkArtifactConsistency(projectRoot: string): CSVError[] {
               }
             }
           }
+          const generatedCardsByCode = new Map<string, any>();
           for (const card of generated.cards) {
+            if (typeof card?.code !== 'string' || !card.code) {
+              errors.push({ file: GENERATED_DATA_PATH, row: 0, value: 'cards', reason: 'Generated card is missing a code' });
+              continue;
+            }
+            if (generatedCardsByCode.has(card.code)) {
+              errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `cards.${card.code}`, reason: 'Duplicate generated card code' });
+            }
+            generatedCardsByCode.set(card.code, card);
             const loc = card.binderLocation;
             const expected = expectedLocations.get(card.code);
             if (loc === null && expected) {
@@ -204,6 +225,12 @@ function checkArtifactConsistency(projectRoot: string): CSVError[] {
                   errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `cards.${card.code}.binderLocation`, reason: `Location does not match canonical layout; expected ${canonical.sheet}-${canonical.side} slot ${canonical.slot}` });
                 }
               }
+            }
+          }
+          for (const [code, expected] of expectedLocations) {
+            const card = generatedCardsByCode.get(code);
+            if (!card) {
+              errors.push({ file: GENERATED_DATA_PATH, row: 0, value: `cards.${code}`, reason: `Missing generated card for canonical card pocket at ${expected.sheet}-${expected.side} slot ${expected.slot}` });
             }
           }
         }
