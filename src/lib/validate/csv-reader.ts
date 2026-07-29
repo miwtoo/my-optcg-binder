@@ -258,7 +258,7 @@ export function validateCodes<T extends { code: string }>(
 /**
  * Check for duplicate card codes within a collection/decklist parse result.
  */
-export function findDuplicateCodes<T extends { code: string }>(
+export function findDuplicateCodes<T extends { code: string; row?: number }>(
   rows: T[],
   file: string,
   _existingErrors: CSVError[],
@@ -268,7 +268,7 @@ export function findDuplicateCodes<T extends { code: string }>(
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i]!;
     const indices = seen.get(row.code) || [];
-    indices.push(i + 2); // data rows start at line 2
+    indices.push(row.row ?? i + 2); // use preserved source row, fallback to position
     seen.set(row.code, indices);
   }
   for (const [code, lines] of seen) {
@@ -291,7 +291,7 @@ export function findDuplicateWantedTargets(rows: WantedRow[], file: string): CSV
     const row = rows[i]!;
     const key = `${row.code}\u0000${row.target}`;
     const lines = seen.get(key) ?? [];
-    lines.push(i + 2);
+    lines.push(row.row ?? i + 2);
     seen.set(key, lines);
   }
   return [...seen.entries()].filter(([, lines]) => lines.length > 1).map(([key, lines]) => {

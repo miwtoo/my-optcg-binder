@@ -209,7 +209,6 @@ export function reconcileBinderLayout(
   // Deep-clone the ledger so we never mutate the committed file.
   const next: BinderLayout = JSON.parse(JSON.stringify(layout));
   const assigned = new Set<string>();
-  const locations = new Map<string, BinderLocation>();
 
   // --- Phase 1: update existing card/vacant pockets -----------
   for (const sheet of next.sheets) {
@@ -226,14 +225,7 @@ export function reconcileBinderLayout(
         if (binderQty > 0) {
           pocket.quantity = binderQty;
           pocket.status = 'card';
-          locations.set(pocket.code, {
-            sheet: sheet.sheet,
-            side: sheet.side,
-            slot: pocket.pocket,
-          });
         } else {
-          // Retain code + quantity for stable slot restoration when the
-          // card later has positive binder quantity again.
           pocket.status = 'vacant';
           pocket.quantity = 0;
           delete pocket.tag;
@@ -262,95 +254,75 @@ export function reconcileBinderLayout(
     for (const [, dm] of decks) inDecks += dm.get(code) ?? 0;
     const binderQty = owned - inDecks;
 
-    // 2a. Find a reserved pocket in the same section
     let target: BinderLayoutPocket | undefined;
-    let targetSheet: (typeof next.sheets)[number] | undefined;
 
+    // 2a. Find a reserved pocket in the same section
     for (const sheet of next.sheets) {
       target = sheet.pockets.find(p => p.status === 'reserved' && p.section === sec);
-      if (target) { targetSheet = sheet; break; }
+      if (target) break;
     }
 
-    // 2b. No reserve found — try to reuse an overflow empty pocket
-    //     that is in the same section.
+    // 2b. No reserve — try to reuse an overflow empty pocket in same section
     if (!target) {
       for (const sheet of next.sheets) {
         target = sheet.pockets.find(p => p.status === 'empty' && p.section === sec);
-        if (target) { targetSheet = sheet; break; }
+        if (target) break;
       }
     }
 
-    // 2c. Still no pocket — append a complete Front+Back overflow
-    //     sheet directly after the owning color section.
+    // 2c. No pocket — append a complete Front+Back overflow sheet
+    //     directly after the last sheet of the owning color section.
     if (!target) {
       const sectionColor = entry.type === 'Leader'
         ? `Leader:${entry.color}`
         : entry.color!;
 
-      // Determine where to insert (after the last sheet of this section)
+      // Find insertion point: after the last sheet of this color section.
+      // The insertion point must be at a complete pair boundary (Front side)
+      // to never split a Front/Back pair.
       let insertAfter = next.sheets.length;
-      let lastSheetOfSection = -1;
       for (let i = next.sheets.length - 1; i >= 0; i--) {
-        const sh = next.sheets[i]!;
-        if (sh.pockets.some(p => p.section.startsWith(sectionColor))) {
-          lastSheetOfSection = i;
+        if (next.sheets[i]!.pockets.some(p => p.section.startsWith(sectionColor))) {
+          insertAfter = i + 1;
           break;
         }
       }
-      if (lastSheetOfSection >= 0) insertAfter = lastSheetOfSection + 1;
-
-      // Ensure insertion doesn't split a Front/Back pair — if the sheet
-      // before the insertion point is a Back side, step past the pair.
-      if (insertAfter > 0 && insertAfter <= next.sheets.length) {
+      // Walk forward to the next Front boundary: after a Back side, the
+      // next valid insertion is after it.
+      while (insertAfter > 0 && insertAfter < next.sheets.length) {
         const before = next.sheets[insertAfter - 1]!;
-        if (before.side === 'Back') {
-          insertAfter += 1;
-        }
+        if (before.side === 'Back') { insertAfter++; } else break;
       }
 
-      // Use a stable immutable ID based on a counter unique to this run.
       let overflowId = 1000;
       while (next.sheets.some(sh => sh.sheetId === `overflow-${sectionColor}-${overflowId}`)) overflowId++;
 
       const frontSid = `overflow-${sectionColor}-${overflowId}`;
       const frontSheet = {
         sheetId: frontSid,
-        sheet: 0, // placeholder — recomputed below from position
+        sheet: 0,
         side: 'Front' as const,
         pockets: [] as BinderLayoutPocket[],
       };
-      for (let i = 1; i <= SLOTS_PER_SIDE; i++) {
-        frontSheet.pockets.push(emptyPocket(frontSid, sec, i, 'empty'));
-      }
+      for (let i = 1; i <= SLOTS_PER_SIDE; i++) frontSheet.pockets.push(emptyPocket(frontSid, sec, i, 'empty'));
 
       const backSid = `overflow-${sectionColor}-${overflowId}-Back`;
       const backSheet = {
         sheetId: backSid,
-        sheet: 0, // placeholder — recomputed from position
+        sheet: 0,
         side: 'Back' as const,
         pockets: [] as BinderLayoutPocket[],
       };
-      for (let i = 1; i <= SLOTS_PER_SIDE; i++) {
-        backSheet.pockets.push(emptyPocket(backSid, sec, i, 'empty'));
-      }
+      for (let i = 1; i <= SLOTS_PER_SIDE; i++) backSheet.pockets.push(emptyPocket(backSid, sec, i, 'empty'));
 
       next.sheets.splice(insertAfter, 0, frontSheet, backSheet);
-
       target = frontSheet.pockets.find(p => p.status === 'empty')!;
-      targetSheet = frontSheet;
     }
 
-    // 2c. Fill the target pocket — record sheetId for post-recompute resolution.
     target.status = 'card';
     target.code = code;
     target.quantity = binderQty;
     delete target.tag;
-
-    locations.set(code, {
-      sheet: 0, // placeholder — resolved after display recomputation
-      side: targetSheet!.side,
-      slot: target.pocket,
-    });
   }
 
   // --- Phase 3: recompute display sheet numbers -----------------
@@ -368,20 +340,22 @@ export function reconcileBinderLayout(
     sheet.sheet = expectedDisplay;
   }
 
-  // --- Phase 4: resolve 0 placeholder locations using recomputed display numbers ---
-  for (const [code, loc] of locations) {
-    if (loc.sheet === 0) {
-      const sheet = next.sheets.find(s =>
-        s.side === loc.side && s.pockets.some(p => p.pocket === loc.slot && p.code === code),
-      );
-      if (sheet) loc.sheet = sheet.sheet;
+  // --- Phase 4: derive EVERY location from final ordered layout ----
+  // Do not reuse locations recorded pre-insertion.  After all mutations
+  // and display recomputation, scan the canonical layout and produce a
+  // consistent projection from card code → (sheet, side, slot).
+  const locations = new Map<string, BinderLocation>();
+  for (const sheet of next.sheets) {
+    for (const pocket of sheet.pockets) {
+      if (pocket.status === 'card' && pocket.code) {
+        locations.set(pocket.code, {
+          sheet: sheet.sheet,
+          side: sheet.side,
+          slot: pocket.pocket,
+        });
+      }
     }
   }
-
-  // --- Phase 5: ensure overflow insert never splits a Front/Back pair ---
-  // Any insertion point must land on a Front sheet or at the end.
-  // If the last sheet before insertion is a Back, move insertion after it.
-  // (Pairs are complete; no single side can belong to a different section.)
 
   return { layout: next, locations };
 }
