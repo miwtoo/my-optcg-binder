@@ -9,7 +9,7 @@
  * 5. Public layout output — public/data/binder-layout.json matches internal.
  */
 
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterEach } from 'vitest';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -147,25 +147,26 @@ describe('Behavioural: public layout output', () => {
 });
 
 describe('Behavioural: strict CSV parser', () => {
+  /** Create a temp directory path for fixture files. */
+  let tmpDir: string;
+
+  beforeEach(() => {
+    tmpDir = require('node:fs').mkdtempSync(
+      require('node:path').resolve(require('node:os').tmpdir(), 'optcg-test-'),
+    );
+  });
+
+  afterEach(() => {
+    require('node:fs').rmSync(tmpDir, { recursive: true, force: true });
+  });
+
   it('rejects blank lines', async () => {
-    // We import the parseable CSV reader to test strict behaviour
-    // The actual CSV files are tested via validateAll; here we test
-    // the parseCSVInternal path via the exported parse functions.
-
-    // We'll test the internal structure by importing the module
     const { parseCollectionCSV } = await import('../src/lib/validate/csv-reader.js');
-
-    // Write a temp CSV with blank lines
-    const { writeFileSync, mkdirSync } = await import('node:fs');
-    const { resolve } = await import('node:path');
-    const tmpDir = resolve(projectRoot, '.scratch');
-    if (!existsSync(tmpDir)) mkdirSync(tmpDir, { recursive: true });
-
-    const badPath = resolve(tmpDir, 'test-blank.csv');
+    const { writeFileSync } = await import('node:fs');
+    const badPath = require('node:path').resolve(tmpDir, 'test-blank.csv');
     writeFileSync(badPath, 'code,amount\nOP01-001,2\n\nOP01-002,1\n', 'utf-8');
 
     const result = parseCollectionCSV(badPath);
-    // Should have an error — blank rows are rejected
     expect(result.errors.length).toBeGreaterThan(0);
     expect(result.errors[0]!.reason.toLowerCase()).toContain('blank');
   });
@@ -173,9 +174,7 @@ describe('Behavioural: strict CSV parser', () => {
   it('rejects extra columns', async () => {
     const { parseCollectionCSV } = await import('../src/lib/validate/csv-reader.js');
     const { writeFileSync } = await import('node:fs');
-    const { resolve } = await import('node:path');
-    const tmpDir = resolve(projectRoot, '.scratch');
-    const badPath = resolve(tmpDir, 'test-extra-col.csv');
+    const badPath = require('node:path').resolve(tmpDir, 'test-extra-col.csv');
     writeFileSync(badPath, 'code,amount\nOP01-001,2,extra\n', 'utf-8');
 
     const result = parseCollectionCSV(badPath);
