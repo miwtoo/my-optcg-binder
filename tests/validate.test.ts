@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { validateAll } from '../src/lib/validate/index.js';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { validateAll, validateInputs } from '../src/lib/validate/index.js';
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -10,6 +12,25 @@ describe('CSV Validation', () => {
     const result = validateAll(projectRoot);
     expect(result.valid).toBe(true);
     expect(result.errors).toHaveLength(0);
+  });
+
+  it('reports a public unknown-code error after the skipped Sabo summary row', () => {
+    const root = mkdtempSync(resolve(tmpdir(), 'optcg-validation-'));
+    try {
+      writeFileSync(resolve(root, 'One Piece TCG Collection - All.csv'), 'code,amount\nOP13-004,1\n');
+      writeFileSync(resolve(root, 'One Piece TCG Collection - Sabo.csv'), 'code,amount\nOP13-004,1\n,51\nZZZZ-NOPE,3\n');
+      writeFileSync(resolve(root, 'One Piece TCG Collection - Lufy G_B [WIP].csv'), 'code,amount\nOP13-004,1\n');
+      writeFileSync(resolve(root, 'Want to Buy.csv'), 'code,amount,target\nOP13-004,1,binder\n');
+      const result = validateInputs(root, new Set(['OP13-004']));
+      expect(result.errors).toContainEqual({
+        file: 'One Piece TCG Collection - Sabo.csv',
+        row: 4,
+        value: 'ZZZZ-NOPE',
+        reason: 'Unknown card code "ZZZZ-NOPE" — not in Vega catalog',
+      });
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 
   it('parses all collection rows', () => {

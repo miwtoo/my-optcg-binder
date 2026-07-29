@@ -30,6 +30,17 @@ const TEST_CATALOG = new Map([
   ['CC', { code: 'CC', name: 'Char C', color: 'Red' as const, cost: 1, type: 'Character' as const }],
   ['CD', { code: 'CD', name: 'Char D', color: 'Red' as const, cost: 1, type: 'Character' as const }], // 4th — needs reserve
   ['CE', { code: 'CE', name: 'Char E', color: 'Red' as const, cost: 1, type: 'Character' as const }], // 5th — needs overflow
+  ['CF', { code: 'CF', name: 'Char F', color: 'Red' as const, cost: 1, type: 'Character' as const }],
+  ['CG', { code: 'CG', name: 'Char G', color: 'Red' as const, cost: 1, type: 'Character' as const }],
+  ['CH', { code: 'CH', name: 'Char H', color: 'Red' as const, cost: 1, type: 'Character' as const }],
+  ['CI', { code: 'CI', name: 'Char I', color: 'Red' as const, cost: 1, type: 'Character' as const }],
+  ['CJ', { code: 'CJ', name: 'Char J', color: 'Red' as const, cost: 1, type: 'Character' as const }],
+  ['CK', { code: 'CK', name: 'Char K', color: 'Red' as const, cost: 1, type: 'Character' as const }],
+  ['CL', { code: 'CL', name: 'Char L', color: 'Red' as const, cost: 1, type: 'Character' as const }], // overflow addition
+  ['CM', { code: 'CM', name: 'Char M', color: 'Red' as const, cost: 1, type: 'Character' as const }], // overflow addition
+  ['CN', { code: 'CN', name: 'Char N', color: 'Red' as const, cost: 1, type: 'Character' as const }],
+  ['CO', { code: 'CO', name: 'Char O', color: 'Red' as const, cost: 1, type: 'Character' as const }],
+  ['CP', { code: 'CP', name: 'Char P', color: 'Red' as const, cost: 1, type: 'Character' as const }], // overflow addition
   ['GA', { code: 'GA', name: 'Green Char A', color: 'Green' as const, cost: 1, type: 'Character' as const }], // Green section after Red
 ]);
 
@@ -160,21 +171,21 @@ describe('Behavioural: overflow placement', () => {
   });
 
   it('non-terminal section overflow: following Green section keeps stable sheetId but display number shifts', () => {
-    // Red:1:Character has 3 reserves. Red codes: CA, CB, CC (3 cards consume reserves).
-    // Green follows Red. Add CD (4th Red) → overflow inserted between Red and Green sections.
+    // Green follows Red. Add CE after the Red reserves are exhausted.
     const initial = createInitialBinderLayout(TEST_CATALOG, ['L1', 'CA', 'CB', 'CC', 'GA']);
     const reconciled = reconcileBinderLayout(
       initial,
-      new Map([['L1', 1], ['CA', 1], ['CB', 1], ['CC', 1], ['CD', 1], ['GA', 1]]),
+      new Map([['L1', 1], ['CA', 1], ['CB', 1], ['CC', 1], ['CD', 1], ['CE', 1], ['GA', 1]]),
       TEST_CATALOG,
     );
 
-    // CD has a location (overflow)
-    expect(reconciled.locations.has('CD')).toBe(true);
+    // CE has a location (overflow)
+    expect(reconciled.locations.has('CE')).toBe(true);
 
     // Find sheet IDs
     const sheetIds = reconciled.layout.sheets.map(s => s.sheetId);
     const displayNos = reconciled.layout.sheets.map(s => s.sheet);
+    const initialSheetIds = new Set(initial.sheets.map(s => s.sheetId));
 
     // Find the Green section's original sheetId
     const greenSheets = reconciled.layout.sheets.filter(s =>
@@ -188,6 +199,10 @@ describe('Behavioural: overflow placement', () => {
     const overflowIndex = sheetIds.findIndex(id => id.includes('overflow'));
     const greenIndex = sheetIds.indexOf(greenSheetId);
     expect(overflowIndex).toBeLessThan(greenIndex);
+    expect(new Set(sheetIds)).toEqual(new Set([
+      ...initialSheetIds,
+      ...sheetIds.filter(id => id.includes('overflow')),
+    ]));
 
     // Display numbers should be recomputed; the Green sheet's display number
     // changes from 3 to 4 (because overflow Front+Back = sheet 3, Green = 4)
@@ -213,7 +228,6 @@ describe('Behavioural: overflow placement', () => {
     }
 
     // All existing (non-overflow) sheetIds from initial layout should remain unchanged
-    const initialSheetIds = new Set(initial.sheets.map(s => s.sheetId));
     const initialLocations = new Map<string, { sheet: number; side: 'Front' | 'Back'; slot: number }>();
     for (const sheet of initial.sheets) {
       for (const pocket of sheet.pockets) {
@@ -241,10 +255,15 @@ describe('Behavioural: overflow placement', () => {
         slot: finalPocket!.pocket,
       });
     }
-    const cdPocket = reconciled.layout.sheets.flatMap(s => s.pockets).find(p => p.code === 'CD');
+    const cdPocket = reconciled.layout.sheets.flatMap(s => s.pockets).find(p => p.code === 'CE');
     expect(cdPocket).toBeDefined();
-    expect(reconciled.locations.get('CD')).toBeDefined();
-    expect(reconciled.locations.get('CD')!.sheet).toBeGreaterThan(0);
+    expect(reconciled.locations.get('CE')).toBeDefined();
+    expect(reconciled.locations.get('CE')!.sheet).toBeGreaterThan(0);
+    for (const code of ['GA', 'CE']) {
+      const pocket = reconciled.layout.sheets.flatMap(s => s.pockets).find(p => p.code === code)!;
+      const owner = reconciled.layout.sheets.find(s => s.pockets.includes(pocket))!;
+      expect(reconciled.locations.get(code)).toEqual({ sheet: owner.sheet, side: owner.side, slot: pocket.pocket });
+    }
 
     expect(validateLayout(reconciled.layout)).toEqual([]);
   });
@@ -259,6 +278,11 @@ describe('Behavioural: public layout output', () => {
     expect(layout.version).toBe(1);
     expect(Array.isArray(layout.sheets)).toBe(true);
     expect(layout.sheets.length).toBeGreaterThan(0);
+    const overflowPairs = new Set(layout.sheets
+      .filter((s: { sheetId: string }) => s.sheetId.startsWith('overflow-'))
+      .map((s: { sheetId: string }) => s.sheetId.replace(/-Back$/, '')));
+    const generated = JSON.parse(readFileSync(resolve(projectRoot, 'public/data/binder.json'), 'utf-8'));
+    expect(generated.binder.overflowSheets).toBe(overflowPairs.size);
   });
 });
 

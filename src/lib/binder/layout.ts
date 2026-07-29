@@ -277,10 +277,9 @@ export function reconcileBinderLayout(
         ? `Leader:${entry.color}`
         : entry.color!;
 
-      // Find the final physical pair belonging to this color.  Insertion is
-      // only ever made at a pair boundary: if the following color shares the
-      // pair, put the new pair before that pair; otherwise put it after it.
-      // This avoids both splitting a pair and accidentally stepping over one.
+      // Find the final complete physical Front+Back pair belonging to this
+      // color.  Overflow is always inserted after that pair: never at its
+      // start and never between its two sides.
       let lastSectionIndex = -1;
       for (let i = next.sheets.length - 1; i >= 0; i--) {
         if (next.sheets[i]!.pockets.some(p => p.section.startsWith(sectionColor))) {
@@ -296,11 +295,7 @@ export function reconcileBinderLayout(
         let pairEnd = lastSectionIndex + 1;
         if (next.sheets[lastSectionIndex]?.side === 'Front' &&
             next.sheets[lastSectionIndex + 1]?.side === 'Back') pairEnd++;
-        const pair = next.sheets.slice(pairStart, pairEnd);
-        const hasFollowingColor = pair.some(sheet => sheet.pockets.some(p =>
-          p.section !== '__UNASSIGNED__' && !p.section.startsWith(sectionColor),
-        ));
-        insertAfter = hasFollowingColor ? pairStart : pairEnd;
+        insertAfter = pairEnd;
       }
 
       let overflowId = 1000;
