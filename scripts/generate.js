@@ -471,7 +471,6 @@ function main() {
 
   const data = {
     meta: {
-      generated: new Date().toISOString(),
       generator: 'my-optcg-binder generate.js',
       generatorVersion: '0.1.0',
       catalogSource: 'Vega',
@@ -486,7 +485,6 @@ function main() {
     binder: summary,
     wanted: wantedEntries,
     sources: {
-      generated: validation.sources.generated,
       files: sourcesFiles,
     },
     attribution: {

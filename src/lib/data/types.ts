@@ -140,7 +140,6 @@ export interface SourceFileEntry {
 }
 
 export interface SourceManifest {
-  generated: string; // ISO timestamp
   files: Record<string, SourceFileEntry>;
 }
 
@@ -170,7 +169,6 @@ export interface BinderSummary {
 
 export interface BinderData {
   meta: {
-    generated: string;
     generator: string;
     generatorVersion: string;
     catalogSource: string;

@@ -1,6 +1,5 @@
 {
   "meta": {
-    "generated": "2026-07-29T07:17:08.872Z",
     "generator": "my-optcg-binder generate.js",
     "generatorVersion": "0.1.0",
     "catalogSource": "Vega",
@@ -2669,7 +2668,6 @@
     }
   ],
   "sources": {
-    "generated": "2026-07-29T07:17:08.379Z",
     "files": {
       "One Piece TCG Collection - All.csv": {
         "checksum": "952ab78fb9aaec9571ebef55a8e6b6308dbc25fa87ece52eb369ec47b3a53c8e",

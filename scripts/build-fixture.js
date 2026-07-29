@@ -142,7 +142,6 @@ function main() {
 
   const data = {
     meta: {
-      generated: new Date().toISOString(),
       generator: 'my-optcg-binder build-fixture.js',
       generatorVersion: '0.1.0',
       catalogSource: 'heuristic (set-prefix color mapping — no Vega snapshot)',

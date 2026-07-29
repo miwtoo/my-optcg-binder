@@ -18,14 +18,12 @@ function validateBinderDataContract(data: any, label: string): void {
     expect(data, `${label}: missing key "${key}"`).toHaveProperty(key);
   }
 
-  // meta
-  expect(data.meta, `${label}: meta`).toHaveProperty('generated');
+  // meta (no `generated` field — deterministic, wall-clock-free metadata)
   expect(data.meta, `${label}: meta`).toHaveProperty('generator');
   expect(data.meta, `${label}: meta`).toHaveProperty('catalogSource');
   expect(data.meta, `${label}: meta`).toHaveProperty('totalCards');
   expect(data.meta, `${label}: meta`).toHaveProperty('totalSheets');
   expect(data.meta, `${label}: meta`).toHaveProperty('dataProvenance');
-  expect(typeof data.meta.generated).toBe('string');
   expect(data.meta.totalCards).toBeGreaterThan(0);
   expect(data.meta.totalSheets).toBeGreaterThan(0);
 
@@ -101,10 +99,8 @@ function validateBinderDataContract(data: any, label: string): void {
     expect(entry.target.length).toBeGreaterThan(0);
   }
 
-  // sources
-  expect(data.sources, `${label}: sources`).toHaveProperty('generated');
+  // sources (no wall-clock `generated` — checksums provide provenance)
   expect(data.sources, `${label}: sources`).toHaveProperty('files');
-  expect(typeof data.sources.generated).toBe('string');
   const fileNames = Object.keys(data.sources.files);
   expect(fileNames.length, `${label}: source files`).toBeGreaterThanOrEqual(3);
   expect(fileNames.some(f => f.includes('All'))).toBe(true);

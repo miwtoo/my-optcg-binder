@@ -196,9 +196,8 @@ export function validateAll(projectRoot: string = '.'): ValidationResult {
     }
   }
 
-  // 6. Build source manifest
+  // 6. Build source manifest (no wall-clock timestamps — checksums provide provenance)
   const sources: SourceManifest = {
-    generated: new Date().toISOString(),
     files: {
       [CSV_PATHS.COLLECTION]: sourceEntry(collectionPath, collectionResult.rowCount),
       [CSV_PATHS.DECK_SABO]: sourceEntry(saboPath, saboResult.rowCount),
