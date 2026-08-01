@@ -102,6 +102,20 @@ async function run() {
     (await page.$('#color'))  ? pass('Color filter rendered')  : fail('Color filter', 'not found');
     (await page.$('#cost'))   ? pass('Cost filter rendered')   : fail('Cost filter', 'not found');
     (await page.$('#type'))   ? pass('Type filter rendered')   : fail('Type filter', 'not found');
+    const filterA11y = await page.evaluate(() => ['color', 'cost', 'type', 'location', 'deck']
+      .every(id => Boolean(document.querySelector(`#${id}`)?.getAttribute('aria-label'))));
+    filterA11y ? pass('All select filters have accessible names') : fail('Filter accessible names', 'one or more selects are unnamed');
+
+    const deckOptions = await page.$$eval('#deck option', options => options.map(option => option.textContent?.trim()).filter(Boolean));
+    deckOptions.length > 1 ? pass(`Deck selector options: ${deckOptions.slice(0, 4).join(', ')}`) : skip('Deck selector options', 'no positive deck allocations in published fixture');
+    if (deckOptions.length > 1) {
+      const selectedDeck = deckOptions[1];
+      await page.selectOption('#deck', { label: selectedDeck });
+      await page.waitForTimeout(200);
+      const filteredCardCount = await page.$$eval('.collection-card', cards => cards.length);
+      filteredCardCount > 0 ? pass(`Named-deck filtering (${selectedDeck}) shows ${filteredCardCount} card(s)`) : fail('Named-deck filtering', 'selected deck produced no cards');
+      await page.selectOption('#deck', '');
+    }
 
     const searchEl = await page.$('#search');
     if (searchEl) {
